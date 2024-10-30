@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using JobEntities.Entities;
 
 namespace JobTracker.Business
 {
@@ -9,7 +10,7 @@ namespace JobTracker.Business
 
         }
 
-        public DbSet<JobProfile> JobProfiles { get; set; }
+        public DbSet<JobEntities.Entities.JobProfile> JobProfiles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Use a connection string to connect to your database
@@ -22,4 +23,11 @@ namespace JobTracker.Business
             return jobProfile?.Employer;
         }
     }
+
+    //public class JobProfile
+    //{
+    //    public Guid Id { get; set; }
+    //    public string Employer { get; set; }
+    //    // Add other properties as needed
+    //}
 }
