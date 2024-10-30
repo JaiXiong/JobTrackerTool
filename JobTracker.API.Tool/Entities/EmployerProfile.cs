@@ -12,8 +12,9 @@ namespace JobEntities.Entities
         [Required]
         public Guid Id { get; set; }
         [Required]
-        public JobProfile JobProfileId { get; set; }
+        public Guid JobProfileId { get; set; }
         public string Name { get; set; }
+        public string title { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }

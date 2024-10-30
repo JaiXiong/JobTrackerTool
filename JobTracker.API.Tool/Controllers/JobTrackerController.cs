@@ -1,5 +1,5 @@
-using JobTracker.API.Tool.Entities;
-using JobTracker.Business;
+using JobEntities.Entities;
+using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobTracker.API.tool.Controllers
@@ -22,9 +22,9 @@ namespace JobTracker.API.tool.Controllers
         public string GetEmployerName(Guid id)
         {
             //var jobProfiles = jobProfiles.FirstOrDefault(x => x.Id == id);
-            var jobProfiles = _jobTrackerToolService.GetEmployerName(id);
+            var name = _jobTrackerToolService.GetEmployerName(id);
 
-            return jobProfiles;
+            return name;
         }
 
         [HttpGet(Name = "GetEmployerName")]

@@ -1,19 +1,16 @@
-namespace JobTracker.API.Tool.Entities
+using System.ComponentModel.DataAnnotations;
+
+namespace JobEntities.Entities
 {
     public class JobProfile
     {
+        [Required]
         public Guid Id { get; set; }
         public DateOnly Date { get; set; }
 
-        public required string Employer { get; set; }
+        public EmployerProfile Employer { get; set; }
 
-        public required string WorkAction { get; set; }
-
-        public string? ContactTitle { get; set; }
-        public string? ContactEmail { get; set; }
-        public string? ContactPhone { get; set; }
-        public string? ContactMethod { get; set; }
-        public string? Result { get; set; }
+        public JobAction WorkAction { get; set; }
     }
 
 }

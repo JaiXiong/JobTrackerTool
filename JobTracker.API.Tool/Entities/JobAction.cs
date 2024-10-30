@@ -16,6 +16,13 @@ namespace JobEntities.Entities
             Offer,
             Reject
         }
+        public enum ContactMethod
+        {
+            Email,
+            Phone,
+            InPerson,
+            Other
+        }
         public enum Result
         {
             Success,
