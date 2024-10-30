@@ -12,5 +12,4 @@ namespace JobEntities.Entities
 
         public JobAction WorkAction { get; set; }
     }
-
 }

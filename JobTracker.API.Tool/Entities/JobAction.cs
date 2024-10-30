@@ -9,6 +9,9 @@ namespace JobEntities.Entities
     public class JobAction
     {
         public Guid Id { get; set; }
+        public string Action { get; set; }
+        public string Method { get; set; }
+        public string ActionResult { get; set; }
         public enum ActionType
         {
             Apply,
