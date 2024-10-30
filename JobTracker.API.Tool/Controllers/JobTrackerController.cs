@@ -1,7 +1,8 @@
-using JobTrackerToolBusiness;
+using JobTracker.API.Tool.Entities;
+using JobTracker.Business;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JobTrackerTool.Controllers
+namespace JobTracker.API.tool.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -18,12 +19,12 @@ namespace JobTrackerTool.Controllers
         }
 
         [HttpGet(Name = "GetEmployerName")]
-        public JobProfile GetEmployerName(Guid id)
+        public string GetEmployerName(Guid id)
         {
             //var jobProfiles = jobProfiles.FirstOrDefault(x => x.Id == id);
-            var jobProfiles = _jobTrackerToolService.JobProfiles.FirstOrDefault(x => x.Id == id);
+            var jobProfiles = _jobTrackerToolService.GetEmployerName(id);
 
-            return 
+            return jobProfiles;
         }
 
         [HttpGet(Name = "GetEmployerName")]
@@ -31,7 +32,7 @@ namespace JobTrackerTool.Controllers
         {
             var jobProfiles = new List<JobProfile>();
 
-            return
+            return jobProfiles;
         }
     }
 }

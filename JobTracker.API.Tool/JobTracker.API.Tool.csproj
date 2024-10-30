@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>JobTracker.API.Tool</AssemblyName>
+    <RootNamespace>JobTracker.API.Tool</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

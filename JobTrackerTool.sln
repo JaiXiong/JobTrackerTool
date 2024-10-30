@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobData", "JobData\JobData.csproj", "{6407CA92-D90D-4129-AEAF-2CDC7B279C55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTracker.API.Tool", "JobTrackerTool\JobTracker.API.Tool.csproj", "{73460412-61B7-46A9-B5AD-ACF0901EE457}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTracker.API.Tool", "JobTracker.API.Tool\JobTracker.API.Tool.csproj", "{73460412-61B7-46A9-B5AD-ACF0901EE457}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTracker.Business", "JobTrackerToolBusiness\JobTracker.Business.csproj", "{80DD3D55-A8CA-4849-BCCF-20776DFB7938}"
 EndProject

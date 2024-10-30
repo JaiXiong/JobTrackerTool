@@ -1,4 +1,4 @@
-namespace JobTrackerTool
+namespace JobTracker.API.Tool.Entities
 {
     public class JobProfile
     {
