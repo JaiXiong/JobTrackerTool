@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CommonModule, NgIf } from '@angular/common';
+import {NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTab, MatTabGroup, MatTabsModule } from '@angular/material/tabs'; // Import MatTabsModule
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
   imports: 
   [
     RouterOutlet, 
-    //CommonModule, 
     FormsModule,
     MatTabsModule,
     MatInputModule,
@@ -20,8 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatTab,
     NgIf,
     MatIconModule,
-    //BrowserAnimationsModule,
-    //NoopAnimationsModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
