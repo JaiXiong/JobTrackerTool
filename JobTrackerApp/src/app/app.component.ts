@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import {NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTab, MatTabGroup, MatTabsModule } from '@angular/material/tabs'; // Import MatTabsModule
@@ -31,4 +31,10 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 })
 export class AppComponent {
   title = 'JobTrackerApp';
+  constructor(private router: Router) {}
+  
+  public mainpage() {
+    console.log('Main page button clicked!');
+    this.router.navigate(['/login']);
+  }
 }

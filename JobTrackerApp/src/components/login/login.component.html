@@ -1,0 +1,23 @@
+<div class="background-container">
+  <div class="login-container">
+    <form>
+        <div class="login-form">
+            <div>
+                <mat-label class="login-label-custom">Username</mat-label>
+                <input matInput placeholder="Enter your username" required [(ngModel)]="username" name="username">
+              </div>
+          
+              <div>
+                <mat-label class="login-label-custom">Password</mat-label>
+                <input matInput type="password" placeholder="Enter your password" required style="margin-left: 3px;">
+              </div>
+              <div class="login-button">
+                <button  mat-raised-button color="primary" (click)="login()">Login</button>
+              </div>
+        </div>
+      
+
+      
+    </form>
+  </div>
+</div>
