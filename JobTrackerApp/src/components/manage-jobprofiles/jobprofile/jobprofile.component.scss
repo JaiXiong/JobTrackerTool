@@ -3,14 +3,31 @@
     flex-direction: column; /* This is the default value, so it's optional */
     //justify-content: start; /* Adjusts the spacing between items */
     align-items: center; /* Aligns items vertically in the center */
+    margin-top: 10%
     //height: 100vh; /* Full viewport height */
   }
+
+  .flex-inner-container {
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    //height: 100vh; /* Full viewport height */
+    // margin-top: 10%; /* Add some space above the tabs */
+    // margin-bottom: 10%; /* Add some space above the tabs */
+  } 
   
   .flex-item {
     background-color: lightblue;
     padding: 20px;
     margin: 10px;
     border: 1px solid #ccc;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 10%;
+    appearance: outline;
   }
 
   .mainpage-title {
@@ -39,6 +56,7 @@
     //padding-left: 1000px; /* Add some space to the left of the text */
     text-align: center; /* Center the text */
   }
+
   .footer-info {
     width: 100%; /* Take up full width */
     text-align: center; /* Center text */

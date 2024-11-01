@@ -1,5 +1,5 @@
 .background-container {
-    background-image: //url('/assets/backgrounds/dave-hoefler-qdX_Z8gu7tA-unsplash.jpg'),
+  background-image: //url('/assets/backgrounds/dave-hoefler-qdX_Z8gu7tA-unsplash.jpg'),
     //url('/assets/backgrounds/billy-freeman-PDqNS8Cwz3M-unsplash.jpg'),
     //url('/assets/backgrounds/evan-mach-2vLhhDEYCvk-unsplash.jpg'), //the bridge
     //url('/assets/backgrounds/kayle-kaupanger-UQRQ6uAXgNA-unsplash.jpg'),
@@ -10,65 +10,63 @@
     //url('/assets/backgrounds/saketh-AufJRf7LirY-unsplash.jpg'), //the leaf
     //url('/assets/backgrounds/tom-barrett-hoA7e2HRr70-unsplash.jpg'), //the city
     //url('/assets/backgrounds/wei-zeng-6KffRaLsClk-unsplash.jpg')
-    ; /* Set the background image */
-    background-size: cover; /* Ensure the image covers the entire container */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    min-height: 100vh; /* Ensure the container takes up the full height of the viewport */
-  }
-
-form 
-{
-    display: flex;
-    flex-direction: column;
-    max-width: 300px;
-    margin: auto;
+  ;
+  /* Set the background image */
+  background-size: cover;
+  /* Ensure the image covers the entire container */
+  background-position: center;
+  /* Center the background image */
+  background-repeat: no-repeat;
+  /* Prevent the image from repeating */
+  min-height: 100vh;
+  /* Ensure the container takes up the full height of the viewport */
 }
 
-.login-form
-{
-    display: flex;
-    flex-direction: column;
-    background-color: #f0f0f0;
-    border-radius: 4px; 
-    padding-top: 10%;
-    padding-bottom: 5%;
-    padding-right: 10px;
-    max-width: 400px;
-    margin: auto;
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: auto;
 }
-  
-  mat-form-field 
-  {
-    margin: 10%;
-    padding: 10%;
-    width: 100%;
-    height: 100%;
-    font-size: 20px;
-  }
 
-  .login-container 
-  {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; // Full viewport height
-  }
-  
-  mat-dialog-content form mat-form-field:first-of-type {
-    margin-top:4px;
-  }
+.login-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding-top: 10%;
+  padding-bottom: 5%;
+  padding-right: 10px;
+  max-width: 400px;
+  margin: auto;
+}
 
-  .login-label-custom
-  {
-    padding: 10px;
-    font-weight: 500;
-  }
+mat-form-field {
+  margin: 10%;
+  padding: 10%;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+}
 
-  .login-button
-    {
-        display: flex;
-        justify-content: flex-end; // Align the button to the right
-        padding-top: 10px;
-    }
-  
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Full viewport height
+}
+
+mat-dialog-content form mat-form-field:first-of-type {
+  margin-top: 4px;
+}
+
+.login-label-custom {
+  padding: 10px;
+  font-weight: 500;
+}
+
+.login-button {
+  display: flex;
+  justify-content: flex-end; // Align the button to the right
+  padding-top: 10px;
+}

@@ -32,9 +32,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 export class AppComponent {
   title = 'JobTrackerApp';
   constructor(private router: Router) {}
-  
+
   public mainpage() {
     console.log('Main page button clicked!');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/jobprofile']);
   }
 }
