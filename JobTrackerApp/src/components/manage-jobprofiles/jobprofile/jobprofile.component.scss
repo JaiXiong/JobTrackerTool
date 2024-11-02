@@ -30,6 +30,15 @@
     appearance: outline;
   }
 
+  .table-border{
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+  }
+
+  .table-border th, .table-border td {
+    border: 1px solid #ddd;
+  }
+
   .mainpage-title {
     //opacity: .9;
     //background-color: lightblue;

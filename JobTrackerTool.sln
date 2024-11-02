@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobTracker.Business", "JobT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj", "{FD393A84-66E2-4F4C-85F0-A1450203B8D3}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "JobTrackerApp", "JobTrackerApp\JobTrackerApp.esproj", "{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{FD393A84-66E2-4F4C-85F0-A1450203B8D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD393A84-66E2-4F4C-85F0-A1450203B8D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD393A84-66E2-4F4C-85F0-A1450203B8D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

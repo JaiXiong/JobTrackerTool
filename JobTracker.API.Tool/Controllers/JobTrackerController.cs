@@ -34,5 +34,19 @@ namespace JobTracker.API.tool.Controllers
 
             return jobProfiles;
         }
+
+        [HttpPost(Name = "AddJobProfile")]
+        public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
+        {
+            if (jobProfile == null)
+            {
+                return BadRequest("JobProfile is null.");
+            }
+
+            _jobTrackerToolService.JobProfiles.Add(jobProfile);
+            await _jobTrackerToolService.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);
+        }
     }
 }
