@@ -11,6 +11,8 @@ namespace JobEntities.Entities
     {
         [Required]
         public Guid Id { get; set; }
+        [Required]
+        public Guid JobProfileId { get; set; }
         public string Action { get; set; }
         public string Method { get; set; }
         public string ActionResult { get; set; }

@@ -1,4 +1,3 @@
-using JobEntities.Entities;
 using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,15 +34,26 @@ namespace JobTracker.API.tool.Controllers
             return jobProfiles;
         }
 
-        [HttpPost(Name = "AddJobProfile")]
-        public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
+        [HttpPost(Name = "CreateJobProfile")]
+        //public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
+        public async Task<IActionResult> CreateJobProfile()
+        {
+            JobProfile jobProfile = new JobProfile();
+            _jobTrackerToolService.Add(jobProfile);
+
+            await _jobTrackerToolService.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);
+        }
+        [HttpPost(Name = "AddActionResult")]
+        public async Task<IActionResult> ActionResult([FromBody] JobProfile jobProfile)
         {
             if (jobProfile == null)
             {
                 return BadRequest("JobProfile is null.");
             }
 
-            _jobTrackerToolService.JobProfiles.Add(jobProfile);
+            _jobTrackerToolService.AddJobProfile(jobProfile);
             await _jobTrackerToolService.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);

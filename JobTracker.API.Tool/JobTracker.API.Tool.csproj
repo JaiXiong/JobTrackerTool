@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JobTrackerToolBusiness\JobTracker.Business.csproj" />
+    <ProjectReference Include="..\JobData\JobData.csproj" />
+    <ProjectReference Include="..\JobTracker.Business\JobTracker.Business.csproj" />
   </ItemGroup>
 
 </Project>
