@@ -1,3 +1,4 @@
+using JobData.Entities;
 using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Mvc;
 

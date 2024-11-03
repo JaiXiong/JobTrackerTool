@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using JobEntities.Entities;
+﻿using JobData.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Business.Services
 {

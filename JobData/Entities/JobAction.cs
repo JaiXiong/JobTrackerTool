@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobEntities.Entities
+namespace JobData.Entities
 {
     public class JobAction
     {

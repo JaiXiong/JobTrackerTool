@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using JobEntities.Entities;
+using JobData.Entities;
 
 namespace JobTracker.API.Tool.DbData
 {

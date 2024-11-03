@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace JobEntities.Entities
+namespace JobData.Entities
 {
     public class JobProfile
     {
