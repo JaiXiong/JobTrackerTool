@@ -1,29 +1,31 @@
 ﻿using JobData.Entities;
+using JobTracker.API.Tool.DbData;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Business.Services
 {
     public class JobTrackerToolService : DbContext
     {
-        public DbSet<JobProfile> JobProfiles { get; set; } // Define DbSet property
-        public DbSet<EmployerProfile> EmployerProfiles { get; set; } // Define DbSet property
-        public DbSet<JobAction> JobActions { get; set; } // Define DbSet property
-        public void AddJobProfile(JobProfile jobProfile)
+        private readonly JobProfileContext _dbContext;
+        public JobTrackerToolService(JobProfileContext context)
+        {
+            _dbContext = context;
+        }
+        public async Task AddJobProfile(JobProfile jobProfile)
         {
             jobProfile.Id = Guid.NewGuid();
-            jobProfile.Date = DateOnly.FromDateTime(DateTime.Now);
-            //jobProfile.WorkAction = new JobAction();
-            //jobProfile.Employer = new EmployerProfile();
-            JobProfiles.Add(jobProfile);
-            SaveChanges();
+            jobProfile.Date = DateTime.Now;
+            jobProfile.LastestUpdate = DateTime.Now;
+            _dbContext.JobProfiles.Add(jobProfile);
+            await _dbContext.SaveChangesAsync();
         }
 
         public void AddEmployerProfile(EmployerProfile employerProfile, Guid jobProfileId)
         {
             employerProfile.Id = Guid.NewGuid();
             employerProfile.JobProfileId = jobProfileId;
-            EmployerProfiles.Add(employerProfile);
-            SaveChanges();
+            _dbContext.Employers.Add(employerProfile);
+            _dbContext.SaveChanges();
         }
 
         public void AddWorkaction(JobAction workAction)
@@ -32,7 +34,20 @@ namespace JobTracker.Business.Services
             workAction.Action = "Action";
             workAction.Method = "Method";
             workAction.ActionResult = "ActionResult";
-            SaveChanges();
+            _dbContext.SaveChanges();
+        }
+
+        public async Task AddUserDetail(Guid jobprofileid)
+        {
+            var jobProfile = _dbContext.JobProfiles.FirstOrDefault(c => c.Id == jobprofileid);
+
+            if (jobProfile == null)
+            {
+                throw Exceptio;
+            }
+            jobProfile.User.Id = Guid.NewGuid();
+
+            await _dbContext.SaveChangesAsync();
         }
         public string GetEmployerName(Guid id)
         {

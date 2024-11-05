@@ -11,7 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utils", "Utils\Utils.csproj
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "JobTrackerApp", "JobTrackerApp\JobTrackerApp.esproj", "{DBF7114B-BEED-4E32-BC0D-B18875C43CFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobData", "JobData\JobData.csproj", "{1A7CF54E-7589-4BAD-A279-02FB308A5DF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobData", "JobData\JobData.csproj", "{1A7CF54E-7589-4BAD-A279-02FB308A5DF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login.API", "Login.API\Login.API.csproj", "{7765C213-D721-4EC3-B74B-6534CDD27986}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login.Business", "Login.Business\Login.Business.csproj", "{88C78D8F-557D-466F-8379-12EEB0C11781}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,14 @@ Global
 		{1A7CF54E-7589-4BAD-A279-02FB308A5DF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A7CF54E-7589-4BAD-A279-02FB308A5DF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A7CF54E-7589-4BAD-A279-02FB308A5DF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7765C213-D721-4EC3-B74B-6534CDD27986}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7765C213-D721-4EC3-B74B-6534CDD27986}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7765C213-D721-4EC3-B74B-6534CDD27986}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7765C213-D721-4EC3-B74B-6534CDD27986}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88C78D8F-557D-466F-8379-12EEB0C11781}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88C78D8F-557D-466F-8379-12EEB0C11781}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88C78D8F-557D-466F-8379-12EEB0C11781}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88C78D8F-557D-466F-8379-12EEB0C11781}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

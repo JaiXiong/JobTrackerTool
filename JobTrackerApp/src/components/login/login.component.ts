@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { error } from 'console';
+import { response } from 'express';
 
 @Component({
   selector: 'app-login',
@@ -31,21 +32,20 @@ import { error } from 'console';
 export class LoginComponent {
 
   username: string = '';
+  password: string = '';
 
   constructor(private router: Router) {}
 
- public login(): boolean {
+ public login(): void {
     console.log('Login button clicked!');
 
     if (this.username === 'admin') 
-      {
+    {
       console.log('Login successful!');
       //call the backend and authenticate the user
-      this.router.navigate(['/jobprofile']);
-      return true;
-    } 
-      console.error('Invalid username!');
+      this.login.service.Login(this.username, this.password).subscribe(response => {
       
-      return false;
+      this.router.navigate(['/jobprofile']);
   }
+}
 }

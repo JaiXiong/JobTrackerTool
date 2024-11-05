@@ -12,5 +12,7 @@ namespace JobTracker.API.Tool.DbData
         public DbSet<EmployerProfile> Employers{ get; set; }
         public DbSet<JobProfile> JobProfiles { get; set; }
         public DbSet<JobAction> JobActions { get; set; }
+        public DbSet<Detail> Details { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
     }
 }
