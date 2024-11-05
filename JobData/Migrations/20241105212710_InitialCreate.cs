@@ -12,18 +12,23 @@ namespace JobData.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Details",
+                name: "UserProfiles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JobProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Updates = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Details", x => x.Id);
+                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,12 +36,19 @@ namespace JobData.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JobProfiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JobProfiles_UserProfiles_UserProfileId",
+                        column: x => x.UserProfileId,
+                        principalTable: "UserProfiles",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -67,28 +79,23 @@ namespace JobData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfiles",
+                name: "Details",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    JobProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EmployerProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Updates = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProfiles", x => x.Id);
+                    table.PrimaryKey("PK_Details", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProfiles_JobProfiles_JobProfileId",
-                        column: x => x.JobProfileId,
-                        principalTable: "JobProfiles",
+                        name: "FK_Details_Employers_EmployerProfileId",
+                        column: x => x.EmployerProfileId,
+                        principalTable: "Employers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -115,10 +122,15 @@ namespace JobData.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Details_EmployerProfileId",
+                table: "Details",
+                column: "EmployerProfileId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Employers_JobProfileId",
                 table: "Employers",
-                column: "JobProfileId",
-                unique: true);
+                column: "JobProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobActions_EmployerProfileId",
@@ -127,9 +139,14 @@ namespace JobData.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProfiles_JobProfileId",
+                name: "IX_JobProfiles_UserProfileId",
+                table: "JobProfiles",
+                column: "UserProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserProfiles_Name",
                 table: "UserProfiles",
-                column: "JobProfileId",
+                column: "Name",
                 unique: true);
         }
 
@@ -143,13 +160,13 @@ namespace JobData.Migrations
                 name: "JobActions");
 
             migrationBuilder.DropTable(
-                name: "UserProfiles");
-
-            migrationBuilder.DropTable(
                 name: "Employers");
 
             migrationBuilder.DropTable(
                 name: "JobProfiles");
+
+            migrationBuilder.DropTable(
+                name: "UserProfiles");
         }
     }
 }

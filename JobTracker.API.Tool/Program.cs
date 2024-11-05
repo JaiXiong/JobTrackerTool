@@ -2,11 +2,15 @@ using JobTracker.API.Tool.DbData;
 using JobTracker.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Register ResourceManager
+builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBusinessErrors.ResourceFileName", typeof(Program).Assembly));
 
 // Register JobTrackerToolService
 builder.Services.AddScoped<JobTrackerToolService>();

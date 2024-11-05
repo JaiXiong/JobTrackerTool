@@ -10,13 +10,13 @@ namespace JobTracker.API.tool.Controllers
     {
         private readonly ILogger<JobTrackerController> _logger;
         private readonly JobTrackerToolService _jobTrackerToolService;
-        private readonly JobTrackerToolService _jobTrackerDBcontext;
+        //private readonly JobTrackerToolService _jobTrackerDBcontext;
 
         public JobTrackerController(ILogger<JobTrackerController> logger, JobTrackerToolService jobTrackerToolService, JobTrackerToolService jobTrackerDBcontext)
         {
             _logger = logger;
             _jobTrackerToolService = jobTrackerToolService;
-            _jobTrackerDBcontext = jobTrackerDBcontext;
+            //_jobTrackerDBcontext = jobTrackerDBcontext;
         }
 
         [HttpGet("employer/{id}", Name = "GetEmployerName")]
@@ -33,6 +33,24 @@ namespace JobTracker.API.tool.Controllers
             return jobProfiles;
         }
 
+        [HttpPost("userprofile",Name="CreateUserProfile")]
+        public async Task<IActionResult> CreateUserProfile([FromBody] UserProfile userProfile)
+        {
+            _jobTrackerToolService.ValidateNewUser(userProfile);
+
+            try
+            {
+                await _jobTrackerToolService.AddUserProfile(userProfile);
+
+                return CreatedAtAction(nameof(GetEmployerName), new { id = userProfile.Id }, userProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the user profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPost("jobprofile", Name = "CreateJobProfile")]
         public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
         {
@@ -41,10 +59,18 @@ namespace JobTracker.API.tool.Controllers
                 return BadRequest("JobProfile is null.");
             }
 
-            await _jobTrackerToolService.AddJobProfile(jobProfile);
-            //await _jobTrackerToolService.SaveChangesAsync();
+            try
+            {
+                await _jobTrackerToolService.AddJobProfile(jobProfile);
 
-            return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);
+                return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the job profile.");
+                return StatusCode(500, "Internal server error");
+            }
+            
         }
 
         [HttpPost("actionresult", Name = "AddActionResult")]
@@ -55,7 +81,7 @@ namespace JobTracker.API.tool.Controllers
                 return BadRequest("JobProfile is null.");
             }
 
-            _jobTrackerToolService.AddJobProfile(jobProfile);
+            await _jobTrackerToolService.AddJobProfile(jobProfile);
             await _jobTrackerToolService.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetEmployerName), new { id = jobProfile.Id }, jobProfile);

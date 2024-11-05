@@ -146,7 +146,15 @@ namespace JobData.Migrations
                     b.Property<DateTime>("LastestUpdate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserProfileId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserProfileId");
 
                     b.ToTable("JobProfiles");
                 });
@@ -172,15 +180,12 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("JobProfileId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("LastestUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -196,7 +201,7 @@ namespace JobData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JobProfileId")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("UserProfiles");
@@ -229,13 +234,11 @@ namespace JobData.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("JobData.Entities.UserProfile", b =>
+            modelBuilder.Entity("JobData.Entities.JobProfile", b =>
                 {
-                    b.HasOne("JobData.Entities.JobProfile", null)
-                        .WithOne("User")
-                        .HasForeignKey("JobData.Entities.UserProfile", "JobProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("JobData.Entities.UserProfile", null)
+                        .WithMany("JobProfile")
+                        .HasForeignKey("UserProfileId");
                 });
 
             modelBuilder.Entity("JobData.Entities.EmployerProfile", b =>
@@ -250,9 +253,11 @@ namespace JobData.Migrations
             modelBuilder.Entity("JobData.Entities.JobProfile", b =>
                 {
                     b.Navigation("Employers");
+                });
 
-                    b.Navigation("User")
-                        .IsRequired();
+            modelBuilder.Entity("JobData.Entities.UserProfile", b =>
+                {
+                    b.Navigation("JobProfile");
                 });
 #pragma warning restore 612, 618
         }

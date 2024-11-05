@@ -9,6 +9,14 @@ namespace JobTracker.API.Tool.DbData
             : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserProfile>()
+                .HasIndex(u => u.Name)
+                .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
+        }
         public DbSet<EmployerProfile> Employers{ get; set; }
         public DbSet<JobProfile> JobProfiles { get; set; }
         public DbSet<JobAction> JobActions { get; set; }
