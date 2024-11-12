@@ -6,10 +6,17 @@ import { LoginComponent } from '../components/login/login.component';
 
 export const routes: Routes = 
 [
-    {path: '', redirectTo: '/login', pathMatch: 'full'},
-    {path: 'jobprofile', component: JobprofileComponent},
-    {path: 'employerprofile', component: EmployerprofileComponent},
-    {path: 'jobaction', component: JobactionComponent},
-    {path: 'login', component: LoginComponent}
-    
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
+    {path: 'login', component: LoginComponent, title: 'Login Page'},
+    {path: 'jobprofile', component: JobprofileComponent, title: 'Home Page'},
+    {path: 'employerprofile', component: EmployerprofileComponent, title: 'Employer Page'},
+    {path: 'jobaction', component: JobactionComponent, title: 'JobAction Page'},
 ];
+
+// export const routes: Routes = [
+//     { path: '', redirectTo: '/login', pathMatch: 'full' },
+//     { path: 'jobprofile', loadComponent: () => import('../components/manage-jobprofiles/jobprofile/jobprofile.component').then(m => m.JobprofileComponent) },
+//     { path: 'employerprofile', loadComponent: () => import('../components/manage-employerprofiles/employerprofile/employerprofile.component').then(m => m.EmployerprofileComponent) },
+//     { path: 'jobaction', loadComponent: () => import('../components/manage-jobactions/jobaction/jobaction.component').then(m => m.JobactionComponent) },
+//     { path: 'login', loadComponent: () => import('../components/login/login.component').then(m => m.LoginComponent) }
+//   ];

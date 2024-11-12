@@ -18,7 +18,7 @@ namespace JobData.Entities
         public Guid EmployerProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LastestUpdate { get; set; }
-        public string Comments { get; set; }
-        public string Updates { get; set; }
+        public string Comments { get; set; } = string.Empty;
+        public string Updates { get; set; } = string.Empty;
     }
 }

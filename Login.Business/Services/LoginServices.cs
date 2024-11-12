@@ -12,7 +12,7 @@ namespace Login.Business.Services
         {
             _resourceManager = resourceManager;
         }
-        public void Login(string username, string pw)
+        public async Task LoginAuth(string username, string pw)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -25,9 +25,6 @@ namespace Login.Business.Services
                 //throw new ArgumentException(Resources.GetResource("PasswordError"));
                 throw new ArgumentException(_resourceManager.GetString("PasswordError"));
             }
-
-
-
         }
     }
 }

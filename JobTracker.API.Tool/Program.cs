@@ -6,7 +6,25 @@ using System.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Read allowed origins from configuration
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
 // Add services to the container.
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        build =>
+        {
+            build.WithOrigins(allowedOrigins)
+                 .AllowAnyMethod()
+                 .AllowAnyHeader()
+                 .AllowCredentials();
+        });
+});
+
 builder.Services.AddControllers();
 
 // Register ResourceManager
@@ -43,6 +61,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

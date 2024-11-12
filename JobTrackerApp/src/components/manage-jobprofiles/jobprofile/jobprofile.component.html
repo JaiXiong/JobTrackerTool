@@ -1,6 +1,12 @@
-<div class="flex-inner-container">
-  <div> Add new employer</div>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-border">
+<div class="flex-container-components">
+  <div>Select your profile</div>
+  <mat-form-field>
+    <mat-label>Profile</mat-label>
+    <mat-select [(value)]="_jobProfileSelected" (selectionChange)="onJobProfileChange($event)">
+      <mat-option *ngFor="let jobProfile of _jobProfiles" [value]="jobProfile">{{jobProfile.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <table mat-table *ngIf="_isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->

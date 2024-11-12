@@ -1,13 +1,15 @@
 <div class="header-info">
-  <div>
-    <p>JobTrackerApp <button  mat-raised-button color="primary" (click)="mainpage()">Mainpage</button></p>
+  <div class="flex-container">
+    <mat-icon class="title-icon" mattooltip="Go to main page" (click)="mainpage()" >JobTrackerApp 
+      <!-- <button  mat-raised-button color="primary" (click)="mainpage()">Mainpage</button> -->
+      <!-- <button class="logout-button" mat-raised-button color="primary" (click)="logout()">Logout</button> -->
+    </mat-icon>
+    <button class="logout-button" mat-raised-button color="primary" (click)="logout()">Logout</button>
   </div>
 </div>
 
 
-<div class="flex-container">
   <router-outlet></router-outlet>
-</div>
 
 
 <div class="footer-info">

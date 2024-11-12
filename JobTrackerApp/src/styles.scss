@@ -1,2 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 mat-dialog-content { overflow: visible !important; }
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css'; // Import the Material theme
+
+.flex-container-components { //the main container for components
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    margin-top: 7%;
+    margin-left: 3%;
+    margin-right: 3%;
+    height: 100vh; /* Full viewport height */
+  }
+
+.flex-container-components-inner { //the main container for components already inside the components container
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    height: 100vh; /* Full viewport height */
+}

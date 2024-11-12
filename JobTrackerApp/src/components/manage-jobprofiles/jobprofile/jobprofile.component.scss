@@ -7,6 +7,25 @@
     //height: 100vh; /* Full viewport height */
   }
 
+  // .flex-container-components { //the main container
+  //   display: flex-grow;
+  //   flex-direction: column; /* This is the default value, so it's optional */
+  //   //justify-content: start; /* Adjusts the spacing between items */
+  //   align-items: center; /* Aligns items vertically in the center */
+  //   margin-top: 7%;
+  //   margin-left: 3%;
+  //   margin-right: 3%;
+  //   height: 100vh; /* Full viewport height */
+  // }
+
+  .flex-container-components-inner { //the main container
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    height: 100vh; /* Full viewport height */
+  }
+
   .flex-inner-container {
     display: flex-grow;
     flex-direction: column; /* This is the default value, so it's optional */
@@ -25,9 +44,9 @@
   }
 
   table {
-    width: 100%;
     margin-top: 10%;
-    appearance: outline;
+    //margin-left: 5%;
+    //margin-right: 5%;
   }
 
   .table-border{

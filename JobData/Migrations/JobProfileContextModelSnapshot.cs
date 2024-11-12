@@ -146,10 +146,11 @@ namespace JobData.Migrations
                     b.Property<DateTime>("LastestUpdate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ProfileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserProfileId")
+                    b.Property<Guid>("UserProfileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -238,7 +239,9 @@ namespace JobData.Migrations
                 {
                     b.HasOne("JobData.Entities.UserProfile", null)
                         .WithMany("JobProfile")
-                        .HasForeignKey("UserProfileId");
+                        .HasForeignKey("UserProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("JobData.Entities.EmployerProfile", b =>

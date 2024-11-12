@@ -27,5 +27,11 @@ namespace JobData.Entities
         public string Website { get; set; }
         public JobAction Result { get; set; }
         public Detail Detail { get; set; }
+
+        public EmployerProfile()
+        {
+            Detail = new Detail();
+            Result = new JobAction();
+        }
     }
 }
