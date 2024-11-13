@@ -11,4 +11,8 @@
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JobData\JobData.csproj" />
+  </ItemGroup>
+
 </Project>

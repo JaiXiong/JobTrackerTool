@@ -17,7 +17,7 @@ namespace Login.API.Controllers
             _loginServices = loginServices;
         }
 
-        [HttpPost(Name = "Login")]
+        [HttpPost("loginauth", Name = "Login")]
         public async Task<IActionResult> Login(string username, string password)
         {
             //TODO
@@ -31,9 +31,10 @@ namespace Login.API.Controllers
 
             try
             {
-                await _loginServices.LoginAuth(username, password);
+                var userid = await _loginServices.LoginAuth(username, password);
 
-                return CreatedAtAction(nameof(Login), new { username = username, password = password });
+                //return CreatedAtAction(nameof(Login), new { username = username, password = password });
+                return Ok(new { id = userid });
             }
             catch (Exception ex)
             {

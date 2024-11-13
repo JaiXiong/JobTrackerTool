@@ -15,21 +15,21 @@ export class JobTrackerService {
 
   public CreateJobProfile(jobProfile: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.jobTrackerUrl}/JobTracker/CreateJobProfile`, jobProfile, { headers });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateJobProfile`, jobProfile, { headers });
   }
   
-  public GetEmployerProfiles(jobProfile: any): Observable<any> {
+  public GetEmployerProfiles(jobProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.jobTrackerUrl}/JobTracker/GetEmployerProfiles`+ '/' + jobProfile.id, { headers });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerProfiles`+ '/' + jobProfileId, { headers });
   }
 
   public GetJobProfile(userNameId: any, jobProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.jobTrackerUrl}/JobTracker/GetJobProfile`,  { headers });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfile`+ '/' + userNameId + '/' + jobProfileId, { headers });
   }
 
-  public GetJobProfiles(): Observable<any> {
+  public GetJobProfiles(userNameId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.jobTrackerUrl}/JobTracker/GetJobProfiles`, { headers });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfiles`+ '/' + userNameId, { headers });
   }
 }

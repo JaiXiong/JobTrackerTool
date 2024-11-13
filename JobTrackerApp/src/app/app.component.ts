@@ -30,6 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   providers: 
   [
     //provideAnimations(), for some reason this was causing my routing to append on top of each other to I commented it out
+    //provideAnimations(),
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

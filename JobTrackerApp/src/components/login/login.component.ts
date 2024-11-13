@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
     ],
   providers:
     [
-      provideAnimations(),
+      //provideAnimations(),
       //{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }
     ],
   templateUrl: './login.component.html',
@@ -38,22 +38,18 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
 
-  username: string = '';
-  password: string = '';
+  _username: string = '';
+  _password: string = '';
+  _usernameid: string = '';
 
   constructor(private router: Router, private loginService: LoginService) { }
 
   public login(): void {
     console.log('Login button clicked!');
-      //call the backend and authenticate the user and get the userid
-      //var userId = this.loginService.Login(this.username, this.password);
-      //this.router.navigate(['/jobprofile'], { queryParams: { username: this.username } });
 
-    this.loginService.Login(this.username, this.password).subscribe(
+    this.loginService.Login(this._username, this._password).subscribe(
       response => {
-        console.log('Login successful', response);
-        var userId = response.userId;
-        this.router.navigate(['/jobprofile'], { queryParams: { username: this.username } });
+        this.router.navigate(['/jobprofile'], { queryParams: { usernameid: response.id } });
       },
       error => {
         console.error('Login failed', error);

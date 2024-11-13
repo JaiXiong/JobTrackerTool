@@ -11,12 +11,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { JobTrackerService } from '../../../services/jobtracker.service';
 import { response } from 'express';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 
 export interface EmployerProfile {
   id: string;
-  date: Date;
+  
   name: string;
   title: string;
   address: string;
@@ -52,7 +52,6 @@ export interface EmployerProfile {
     MatLabel,
     MatInputModule,
     FormsModule,
-    CommonModule,
     MatTabsModule,
     MatTabLabel,
     MatIcon, 
@@ -71,27 +70,23 @@ export interface EmployerProfile {
 
 export class JobprofileComponent {
   title = 'JobTrackerApp';
-  _username: string = '';
-  _userNameId: any;
+  _userNameId: string = '';
   _jobProfiles: any;
   _jobProfile: any;
   _jobProfileSelected: any;
-  _employerProfile: any;
-  displayedColumns: string[] = ['name', 'city', 'state', 'phone', 'email', 'website', 'date'];
-  ELEMENT_DATA: EmployerProfile[] = [];
-  dataSource: any;
+  _employerProfiles: any;
+  displayedColumns: string[] = ['name', 'city', 'state', 'phone', 'email', 'website'];
+  //ELEMENT_DATA: EmployerProfile[] = [];
+  dataSource: EmployerProfile[] = [];
   _isSelected: boolean = false;
   //dataSource = ELEMENT_DATA;
   
   ngOnInit(): void {
     // Retrieve the username from the query parameters
     this.route.queryParams.subscribe(params => {
-      this._username = params['username'];
+      this._userNameId = params['usernameid'];
     });
-    //_userNameId = this.jobTrackerService.userProfile(username);
-    this.dataSource = this.getEmployerProfiles();
-    this._jobProfile = this.getJobProfile(this._username);
-    this._jobProfiles = this.getJobProfiles(this._username);
+    this._jobProfiles = this.getJobProfiles();
   }
 
   constructor(private router: Router, private route: ActivatedRoute, private jobTrackerService: JobTrackerService) { }
@@ -114,16 +109,30 @@ export class JobprofileComponent {
   }
 
   public getEmployerProfiles(): void {
-    this.jobTrackerService.GetEmployerProfiles(this._jobProfile).subscribe(response => {
-      console.log(response);
-      this.dataSource = response;
+    this.jobTrackerService.GetEmployerProfiles(this._jobProfileSelected.id).subscribe(response => {
+      const employerList = response.map((element: { name: any; city: any; state: any; phone: any; email: any; website: any; }) => {
+        return {
+          //id: element.id,
+          //date: new Date(element.date),
+          name: element.name,
+          //title: element.title,
+          //address: element.address,
+          city: element.city,
+          state: element.state,
+          //zip: element.zip,
+          phone: element.phone,
+          email: element.email,
+          website: element.website
+        };
+      });
+      this.dataSource = employerList;
     },
       error => {
         console.error('Failed to get employer profiles', error);
       });
   }
 
-  public getJobProfile(username: string): any {
+  public getJobProfile() {
     this.jobTrackerService.GetJobProfile(this._userNameId, this._jobProfile).subscribe(response => {
       console.log(response);
       this._jobProfile = response;
@@ -133,19 +142,57 @@ export class JobprofileComponent {
       });
   }
 
-  public getJobProfiles(username: string): any {
-    this.jobTrackerService.GetJobProfiles().subscribe(response => {
-      console.log(response);
-      this._jobProfiles = response;
+  public getJobProfiles() {
+    this.jobTrackerService.GetJobProfiles(this._userNameId).subscribe(response => {
+      
+      const dropDownList = response.map((element: { name: any, profileName: any; }) => {
+        element.name = element.profileName;
+        return element;
+      });
+      this._jobProfiles = dropDownList;
     },
       error => {
         console.error('Failed to get job profiles', error);
       });
-    
   }
+
+  // public convertJobProfiles(response: any): Observable<any[]> {
+
+  //   const dropDownList = response.map((element: { name: any, profileName: any; }) => {
+  //     element.name = element.profileName;
+  //     return element;
+  //   });
+  //   //this._jobProfiles = dropDownList;
+  //   return of(dropDownList);
+  // }
+
+  // public convertEmployerProfiles(response: any): Observable<any[]> {
+  //   //displayedColumns: string[] = ['name', 'city', 'state', 'phone', 'email', 'website', 'date'];
+  //     const employerList = response.map((element: { date: any; name: any; city: any; state: any; phone: any; email: any; website: any; }) => {
+  //       return {
+  //         //id: element.id,
+  //         date: element.date,
+  //         name: element.name,
+  //         //title: element.title,
+  //         //address: element.address,
+  //         city: element.city,
+  //         state: element.state,
+  //         //zip: element.zip,
+  //         phone: element.phone,
+  //         email: element.email,
+  //         website: element.website
+  //       };
+  //     });
+  //     //this.dataSource = employerList;
+  //     return of(employerList);
+  //   }
 
   public onJobProfileChange(event: any) { 
     this._jobProfileSelected = event.value;
+    console.log('Selected job profile:', this._jobProfileSelected);
+    //this._jobProfiles = this.convertJobProfiles(this.getJobProfiles());
+    this._employerProfiles = this.getEmployerProfiles();
+    this._isSelected = true;
   }
 
   public download() {
