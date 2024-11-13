@@ -17,7 +17,7 @@ namespace JobData.Entities
         [Required]
         public Guid JobProfileId { get; set; }
         public string Name { get; set; }
-        public string title { get; set; }
+        public string Title { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }
