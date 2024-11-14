@@ -19,7 +19,8 @@ namespace JobTracker.Business.DataServices
                         "Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes"
                         ))
                 .AddScoped<JobTrackerToolService>()
-                .AddSingleton(new ResourceManager("JobTracker.Resources", typeof(JobTrackerToolService).Assembly))
+                //.AddSingleton(new ResourceManager("JobTracker.Business.Resources", typeof(JobTrackerToolService).Assembly))
+                .AddSingleton(new ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(JobTrackerToolService).Assembly))
                 .BuildServiceProvider();
 
             var jobTrackerToolService = serviceProvider.GetService<JobTrackerToolService>();
@@ -210,17 +211,17 @@ namespace JobTracker.Business.DataServices
         {
             var random = new Random();
 
-            for (int i = 0; i < 2; i++)
-            {
+            //for (int i = 0; i < 2; i++)
+            //{
                 var userProfile = new UserProfile
                 {
                     Id = Guid.NewGuid(),
                     Date = DateTime.UtcNow,
                     LastestUpdate = DateTime.UtcNow,
                     Name = $"Admin",
-                    Email = $"user{i}@example.com",
-                    Phone = $"555-010{i}",
-                    Address = $"123 Main St Apt {i}",
+                    Email = $"user@example.com",
+                    Phone = $"555-010",
+                    Address = $"123 Main St Apt",
                     City = "City",
                     State = "State",
                     Zip = "12345"
@@ -236,7 +237,7 @@ namespace JobTracker.Business.DataServices
                         UserProfileId = userProfile.Id,
                         Date = DateTime.UtcNow,
                         LastestUpdate = DateTime.UtcNow,
-                        ProfileName = $"Job Profile {j} for User {i}"
+                        ProfileName = $"Job Profile {j} for User"
                     };
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
@@ -284,7 +285,7 @@ namespace JobTracker.Business.DataServices
                         await jobTrackerToolService.AddDetail(detail);
                     }
                 }
-            }
+           // }
         }
     }
 }

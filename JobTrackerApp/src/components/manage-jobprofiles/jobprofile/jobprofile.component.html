@@ -49,6 +49,16 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <mat-paginator *ngIf="_isSelected"
+  #paginator
+  (page)="onPageChange($event)"
+  [length]="totalRecords"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  showFirstLastButtons>
+  </mat-paginator>
 </div>
 
 

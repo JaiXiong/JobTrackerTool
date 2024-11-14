@@ -79,6 +79,21 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        [HttpGet("pagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
+        public async Task<IEnumerable<EmployerProfile>> GetPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        {
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetPagingData(jobProfileId, pageIndex, pageSize);
+                return employerProfiles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the employer profiles paging.");
+                throw new ArgumentException("An error occurred while paging the employer profiles.");
+            }
+        }
+
         [HttpPost("userprofile",Name="CreateUserProfile")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserProfile userProfile)
         {

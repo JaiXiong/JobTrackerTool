@@ -204,6 +204,21 @@ namespace JobTracker.Business.Services
             }
             return employerProfiles;
         }
+
+        public async Task<IEnumerable<EmployerProfile>> GetPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        {
+            //var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == userProfileId)
+            //.Skip(pageIndex * pageSize)
+            //.Take(pageSize).ToListAsync();
+            var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == jobProfileId)
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize).ToListAsync();
+            if (employerProfiles == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
+            }
+            return employerProfiles;
+        }
         public string GetEmployerName(Guid id)
         {
             var name = "";
