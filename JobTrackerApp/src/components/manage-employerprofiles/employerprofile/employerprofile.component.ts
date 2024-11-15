@@ -29,6 +29,21 @@ import {
   RouterLinkActive,
   Router
 } from '@angular/router';
+import { JobTrackerService } from '../../../services/jobtracker.service';
+
+export interface EmployerProfile {
+  id: string;
+
+  name: string;
+  title: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  phone: string;
+  email: string;
+  website: string;
+}
 
 @Component({
   selector: 'app-employerprofile',
@@ -62,7 +77,8 @@ export class EmployerprofileComponent implements OnInit {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EmployerprofileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: MatDialog,
-    private location: Location
+    private location: Location,
+    private jobTrackerService: JobTrackerService
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +101,16 @@ export class EmployerprofileComponent implements OnInit {
       'Your order has been submitted',
       this.employerProfileForm.value
     );
+
+    this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
+      (response) => {
+        console.log('Employer Profile Updated');
+        //update the employer profile?
+      },
+      (error) => {
+        console.log('Error updating Employer Profile');
+      }
+    );
   }
 
   onClose(): void {
@@ -93,12 +119,12 @@ export class EmployerprofileComponent implements OnInit {
     //this.router.navigate(['/jobprofile']);
   }
 }
-function inject(
-  MAT_DIALOG_DATA: InjectionToken<any>
-): (
-  target: typeof EmployerprofileComponent,
-  propertyKey: undefined,
-  parameterIndex: 2
-) => void {
-  throw new Error('Function not implemented.');
-}
+// function inject(
+//   MAT_DIALOG_DATA: InjectionToken<any>
+// ): (
+//   target: typeof EmployerprofileComponent,
+//   propertyKey: undefined,
+//   parameterIndex: 2
+// ) => void {
+//   throw new Error('Function not implemented.');
+// }

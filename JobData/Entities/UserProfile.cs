@@ -15,7 +15,7 @@ namespace JobData.Entities
         [Required]
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
-        public DateTime LastestUpdate { get; set; }
+        public DateTime LatestUpdate { get; set; }
         public List<JobProfile> JobProfile { get; set; }
         [Required]
         public string Name { get; set; }

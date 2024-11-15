@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobData.Migrations
 {
     [DbContext(typeof(JobProfileContext))]
-    [Migration("20241113221444_init_1.0.1")]
-    partial class init_101
+    [Migration("20241115211419_init_1.0.5")]
+    partial class init_105
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,12 +70,18 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("JobProfileId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LatestUpdate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -89,15 +95,15 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Website")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Zip")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -122,8 +128,14 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("EmployerProfileId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LatestUpdate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Method")
                         .IsRequired()

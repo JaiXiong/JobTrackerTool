@@ -38,7 +38,7 @@ namespace JobData.Migrations
                     b.Property<Guid>("EmployerProfileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("LastestUpdate")
+                    b.Property<DateTime>("LatestUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Updates")
@@ -67,12 +67,18 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("JobProfileId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LatestUpdate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -119,8 +125,14 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("EmployerProfileId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LatestUpdate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Method")
                         .IsRequired()
@@ -143,7 +155,7 @@ namespace JobData.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastestUpdate")
+                    b.Property<DateTime>("LatestUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProfileName")
@@ -181,7 +193,7 @@ namespace JobData.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LastestUpdate")
+                    b.Property<DateTime>("LatestUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")

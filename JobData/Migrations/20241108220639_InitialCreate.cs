@@ -17,7 +17,7 @@ namespace JobData.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LatestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -38,7 +38,7 @@ namespace JobData.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LatestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProfileName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -86,7 +86,7 @@ namespace JobData.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EmployerProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LatestUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Updates = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

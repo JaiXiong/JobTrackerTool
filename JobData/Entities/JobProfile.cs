@@ -13,7 +13,7 @@ namespace JobData.Entities
         [Required]
         public Guid UserProfileId { get; set; }
         public DateTime Date { get; set; }
-        public DateTime LastestUpdate { get; set; }
+        public DateTime LatestUpdate { get; set; }
         public string ProfileName { get; set; }
         public List<EmployerProfile>? Employers { get; set; }
         public JobProfile()

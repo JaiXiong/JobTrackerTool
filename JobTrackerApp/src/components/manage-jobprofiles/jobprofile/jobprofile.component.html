@@ -3,7 +3,7 @@
   <mat-form-field>
     <mat-label>Profile</mat-label>
     <mat-select [(value)]="_jobProfileSelected" (selectionChange)="onJobProfileChange($event)">
-      <mat-option *ngFor="let jobProfile of _jobProfiles" [value]="jobProfile">{{jobProfile.name}}</mat-option>
+      <mat-option *ngFor="let jobProfile of _jobProfiles" [value]="jobProfile">{{jobProfile.profileName}}</mat-option>
     </mat-select>
   </mat-form-field>
   <table mat-table *ngIf="_isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
@@ -46,6 +46,11 @@
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef> Date </th>
       <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="latestupdate">
+      <th mat-header-cell *matHeaderCellDef> Latest Update </th>
+      <td mat-cell *matCellDef="let element"> {{element.latestUpdate}} </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

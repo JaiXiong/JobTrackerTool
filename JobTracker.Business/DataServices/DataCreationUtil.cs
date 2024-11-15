@@ -55,7 +55,7 @@ namespace JobTracker.Business.DataServices
                 {
                     Id = Guid.NewGuid(),
                     Date = DateTime.UtcNow,
-                    LastestUpdate = DateTime.UtcNow,
+                    LatestUpdate = DateTime.UtcNow,
                     Name = $"User {i}",
                     Email = $"user{i}@example.com",
                     Phone = $"555-010{i}",
@@ -74,7 +74,7 @@ namespace JobTracker.Business.DataServices
                         Id = Guid.NewGuid(),
                         UserProfileId = userProfile.Id,
                         Date = DateTime.UtcNow,
-                        LastestUpdate = DateTime.UtcNow,
+                        LatestUpdate = DateTime.UtcNow,
                         ProfileName = $"Job Profile {j} for User {i}"
                     };
 
@@ -115,7 +115,7 @@ namespace JobTracker.Business.DataServices
                             Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
                             Date = DateTime.UtcNow,
-                            LastestUpdate = DateTime.UtcNow,
+                            LatestUpdate = DateTime.UtcNow,
                             Comments = "Initial contact",
                             Updates = "Follow-up scheduled"
                         };
@@ -136,7 +136,7 @@ namespace JobTracker.Business.DataServices
                 {
                     Id = Guid.NewGuid(),
                     Date = DateTime.UtcNow,
-                    LastestUpdate = DateTime.UtcNow,
+                    LatestUpdate = DateTime.UtcNow,
                     Name = $"User {i}",
                     Email = $"user{i}@example.com",
                     Phone = $"555-010{i}",
@@ -155,7 +155,7 @@ namespace JobTracker.Business.DataServices
                         Id = Guid.NewGuid(),
                         UserProfileId = userProfile.Id,
                         Date = DateTime.UtcNow,
-                        LastestUpdate = DateTime.UtcNow,
+                        LatestUpdate = DateTime.UtcNow,
                         ProfileName = $"Job Profile {j} for User {i}"
                     };
 
@@ -196,7 +196,7 @@ namespace JobTracker.Business.DataServices
                             Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
                             Date = DateTime.UtcNow,
-                            LastestUpdate = DateTime.UtcNow,
+                            LatestUpdate = DateTime.UtcNow,
                             Comments = "Initial contact",
                             Updates = "Follow-up scheduled"
                         };
@@ -217,7 +217,7 @@ namespace JobTracker.Business.DataServices
                 {
                     Id = Guid.NewGuid(),
                     Date = DateTime.UtcNow,
-                    LastestUpdate = DateTime.UtcNow,
+                    LatestUpdate = DateTime.UtcNow,
                     Name = $"Admin",
                     Email = $"user@example.com",
                     Phone = $"555-010",
@@ -236,7 +236,7 @@ namespace JobTracker.Business.DataServices
                         Id = Guid.NewGuid(),
                         UserProfileId = userProfile.Id,
                         Date = DateTime.UtcNow,
-                        LastestUpdate = DateTime.UtcNow,
+                        LatestUpdate = DateTime.UtcNow,
                         ProfileName = $"Job Profile {j} for User"
                     };
 
@@ -248,6 +248,8 @@ namespace JobTracker.Business.DataServices
                         {
                             Id = Guid.NewGuid(),
                             JobProfileId = jobProfile.Id,
+                            Date = DateTime.UtcNow,
+                            LatestUpdate = DateTime.UtcNow,
                             Name = $"Employer {k} for Job Profile {j}",
                             Title = "Title",
                             Address = "Address",
@@ -265,6 +267,8 @@ namespace JobTracker.Business.DataServices
                         {
                             Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
+                            Date = DateTime.UtcNow,
+                            LatestUpdate = DateTime.UtcNow,
                             Action = "Apply",
                             Method = "Email",
                             ActionResult = "Success"
@@ -277,7 +281,7 @@ namespace JobTracker.Business.DataServices
                             Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
                             Date = DateTime.UtcNow,
-                            LastestUpdate = DateTime.UtcNow,
+                            LatestUpdate = DateTime.UtcNow,
                             Comments = "Initial contact",
                             Updates = "Follow-up scheduled"
                         };

@@ -25,7 +25,7 @@ namespace JobTracker.Business.Services
 
             jobProfile.Id = jobProfile.Id == Guid.Empty ? Guid.NewGuid() : jobProfile.Id;
             jobProfile.Date = DateTime.Now;
-            jobProfile.LastestUpdate = DateTime.Now;
+            jobProfile.LatestUpdate = DateTime.Now;
             _dbContext.JobProfiles.Add(jobProfile);
             await _dbContext.SaveChangesAsync();
         }
@@ -63,7 +63,7 @@ namespace JobTracker.Business.Services
 
             userProfile.Id = userProfile.Id == Guid.Empty ? Guid.NewGuid() : userProfile.Id;
             userProfile.Date = DateTime.Now;
-            userProfile.LastestUpdate = DateTime.Now;
+            userProfile.LatestUpdate = DateTime.Now;
 
             _dbContext.UserProfiles.Add(userProfile);
             await _dbContext.SaveChangesAsync();
@@ -219,6 +219,19 @@ namespace JobTracker.Business.Services
             }
             return employerProfiles;
         }
+
+        public async Task UpdateEmployerProfile(EmployerProfile employerProfile)
+        {
+            var exist = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfile.Id);
+            if (exist == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
+            }
+            employerProfile.Id = employerProfile.Id == Guid.Empty ? Guid.NewGuid() : employerProfile.Id;
+            _dbContext.Employers.Update(employerProfile);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public string GetEmployerName(Guid id)
         {
             var name = "";

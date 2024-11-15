@@ -186,5 +186,25 @@ namespace JobTracker.API.tool.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpPut("employerprofile", Name = "UpdateEmployerProfile")]
+        public async Task<IActionResult> UpdateEmployerProfile([FromBody] EmployerProfile employerProfile)
+        {
+            if (employerProfile == null)
+            {
+                return BadRequest("EmployerProfile is null.");
+            }
+
+            try
+            {
+                await _jobTrackerToolService.UpdateEmployerProfile(employerProfile);
+                return CreatedAtAction(nameof(UpdateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the employer profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

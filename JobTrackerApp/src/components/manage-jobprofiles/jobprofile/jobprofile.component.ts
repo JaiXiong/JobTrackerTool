@@ -10,7 +10,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatTabLabel, MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -22,7 +22,9 @@ import { EmployerprofileComponent } from '../../manage-employerprofiles/employer
 
 export interface EmployerProfile {
   id: string;
-
+  date: Date;
+  latestUpdate: Date;
+  jobProfileId: string;
   name: string;
   title: string;
   address: string;
@@ -32,6 +34,15 @@ export interface EmployerProfile {
   phone: string;
   email: string;
   website: string;
+}
+
+export interface JobProfile {
+  id: string;
+  userProfileId: string;
+  date: Date;
+  latestUpdate: Date;
+  profileName: string;
+  //name: string;
 }
 
 @Component({
@@ -58,6 +69,7 @@ export interface EmployerProfile {
   ],
   providers: [
     //provideAnimations(),
+    DatePipe,
   ],
   templateUrl: './jobprofile.component.html',
   styleUrl: './jobprofile.component.scss',
@@ -69,10 +81,31 @@ export class JobprofileComponent {
   pageSize: number = 10;
   pageIndex: number = 0;
   _userNameId: string = '';
-  _jobProfiles: any;
-  _jobProfile: any;
-  _jobProfileSelected: any;
-  _employerProfiles: any;
+  _jobProfiles: JobProfile[] = [];
+  _jobProfile!: JobProfile;
+  _jobProfileSelected: JobProfile = {
+    id: '',
+    userProfileId: '',
+    date: new Date(),
+    latestUpdate: new Date(),
+    profileName: '',
+  };
+  _employerProfile: EmployerProfile = {
+    id: '',
+    date: new Date(),
+    latestUpdate: new Date(),
+    jobProfileId: '',
+    name: '',
+    title: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    phone: '',
+    email: '',
+    website: '',
+  };
+  _employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
     'name',
     'city',
@@ -80,6 +113,8 @@ export class JobprofileComponent {
     'phone',
     'email',
     'website',
+    'date',
+    'latestupdate',
   ];
   dataSource: EmployerProfile[] = [];
   _isSelected: boolean = false;
@@ -89,17 +124,18 @@ export class JobprofileComponent {
     this.route.queryParams.subscribe((params) => {
       this._userNameId = params['usernameid'];
     });
-    this._jobProfiles = this.getJobProfiles();
+    this.getJobProfiles();
   }
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private jobTrackerService: JobTrackerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private datePipe: DatePipe
   ) {}
 
-  onCreateJobProfile() {
+  onCreateJobProfile(): void {
     const jobProfile = {
       // Define the job profile data structure
       // Add other fields as needed
@@ -122,31 +158,7 @@ export class JobprofileComponent {
       .GetEmployerProfiles(this._jobProfileSelected.id)
       .subscribe(
         (response) => {
-          const employerList = response.map(
-            (element: {
-              name: any;
-              city: any;
-              state: any;
-              phone: any;
-              email: any;
-              website: any;
-            }) => {
-              return {
-                //id: element.id,
-                //date: new Date(element.date),
-                name: element.name,
-                //title: element.title,
-                //address: element.address,
-                city: element.city,
-                state: element.state,
-                //zip: element.zip,
-                phone: element.phone,
-                email: element.email,
-                website: element.website,
-              };
-            }
-          );
-          this.dataSource = employerList;
+          //do something with the response
         },
         (error) => {
           console.error('Failed to get employer profiles', error);
@@ -154,7 +166,7 @@ export class JobprofileComponent {
       );
   }
 
-  public getJobProfile() {
+  public getJobProfile(): void {
     this.jobTrackerService
       .GetJobProfile(this._userNameId, this._jobProfile)
       .subscribe(
@@ -168,16 +180,10 @@ export class JobprofileComponent {
       );
   }
 
-  public getJobProfiles() {
+  public getJobProfiles(): void {
     this.jobTrackerService.GetJobProfiles(this._userNameId).subscribe(
       (response) => {
-        const dropDownList = response.map(
-          (element: { name: any; profileName: any }) => {
-            element.name = element.profileName;
-            return element;
-          }
-        );
-        this._jobProfiles = dropDownList;
+        this._jobProfiles = this.convertJobProfiles(response);
       },
       (error) => {
         console.error('Failed to get job profiles', error);
@@ -185,46 +191,33 @@ export class JobprofileComponent {
     );
   }
 
-  public convertJobProfiles(response: any) {
-    const dropDownList = response.map(
-      (element: { name: any; profileName: any }) => {
-        element.name = element.profileName;
-        return element;
-      }
-    );
-
-    return dropDownList;
+  public convertJobProfiles(response: any): JobProfile[] {
+    return response.map((element: JobProfile) => {
+      return {
+        ...element,
+        date: this.datePipe.transform(element.date, 'M/dd/yyyy hh:mm a') as any,
+        latestUpdate: this.datePipe.transform(
+          element.latestUpdate,
+          'M/dd/yyyy hh:mm a'
+        ) as any,
+      };
+    });
   }
 
-  public convertEmployerProfiles(response: any) {
-    const employerList = response.map(
-      (element: {
-        name: any;
-        city: any;
-        state: any;
-        phone: any;
-        email: any;
-        website: any;
-      }) => {
-        return {
-          //id: element.id,
-          //date: element.date,
-          name: element.name,
-          //title: element.title,
-          //address: element.address,
-          city: element.city,
-          state: element.state,
-          //zip: element.zip,
-          phone: element.phone,
-          email: element.email,
-          website: element.website,
-        };
-      }
-    );
-
-    return employerList;
+  public convertEmployerProfiles(response: any): EmployerProfile[] {
+    return response.map((element: EmployerProfile) => {
+      return {
+        ...element,
+        date: this.datePipe.transform(element.date, 'M/dd/yyyy hh:mm a') as any,
+        latestUpdate: this.datePipe.transform(
+          element.latestUpdate,
+          'M/dd/yyyy hh:mm a'
+        ) as any,
+      };
+    });
   }
-  public onNameClick(event: Event, element: EmployerProfile) {
+
+  public onNameClick(event: Event, element: EmployerProfile): void {
     event.preventDefault(); // Prevent the default anchor behavior
     console.log('Name clicked:', element);
     for (let i = 0; i < this.dataSource.length; i++) {}
@@ -239,18 +232,24 @@ export class JobprofileComponent {
         website: element.website,
       },
     });
+
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      //this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
-        
+      if (result) {
+        this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
+          (response) => {
+            console.log('Employer profile updated successfully', response);
+            // Handle success response
+          },
+          (error) => {
+            console.error('Failed to update employer profile', error);
+            // Handle error response
+          }
+        );
+      }
     });
-    // this.router.navigate(['/employerprofile'], {
-    //   queryParams: { employerid: element.id },
-    // });
   }
 
-  public dialogPopup() {}
-
+  public dialogPopup(): void {}
 
   public onJobProfileChange(event: any) {
     this._jobProfileSelected = event.value;
@@ -258,17 +257,17 @@ export class JobprofileComponent {
     this._isSelected = true;
   }
 
-  public onPageChange(event: any) {
+  public onPageChange(event: any): void {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.getPageData();
   }
 
-  public getPageData() {
-    // Call the service to get the data for the current page
-    // const searchCriteria = {
-    //   //sort/search criteria
-    // };
+  public getPageData(): void {
+    if (!this._jobProfileSelected) {
+      console.error('No job profile selected');
+      return;
+    }
 
     this.jobTrackerService
       .GetEmployerPagingData(
@@ -278,8 +277,6 @@ export class JobprofileComponent {
       )
       .subscribe(
         (response) => {
-          // Handle success response
-          console.log('Paging data:', response);
           this.totalRecords = response.length ? response.length : 0;
           this.dataSource = this.convertEmployerProfiles(response);
         },
@@ -289,7 +286,7 @@ export class JobprofileComponent {
       );
   }
 
-  public download() {
+  public download(): void {
     console.log('Download button clicked!');
   }
 }

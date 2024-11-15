@@ -16,6 +16,8 @@ namespace JobData.Entities
         [ForeignKey("JobProfile")]
         [Required]
         public Guid JobProfileId { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime LatestUpdate { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
         public string Address { get; set; }
