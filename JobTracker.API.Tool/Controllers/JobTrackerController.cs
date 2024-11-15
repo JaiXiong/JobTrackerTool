@@ -79,12 +79,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpGet("pagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
-        public async Task<IEnumerable<EmployerProfile>> GetPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        [HttpGet("employerpagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
+        public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
             try
             {
-                var employerProfiles = await _jobTrackerToolService.GetPagingData(jobProfileId, pageIndex, pageSize);
+                var employerProfiles = await _jobTrackerToolService.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
                 return employerProfiles;
             }
             catch (Exception ex)

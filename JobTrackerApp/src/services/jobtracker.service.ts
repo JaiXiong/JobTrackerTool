@@ -33,8 +33,8 @@ export class JobTrackerService {
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfiles`+ '/' + userNameId, { headers });
   }
 
-  public GetPagingData(jobProfileId: any, pageIndex: any, pageSize: any): Observable<any> {
+  public GetEmployerPagingData(jobProfileId: any, pageIndex: any, pageSize: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/PagingData`+ '/' + jobProfileId + '/' + pageIndex + '/' + pageSize, { headers });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerPagingData`+ '/' + jobProfileId + '/' + pageIndex + '/' + pageSize, { headers });
   }
 }

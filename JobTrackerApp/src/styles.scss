@@ -18,5 +18,9 @@ mat-dialog-content { overflow: visible !important; }
     flex-direction: column; /* This is the default value, so it's optional */
     //justify-content: start; /* Adjusts the spacing between items */
     align-items: center; /* Aligns items vertically in the center */
-    height: 100vh; /* Full viewport height */
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+    overflow: hidden !important;
+    //height: 75vh; /* Full viewport height */
 }

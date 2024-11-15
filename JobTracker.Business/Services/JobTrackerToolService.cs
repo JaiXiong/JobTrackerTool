@@ -205,7 +205,7 @@ namespace JobTracker.Business.Services
             return employerProfiles;
         }
 
-        public async Task<IEnumerable<EmployerProfile>> GetPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
             //var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == userProfileId)
             //.Skip(pageIndex * pageSize)

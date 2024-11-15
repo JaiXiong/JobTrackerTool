@@ -44,7 +44,7 @@
   }
 
   table {
-    margin-top: 10%;
+    //margin-top: 10%;
     //margin-left: 5%;
     //margin-right: 5%;
   }
@@ -85,38 +85,9 @@
     text-align: center; /* Center the text */
   }
 
-  .footer-info {
-    width: 100%; /* Take up full width */
-    text-align: center; /* Center text */
-    padding: 10px 0; /* Add padding */
-    background-color: #f1f1f1; /* Light background color */
-    position: fixed; /* Fix the footer at the bottom */
-    bottom: 0; /* Align to the bottom */
-    left: 0; /* Align to the left */
-  }
-
   .download-icon {
     width: 24px; /* Set the width of the icon */
     height: 24px; /* Set the height of the icon */
     margin-right: 8px; /* Add some space between the icon and the text */
     vertical-align: middle; /* Align the icon vertically with the text */
 }
-
-.background-container {
-    background-image: //url('/assets/backgrounds/dave-hoefler-qdX_Z8gu7tA-unsplash.jpg'),
-    //url('/assets/backgrounds/billy-freeman-PDqNS8Cwz3M-unsplash.jpg'),
-    //url('/assets/backgrounds/evan-mach-2vLhhDEYCvk-unsplash.jpg'), //the bridge
-    //url('/assets/backgrounds/kayle-kaupanger-UQRQ6uAXgNA-unsplash.jpg'),
-    url('/assets/backgrounds/mark-rohan-vN7Cpe2MSf8-unsplash.jpg'), //this looks good
-    //url('/assets/backgrounds/miguel-angel-sanz-6vwmc_ouh-0-unsplash.jpg'), //7bridges
-    //url('/assets/backgrounds/nick-grant-SN3yJux68hY-unsplash.jpg'),
-    //url('/assets/backgrounds/rebekah-dummer-ctYNjhUunNg-unsplash.jpg'), //this looks good
-    //url('/assets/backgrounds/saketh-AufJRf7LirY-unsplash.jpg'), //the leaf
-    //url('/assets/backgrounds/tom-barrett-hoA7e2HRr70-unsplash.jpg'), //the city
-    //url('/assets/backgrounds/wei-zeng-6KffRaLsClk-unsplash.jpg')
-    ; /* Set the background image */
-    background-size: cover; /* Ensure the image covers the entire container */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    min-height: 100vh; /* Ensure the container takes up the full height of the viewport */
-  }

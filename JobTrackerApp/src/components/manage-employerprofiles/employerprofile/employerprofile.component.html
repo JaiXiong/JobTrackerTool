@@ -1,1 +1,39 @@
-<p>employerprofile works!</p>
+
+<div class="flex-container-components-inner">
+    <p>employerprofile works!</p>
+    <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
+    <div class="flex-container-components-inner">
+        <form [formGroup]="employerProfileForm" (ngSubmit)="onSubmit()">
+            <label for="name">Employer Name</label>
+            <input type="text" id="name" formControlName="name">
+    
+            <div formGroupName="address">
+                <h2>Address</h2>
+                <label for="street">Street</label>
+                <input type="text" id="street" formControlName="street">
+                <label for="city">City</label>
+                <input type="text" id="city" formControlName="city">
+                <label for="state">State</label>
+                <input type="text" id="state" formControlName="state">
+                <label for="zip">Zip</label>
+                <input type="text" id="zip" formControlName="zip">
+            </div>
+    
+            <div formGroupName="contactInfo">
+                <h2>Contact</h2>
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" formControlName="phone">
+                <label for="email">Email</label>
+                <input type="text" id="email" formControlName="email">
+                <label for="website">Website</label>
+                <input type="text" id="website" formControlName="website">
+                <label for="date">Date</label>
+                <input type="text" id="date" formControlName="date">
+            </div>
+    
+            <button type="submit" [disabled]="!employerProfileForm.valid">Submit</button>
+        </form>
+    </div>
+    
+
+</div>
