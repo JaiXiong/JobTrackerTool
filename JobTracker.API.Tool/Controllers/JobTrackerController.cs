@@ -50,6 +50,22 @@ namespace JobTracker.API.tool.Controllers
 
         }
 
+        [HttpGet("employerprofiles", Name = "GetAllEmployerNames")]
+        public async Task<IEnumerable<EmployerProfile>> GetAllEmployerProfiles()
+        {
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetAllEmployers();
+                return employerProfiles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the employer profiles.");
+                throw new ArgumentException("An error occurred while getting the employer profiles.");
+            }
+
+        }
+
         [HttpGet("jobprofile/{jobprofileid}", Name = "GetJobProfile")]
         public async Task<JobProfile> GetJobProfile(Guid jobprofileid)
         {
@@ -79,6 +95,21 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        [HttpGet("jobprofiles", Name = "GetAllJobProfiles")]
+        public async Task<IEnumerable<JobProfile>> GetAllJobProfiles()
+        {
+            try
+            {
+                var jobProfiles = await _jobTrackerToolService.GetAllJobProfiles();
+                return jobProfiles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the employer profile.");
+                throw new ArgumentException("An error occurred while getting the employer profile.");
+            }
+        }
+
         [HttpGet("employerpagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
         public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
@@ -91,6 +122,51 @@ namespace JobTracker.API.tool.Controllers
             {
                 _logger.LogError(ex, "An error occurred while getting the employer profiles paging.");
                 throw new ArgumentException("An error occurred while paging the employer profiles.");
+            }
+        }
+
+        [HttpGet("jobaction", Name = "GetAllJobAction")]
+        public async Task<IEnumerable<JobAction>> GetAllJobAction()
+        {
+            try
+            {
+                var jobActions = await _jobTrackerToolService.GetAllJobActions();
+                return jobActions;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the job action.");
+                throw new ArgumentException("An error occurred while getting the job action.");
+            }
+        }
+
+        [HttpGet("jobaction/{employerProfileId}", Name = "GetJobAction")]
+        public async Task<IActionResult> GetActionResult(Guid employerProfileId)
+        {
+            try
+            {
+                var jobAction = await _jobTrackerToolService.GetJobAction(employerProfileId);
+                return Ok(jobAction);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the action result.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("detail", Name = "GetAllDetail")]
+        public async Task<IEnumerable<Detail>> GetAllDetail()
+        {
+            try
+            {
+                var details = await _jobTrackerToolService.GetAllDetails();
+                return details;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the detail.");
+                throw new ArgumentException("An error occurred while getting the detail.");
             }
         }
 
@@ -155,14 +231,14 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpPost("actionresult", Name = "CreateActionResult")]
-        public async Task<IActionResult> CreateActionResult([FromBody] JobAction actionResult)
+        [HttpPost("jobaction/{employerProfileId}", Name = "AddJobAction")]
+        public async Task<IActionResult> AddJobAction(Guid employerProfileId, [FromBody] JobAction jobAction)
         {
             try
             {
-                await _jobTrackerToolService.AddActionResult(actionResult);
+                await _jobTrackerToolService.AddJobAction(employerProfileId, jobAction);
 
-                return CreatedAtAction(nameof(CreateActionResult), new { id = actionResult.Id }, actionResult);
+                return CreatedAtAction(nameof(AddJobAction), new { id = jobAction.Id }, jobAction);
             }
             catch (Exception ex)
             {
@@ -171,12 +247,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpPost("detail", Name = "CreateDetail")]
-        public async Task<IActionResult> CreateDetail([FromBody] Detail detail)
+        [HttpPost("detail/{employerProfileId}", Name = "CreateDetail")]
+        public async Task<IActionResult> CreateDetail(Guid employerProfileId, [FromBody] Detail detail)
         {
             try
             {
-                await _jobTrackerToolService.AddDetail(detail);
+                await _jobTrackerToolService.AddDetail(employerProfileId, detail);
 
                 return CreatedAtAction(nameof(CreateDetail), new { id = detail.Id }, detail);
             }

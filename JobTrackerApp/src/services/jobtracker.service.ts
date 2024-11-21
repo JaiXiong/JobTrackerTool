@@ -42,4 +42,14 @@ export class JobTrackerService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<any>(`${this.jobTrackerUrl}/api/JobTracker/employerprofile`, employerProfile, { headers });
   }
+
+  public GetJobAction(employerProfileId: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobAction`+ '/' + employerProfileId, { headers });
+  }
+
+  public GetDetail(employerProfileId: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/Detail`+ '/' + employerProfileId, { headers });
+  }
 }

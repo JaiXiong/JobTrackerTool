@@ -7,18 +7,14 @@ namespace JobData.Entities
     public class JobProfile
     {
         [Key]
-        [Required]
         public Guid Id { get; set; }
         [ForeignKey("UserProfile")]
         [Required]
-        public Guid UserProfileId { get; set; }
+        public required Guid UserProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
-        public string ProfileName { get; set; }
-        public List<EmployerProfile>? Employers { get; set; }
-        public JobProfile()
-        {
-            Employers = new List<EmployerProfile>();
-        }
+        [Required]
+        public required string ProfileName { get; set; }
+        public virtual ICollection<EmployerProfile>? Employers { get; set; }
     }
 }

@@ -19,31 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EmployerprofileComponent } from '../../manage-employerprofiles/employerprofile/employerprofile.component';
-
-export interface EmployerProfile {
-  id: string;
-  date: Date;
-  latestUpdate: Date;
-  jobProfileId: string;
-  name: string;
-  title: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  phone: string;
-  email: string;
-  website: string;
-}
-
-export interface JobProfile {
-  id: string;
-  userProfileId: string;
-  date: Date;
-  latestUpdate: Date;
-  profileName: string;
-  //name: string;
-}
+import { JobProfile } from '../../../models/job-profile.model';
+import { EmployerProfile } from '../../../models/employer-profile.model';
 
 @Component({
   selector: 'app-jobprofile',
@@ -89,6 +66,7 @@ export class JobprofileComponent {
     date: new Date(),
     latestUpdate: new Date(),
     profileName: '',
+    employerProfiles: [],
   };
   _employerProfile: EmployerProfile = {
     id: '',
@@ -104,16 +82,33 @@ export class JobprofileComponent {
     phone: '',
     email: '',
     website: '',
+    jobaction: {
+      id: '',
+      employerprofileid: '',
+      date: '',
+      latestUpdate: '',
+      action: '',
+      method: '',
+      actionresult: '',
+    },
+    details: {
+      id: '',
+      employerprofileid: '',
+      date: '',
+      latestUpdate: '',
+      comments: '',
+      updates: '',
+    },
   };
   _employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
+    'date',
     'name',
     'city',
     'state',
     'phone',
     'email',
     'website',
-    'date',
     'latestupdate',
   ];
   dataSource: EmployerProfile[] = [];
@@ -219,19 +214,25 @@ export class JobprofileComponent {
 
   public onNameClick(event: Event, element: EmployerProfile): void {
     event.preventDefault(); // Prevent the default anchor behavior
-    console.log('Name clicked:', element);
-    for (let i = 0; i < this.dataSource.length; i++) {}
+
+    //for (let i = 0; i < this.dataSource.length; i++) {}
+
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
       width: '500px',
-      data: {
-        name: element.name,
-        city: element.city,
-        state: element.state,
-        phone: element.phone,
-        email: element.email,
-        website: element.website,
-      },
+      data: element,
     });
+
+    // const dialogRef = this.dialog.open(EmployerprofileComponent, {
+    //   width: '500px',
+    //   data: {
+    //     name: element.name,
+    //     city: element.city,
+    //     state: element.state,
+    //     phone: element.phone,
+    //     email: element.email,
+    //     website: element.website,
+    //   },
+    // });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {

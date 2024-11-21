@@ -16,6 +16,8 @@ namespace JobTracker.API.Tool.DbData
                 .IsUnique();
 
             base.OnModelCreating(modelBuilder);
+
+
         }
         public DbSet<EmployerProfile> Employers{ get; set; }
         public DbSet<JobProfile> JobProfiles { get; set; }

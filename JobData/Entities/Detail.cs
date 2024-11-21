@@ -10,15 +10,17 @@ namespace JobData.Entities
 {
     public class Detail
     {
-        [Key]
-        [Required]
         public Guid Id { get; set; }
         [ForeignKey("EmployerProfile")]
         [Required]
-        public Guid EmployerProfileId { get; set; }
+        public required Guid EmployerProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
-        public string Comments { get; set; } = string.Empty;
-        public string Updates { get; set; } = string.Empty;
+        [Column(TypeName = "varchar(500)")]
+        [MaxLength(500)]
+        public string? Comments { get; set; }
+        [Column(TypeName = "varchar(500)")]
+        [MaxLength(500)]
+        public string? Updates { get; set; }
     }
 }

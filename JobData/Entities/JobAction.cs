@@ -10,35 +10,33 @@ namespace JobData.Entities
 {
     public class JobAction
     {
-        [Key]
-        [Required]
         public Guid Id { get; set; }
         [ForeignKey("EmployerProfile")]
         [Required]
-        public Guid EmployerProfileId { get; set; }
+        public required Guid EmployerProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
-        public string Action { get; set; } = string.Empty;
-        public string Method { get; set; } = string.Empty;
-        public string ActionResult { get; set; } = string.Empty;
-        public enum ActionType
-        {
-            Apply,
-            Interview,
-            Offer,
-            Reject
-        }
-        public enum ContactMethod
-        {
-            Email,
-            Phone,
-            InPerson,
-            Other
-        }
-        public enum Result
-        {
-            Success,
-            Failure
-        }
+        public string? Action { get; set; }
+        public string? Method { get; set; } 
+        public string? ActionResult { get; set; }
+        //public enum ActionType
+        //{
+        //    Apply,
+        //    Interview,
+        //    Offer,
+        //    Reject
+        //}
+        //public enum ContactMethod
+        //{
+        //    Email,
+        //    Phone,
+        //    InPerson,
+        //    Other
+        //}
+        //public enum Result
+        //{
+        //    Success,
+        //    Failure
+        //}
     }
 }

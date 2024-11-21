@@ -16,18 +16,17 @@ namespace JobData.Entities
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
-        public List<JobProfile> JobProfile { get; set; }
+        public virtual ICollection<JobProfile>? JobProfile { get; set; }
         [Required]
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-        public UserProfile()
-        {
-            JobProfile = new List<JobProfile>();
-        }
+        public required string UserName { get; set; }
+        public string? FirstName { get; set; }
+        public string? MiddleName { get; set; }
+        public string? LastName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? Zip { get; set; }
     }
 }

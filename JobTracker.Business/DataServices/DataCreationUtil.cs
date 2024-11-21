@@ -108,7 +108,7 @@ namespace JobTracker.Business.DataServices
                             ActionResult = "Success"
                         };
 
-                        await jobTrackerToolService.AddActionResult(jobAction);
+                        await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
 
                         var detail = new Detail
                         {
@@ -120,7 +120,7 @@ namespace JobTracker.Business.DataServices
                             Updates = "Follow-up scheduled"
                         };
 
-                        await jobTrackerToolService.AddDetail(detail);
+                        await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
                     }
                 }
             }
@@ -189,7 +189,7 @@ namespace JobTracker.Business.DataServices
                             ActionResult = "Success"
                         };
 
-                        await jobTrackerToolService.AddActionResult(jobAction);
+                        await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
 
                         var detail = new Detail
                         {
@@ -201,7 +201,7 @@ namespace JobTracker.Business.DataServices
                             Updates = "Follow-up scheduled"
                         };
 
-                        await jobTrackerToolService.AddDetail(detail);
+                        await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
                     }
                 }
             }
@@ -215,7 +215,7 @@ namespace JobTracker.Business.DataServices
             //{
                 var userProfile = new UserProfile
                 {
-                    Id = Guid.NewGuid(),
+                    //Id = Guid.NewGuid(),
                     Date = DateTime.UtcNow,
                     LatestUpdate = DateTime.UtcNow,
                     Name = $"Admin",
@@ -229,11 +229,11 @@ namespace JobTracker.Business.DataServices
 
                 await jobTrackerToolService.AddUserProfile(userProfile);
 
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < 6; j++)
                 {
                     var jobProfile = new JobProfile
                     {
-                        Id = Guid.NewGuid(),
+                        //Id = Guid.NewGuid(),
                         UserProfileId = userProfile.Id,
                         Date = DateTime.UtcNow,
                         LatestUpdate = DateTime.UtcNow,
@@ -242,11 +242,11 @@ namespace JobTracker.Business.DataServices
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
 
-                    for (int k = 0; k < 50; k++)
+                    for (int k = 0; k < 501; k++)
                     {
                         var employerProfile = new EmployerProfile
                         {
-                            Id = Guid.NewGuid(),
+                            //Id = Guid.NewGuid(),
                             JobProfileId = jobProfile.Id,
                             Date = DateTime.UtcNow,
                             LatestUpdate = DateTime.UtcNow,
@@ -265,7 +265,7 @@ namespace JobTracker.Business.DataServices
 
                         var jobAction = new JobAction
                         {
-                            Id = Guid.NewGuid(),
+                            //Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
                             Date = DateTime.UtcNow,
                             LatestUpdate = DateTime.UtcNow,
@@ -274,11 +274,11 @@ namespace JobTracker.Business.DataServices
                             ActionResult = "Success"
                         };
 
-                        await jobTrackerToolService.AddActionResult(jobAction);
+                        await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
 
                         var detail = new Detail
                         {
-                            Id = Guid.NewGuid(),
+                            //Id = Guid.NewGuid(),
                             EmployerProfileId = employerProfile.Id,
                             Date = DateTime.UtcNow,
                             LatestUpdate = DateTime.UtcNow,
@@ -286,7 +286,7 @@ namespace JobTracker.Business.DataServices
                             Updates = "Follow-up scheduled"
                         };
 
-                        await jobTrackerToolService.AddDetail(detail);
+                        await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
                     }
                 }
            // }
