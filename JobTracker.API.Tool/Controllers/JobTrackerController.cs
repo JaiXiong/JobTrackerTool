@@ -141,7 +141,7 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("jobaction/{employerProfileId}", Name = "GetJobAction")]
-        public async Task<IActionResult> GetActionResult(Guid employerProfileId)
+        public async Task<IActionResult> GetJobAction(Guid employerProfileId)
         {
             try
             {
@@ -167,6 +167,21 @@ namespace JobTracker.API.tool.Controllers
             {
                 _logger.LogError(ex, "An error occurred while getting the detail.");
                 throw new ArgumentException("An error occurred while getting the detail.");
+            }
+        }
+
+        [HttpGet("detail/{employerProfileId}", Name = "GetDetail")]
+        public async Task<IActionResult> GetDetail(Guid employerProfileId)
+        {
+            try
+            {
+                var detail = await _jobTrackerToolService.GetDetail(employerProfileId);
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the detail.");
+                return StatusCode(500, "Internal server error");
             }
         }
 

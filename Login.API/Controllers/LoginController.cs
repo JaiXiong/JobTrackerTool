@@ -34,7 +34,7 @@ namespace Login.API.Controllers
                 var userid = await _loginServices.LoginAuth(username, password);
 
                 //return CreatedAtAction(nameof(Login), new { username = username, password = password });
-                return Ok(new { id = userid });
+                return Ok(new { id = userid, name = username});
             }
             catch (Exception ex)
             {

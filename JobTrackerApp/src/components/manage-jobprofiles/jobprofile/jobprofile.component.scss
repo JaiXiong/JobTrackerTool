@@ -1,41 +1,3 @@
-.flex-container { //the main container
-    display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
-    margin-top: 10%
-    //height: 100vh; /* Full viewport height */
-  }
-
-  // .flex-container-components { //the main container
-  //   display: flex-grow;
-  //   flex-direction: column; /* This is the default value, so it's optional */
-  //   //justify-content: start; /* Adjusts the spacing between items */
-  //   align-items: center; /* Aligns items vertically in the center */
-  //   margin-top: 7%;
-  //   margin-left: 3%;
-  //   margin-right: 3%;
-  //   height: 100vh; /* Full viewport height */
-  // }
-
-  .flex-container-components-inner { //the main container
-    display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
-    height: 100vh; /* Full viewport height */
-  }
-
-  .flex-inner-container {
-    display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
-    //height: 100vh; /* Full viewport height */
-    // margin-top: 10%; /* Add some space above the tabs */
-    // margin-bottom: 10%; /* Add some space above the tabs */
-  } 
-  
   .flex-item {
     background-color: lightblue;
     padding: 20px;
@@ -58,30 +20,11 @@
     border: 1px solid #ddd;
   }
 
-  .mainpage-title {
-    //opacity: .9;
-    //background-color: lightblue;
-    //padding: 5px;
-    //margin: 10px;
-    //border: 1px solid #ccc;
-    //padding-left: 700px; /* Add some space to the left of the text */
-    text-align: center; /* Center the text */
-    color: rgb(0, 0, 0);
-    font-size: 5em;
-    transform: scale(1.1); /* Adjust the scale factor as needed */
-    transform-origin: top left; /* Ensure scaling starts from the top left corner */
-  }
-
-  .mainpage-tabs {
-    display: flex; /* Display the tabs in a row */
-    //justify-content: center; /* Center the tabs */
-    margin-top: 20px; /* Add some space above the tabs */
-    //width: 75%; /* Take up full width */
-    //padding-left: 250px; /* Add some space to the left of the tabs */
-  }
-
-  .job-titles {
-    //padding-left: 1000px; /* Add some space to the left of the text */
+  .jobprofile-welcome-custom {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2em;
+    font-weight: bold;
+    color: #0000FF;
     text-align: center; /* Center the text */
   }
 
@@ -90,4 +33,19 @@
     height: 24px; /* Set the height of the icon */
     margin-right: 8px; /* Add some space between the icon and the text */
     vertical-align: middle; /* Align the icon vertically with the text */
+}
+
+.jobprofile-icons {
+  display: flex-grow;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7em;
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+
+  &:hover {
+    color: #007bff; /* Change color on hover */
+  }
+
 }

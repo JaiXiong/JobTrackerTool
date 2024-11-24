@@ -27,9 +27,8 @@ namespace JobData.Entities
         public string? Email { get; set; }
         public string? Website { get; set; }
 
-        public 
-        //public virtual JobAction? Result { get; set; }
-        //public virtual Detail? Detail { get; set; }
+        public virtual JobAction? Result { get; set; }
+        public virtual Detail? Detail { get; set; }
 
         //public EmployerProfile()
         //{

@@ -1,42 +1,22 @@
-import { Location, CommonModule, JsonPipe, NgFor } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Inject,
-  InjectionToken,
-  OnInit,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { JobTrackerService } from '../../../../services/jobtracker.service';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from 'express';
+import { EmployerProfile, ActionResult, Details } from '../../../../models/employer-profile.model';
+import { EmployerprofileComponent } from '../../../manage-employerprofiles/employerprofile/employerprofile.component';
+import { CommonModule, NgFor, JsonPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  RouterModule,
-  RouterOutlet,
-  RouterLink,
-  RouterLinkActive,
-  Router
-} from '@angular/router';
-import { JobTrackerService } from '../../../services/jobtracker.service';
-import { EmployerProfile, ActionResult, Details } from '../../../models/employer-profile.model';
-import { error } from 'console';
+import { RouterModule, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  selector: 'app-employerprofile',
+  selector: 'app-create-employerprofiles',
   standalone: true,
-  imports: [
+  imports: 
+  [
     RouterModule,
     RouterOutlet,
     CommonModule,
@@ -53,11 +33,13 @@ import { error } from 'console';
     NgFor,
     JsonPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './employerprofile.component.html',
-  styleUrl: './employerprofile.component.scss',
+  templateUrl: './create-employerprofiles.component.html',
+  styleUrl: './create-employerprofiles.component.scss'
 })
-export class EmployerprofileComponent implements OnInit {
+export class CreateEmployerprofilesComponent {
+
+  //constructor(private jobTrackerService: JobTrackerService, private dialog: MatDialog) {}
+
   employerProfileForm!: FormGroup;
   actionForm!: FormGroup;
   detailsForm!: FormGroup;
@@ -107,30 +89,6 @@ export class EmployerprofileComponent implements OnInit {
     // this.setEmployerProfileForm();
     // this.setActionForm();
     // this.setDetailsForm();
-  }
-
-  public EmployerProfileDialog(element: any): void {
-    // Open the dialog
-    const dialogRef = this.dialog.open(EmployerprofileComponent, {
-      width: '500px',
-      height: '800px',
-      data: element,
-    });
-
-    dialogRef.afterClosed().subscribe((result: EmployerProfile) => {
-      if (result) {
-        this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
-          (response) => {
-            console.log('Employer profile updated successfully', response);
-            // Handle success response
-          },
-          (error) => {
-            console.error('Failed to update employer profile', error);
-            // Handle error response
-          }
-        );
-      }
-    });
   }
 
   public onSubmit(): void {
@@ -265,14 +223,28 @@ export class EmployerprofileComponent implements OnInit {
       }
     );
   }
-  
+
+  public EmployerProfileDialog(element: any): void {
+    // Open the dialog
+    const dialogRef = this.dialog.open(CreateEmployerprofilesComponent, {
+      width: '500px',
+      height: '800px',
+      data: element,
+    });
+
+    dialogRef.afterClosed().subscribe((result: CreateEmployerprofilesComponent) => {
+      if (result) {
+        this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
+          (response) => {
+            console.log('Employer profile updated successfully', response);
+            // Handle success response
+          },
+          (error) => {
+            console.error('Failed to update employer profile', error);
+            // Handle error response
+          }
+        );
+      }
+    });
+  }
 }
-// function inject(
-//   MAT_DIALOG_DATA: InjectionToken<any>
-// ): (
-//   target: typeof EmployerprofileComponent,
-//   propertyKey: undefined,
-//   parameterIndex: 2
-// ) => void {
-//   throw new Error('Function not implemented.');
-// }

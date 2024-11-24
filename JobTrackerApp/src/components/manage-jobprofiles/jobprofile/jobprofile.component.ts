@@ -18,9 +18,10 @@ import { JobTrackerService } from '../../../services/jobtracker.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EmployerprofileComponent } from '../../manage-employerprofiles/employerprofile/employerprofile.component';
 import { JobProfile } from '../../../models/job-profile.model';
 import { EmployerProfile } from '../../../models/employer-profile.model';
+import { EmployerprofileComponent } from '../../manage-employerprofiles/employerprofile/employerprofile.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-jobprofile',
@@ -43,6 +44,7 @@ import { EmployerProfile } from '../../../models/employer-profile.model';
     MatInputModule,
     MatPaginator,
     MatDialogModule,
+    MatTooltipModule
   ],
   providers: [
     //provideAnimations(),
@@ -58,6 +60,7 @@ export class JobprofileComponent {
   pageSize: number = 10;
   pageIndex: number = 0;
   _userNameId: string = '';
+  _userName: string = '';
   _jobProfiles: JobProfile[] = [];
   _jobProfile!: JobProfile;
   _jobProfileSelected: JobProfile = {
@@ -82,18 +85,18 @@ export class JobprofileComponent {
     phone: '',
     email: '',
     website: '',
-    jobaction: {
+    jobAction: {
       id: '',
-      employerprofileid: '',
+      employerProfileId: '',
       date: '',
       latestUpdate: '',
       action: '',
       method: '',
-      actionresult: '',
+      actionResult: '',
     },
     details: {
       id: '',
-      employerprofileid: '',
+      employerProfileId: '',
       date: '',
       latestUpdate: '',
       comments: '',
@@ -118,6 +121,7 @@ export class JobprofileComponent {
     // Retrieve the username from the query parameters
     this.route.queryParams.subscribe((params) => {
       this._userNameId = params['usernameid'];
+      this._userName = params['name'];
     });
     this.getJobProfiles();
   }
@@ -127,7 +131,7 @@ export class JobprofileComponent {
     private route: ActivatedRoute,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
   ) {}
 
   onCreateJobProfile(): void {
@@ -215,24 +219,10 @@ export class JobprofileComponent {
   public onNameClick(event: Event, element: EmployerProfile): void {
     event.preventDefault(); // Prevent the default anchor behavior
 
-    //for (let i = 0; i < this.dataSource.length; i++) {}
-
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
       width: '500px',
       data: element,
     });
-
-    // const dialogRef = this.dialog.open(EmployerprofileComponent, {
-    //   width: '500px',
-    //   data: {
-    //     name: element.name,
-    //     city: element.city,
-    //     state: element.state,
-    //     phone: element.phone,
-    //     email: element.email,
-    //     website: element.website,
-    //   },
-    // });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
@@ -289,5 +279,17 @@ export class JobprofileComponent {
 
   public download(): void {
     console.log('Download button clicked!');
+  }
+
+  public onCreate(): void {
+    console.log('Create button clicked!');
+  }
+
+  public onUpdate(): void {
+    console.log('Update button clicked!');
+  }
+
+  public onDelete(): void { 
+    console.log('Delete button clicked!');
   }
 }

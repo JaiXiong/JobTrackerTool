@@ -49,7 +49,7 @@ export class LoginComponent {
 
     this.loginService.Login(this._username, this._password).subscribe(
       response => {
-        this.router.navigate(['/jobprofile'], { queryParams: { usernameid: response.id } });
+        this.router.navigate(['/jobprofile'], { queryParams: { usernameid: response.id, name: response.name } });
       },
       error => {
         console.error('Login failed', error);

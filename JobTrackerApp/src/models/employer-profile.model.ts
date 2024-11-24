@@ -12,23 +12,23 @@ export interface EmployerProfile {
     phone: string;
     email: string;
     website: string;
-    jobaction: ActionResult;
+    jobAction: ActionResult;
     details: Details;
   }
   
   export interface ActionResult {
     id: string;
-    employerprofileid: string;
+    employerProfileId: string;
     date: string;
     latestUpdate: string;
     action: string;
     method: string;
-    actionresult: string;
+    actionResult: string;
   }
   
   export interface Details {
     id: string;
-    employerprofileid: string;
+    employerProfileId: string;
     date: string;
     latestUpdate: string;
     comments: string;

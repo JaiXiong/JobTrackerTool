@@ -254,12 +254,12 @@ namespace JobTracker.Business.Services
 
         public async Task<JobAction> GetJobAction(Guid employerProfileId)
         {
-            var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
-            if (employerProfile == null)
+            var jobAction = await _dbContext.JobActions.FirstOrDefaultAsync(c => c.EmployerProfileId == employerProfileId);
+            if (jobAction == null)
             {
                 throw new ArgumentNullException(_resourceManager.GetString("JobActionNull"));
             }
-            return employerProfile.Result;
+            return jobAction;
         }
 
         public async Task<IEnumerable<JobAction>> GetAllJobActions()
@@ -270,6 +270,16 @@ namespace JobTracker.Business.Services
                 throw new ArgumentNullException(_resourceManager.GetString("JobActionNull"));
             }
             return jobActions;
+        }
+
+        public async Task<Detail> GetDetail(Guid employerProfileId)
+        {
+            var detail = await _dbContext.Details.FirstOrDefaultAsync(c => c.EmployerProfileId == employerProfileId);
+            if (detail == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("DetailNull"));
+            }
+            return detail;
         }
 
         public async Task<IEnumerable<Detail>> GetAllDetails()

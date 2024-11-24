@@ -17,6 +17,16 @@ export class JobTrackerService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateJobProfile`, jobProfile, { headers });
   }
+
+  public CreateEmployerProfile(employerProfile: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateEmployerProfile`, employerProfile, { headers });
+  }
+
+  public CreateUser(user: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateUser`, user, { headers });
+  }
   
   public GetEmployerProfiles(jobProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

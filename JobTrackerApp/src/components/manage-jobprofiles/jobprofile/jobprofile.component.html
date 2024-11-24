@@ -1,11 +1,16 @@
 <div class="flex-container-components-inner">
-  <div>Select your profile</div>
+  <div class="jobprofile-welcome-custom">Welcome to your Job Portal, {{_userName}}</div>
   <mat-form-field>
     <mat-label>Profile</mat-label>
-    <mat-select [(value)]="_jobProfileSelected" (selectionChange)="onJobProfileChange($event)">
+    <mat-select [(value)]="_jobProfileSelected" matTooltip="Select your profile" (selectionChange)="onJobProfileChange($event)">
       <mat-option *ngFor="let jobProfile of _jobProfiles" [value]="jobProfile">{{jobProfile.profileName}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <span>
+    <mat-icon class="jobprofile-icons" matTooltip="Add new profile" fontIcon="add" (click)="onCreate()"></mat-icon>
+    <mat-icon class="jobprofile-icons" matTooltip="Update profile" fontIcon="edit" *ngIf="_isSelected" (click)="onUpdate()"></mat-icon>
+    <mat-icon class="jobprofile-icons" matTooltip="Delete profile" fontIcon="delete" *ngIf="_isSelected" (click)="onDelete()"></mat-icon>
+  </span>
   <table mat-table *ngIf="_isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
 
     <!--- Note that these columns can be defined in any order.

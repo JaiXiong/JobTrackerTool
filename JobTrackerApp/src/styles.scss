@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 mat-dialog-content { overflow: visible !important; }
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css'; // Import the Material theme
+@import "@angular/material/prebuilt-themes/indigo-pink.css"; // Import the Material theme
 
 .flex-container-components { //the main container for components
     display: flex-grow;
@@ -18,9 +19,23 @@ mat-dialog-content { overflow: visible !important; }
     flex-direction: column; /* This is the default value, so it's optional */
     //justify-content: start; /* Adjusts the spacing between items */
     align-items: center; /* Aligns items vertically in the center */
-    margin-top: 3%;
+    margin-top: 70px;
     margin-left: 3%;
     margin-right: 3%;
     overflow: hidden !important;
     //height: 75vh; /* Full viewport height */
+}
+
+.horizontal-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.vertical-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
