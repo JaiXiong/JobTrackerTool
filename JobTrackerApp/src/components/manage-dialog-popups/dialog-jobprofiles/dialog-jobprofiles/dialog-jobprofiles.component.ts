@@ -46,10 +46,14 @@ export class DialogJobprofilesComponent implements OnInit {
 
   ngOnInit(): void {
     this.jobProfileForm = this.formBuilder.group({
-      id: [this.data.id],
-      date: [{ value: this.data.date, disabled: true }],
-      userProfileId: [this.data.userProfileId],
-      profileName: [this.data.profileName],
+      // id: [this.data.id],
+      // date: [{ value: this.data.date, disabled: true }],
+      // userProfileId: [this.data.userProfileId],
+      // profileName: [this.data.profileName],
+      id: [''],
+      //date: [{ value: this.data.date, disabled: true }],
+      userProfileId: [''],
+      profileName: [''],
     });
   }
 
@@ -70,5 +74,12 @@ export class DialogJobprofilesComponent implements OnInit {
 
   onClose(): void {
     this.dialog.closeAll();
+  }
+
+  public onTabChange(event: any) {
+    if (event.index == 0) {
+    } else if (event.index == 1) {
+    } else {
+    }
   }
 }

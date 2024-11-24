@@ -113,6 +113,8 @@ export class JobprofileComponent {
   ];
   dataSource: EmployerProfile[] = [];
   _isSelected: boolean = false;
+  _showJobOptions: boolean = true;
+  _showEmployerOptions: boolean = false;
 
   ngOnInit(): void {
     // Retrieve the username from the query parameters
@@ -131,23 +133,23 @@ export class JobprofileComponent {
     private datePipe: DatePipe,
   ) {}
 
-  onCreateJobProfile(): void {
-    const jobProfile = {
-      // Define the job profile data structure
-      // Add other fields as needed
-    };
+  // onCreateJobProfile(): void {
+  //   const jobProfile = {
+  //     // Define the job profile data structure
+  //     // Add other fields as needed
+  //   };
 
-    this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
-      (response) => {
-        console.log('Job profile created successfully', response);
-        // Handle success response
-      },
-      (error) => {
-        console.error('Failed to create job profile', error);
-        // Handle error response
-      }
-    );
-  }
+  //   this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
+  //     (response) => {
+  //       console.log('Job profile created successfully', response);
+  //       // Handle success response
+  //     },
+  //     (error) => {
+  //       console.error('Failed to create job profile', error);
+  //       // Handle error response
+  //     }
+  //   );
+  // }
 
   public getEmployerProfiles(): void {
     this.jobTrackerService
@@ -218,6 +220,7 @@ export class JobprofileComponent {
 
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
       width: '500px',
+      height: '800px',
       data: element,
     });
 
@@ -243,6 +246,8 @@ export class JobprofileComponent {
     this._jobProfileSelected = event.value;
     this.getPageData();
     this._isSelected = true;
+    this._showJobOptions = false;
+    this._showEmployerOptions = true;
   }
 
   public onPageChange(event: any): void {
@@ -278,12 +283,13 @@ export class JobprofileComponent {
     console.log('Download button clicked!');
   }
 
-  public onCreate(): void {
+  public onCreateJobProfile(): void {
     console.log('Create button clicked!');
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
       height: '800px',
     });
+    
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
@@ -301,10 +307,11 @@ export class JobprofileComponent {
     });
   }
 
-  public onUpdate(): void {
+  public onEditJobProfile(): void {
     console.log('Update button clicked!');
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
+      height: '800px',
       data: this._employerProfile,
     });
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -323,8 +330,26 @@ export class JobprofileComponent {
     });
   }
 
-  public onDelete(): void { 
+  public onDeleteJobProfile(): void { 
     console.log('Delete button clicked!');
+  }
 
+  public onCreateEmployerProfile(): void {
+    console.log('Create Employer Profile button clicked!');
+  }
+
+  public onEditEmployerProfile(): void {
+    console.log('Edit Employer Profile button clicked!');
+  }
+
+  public onDeleteEmployerProfile(): void {
+    console.log('Delete Employer Profile button clicked!');
+  }
+
+  public onJobDefaultClick(): void {
+    console.log('Job Default button clicked!');
+    this._showJobOptions = true;
+    this._showEmployerOptions = false;
+    this.dataSource = [];
   }
 }

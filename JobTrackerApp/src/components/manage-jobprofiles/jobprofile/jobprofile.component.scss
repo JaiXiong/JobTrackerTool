@@ -36,9 +36,11 @@
 }
 
 .jobprofile-icons {
-  display: flex-grow;
-  flex-direction: column;
-  justify-content: center;
+  //display: flex;
+  //flex-direction: row;
+  //justify-content: flex-start;
+  margin-left: 5px;
+  margin-right: 5px;
   align-items: center;
   font-size: 1.7em;
   cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
@@ -47,5 +49,24 @@
   &:hover {
     color: #007bff; /* Change color on hover */
   }
+}
 
+.employerprofile-icons {
+  //display: flex;
+  //flex-direction: row;
+  //justify-content: flex-end;
+  margin-left: 5px;
+  margin-right: 5px;
+  align-items: center;
+  font-size: 1.7em;
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+
+  &:hover {
+    color: #007bff; /* Change color on hover */
+  }
+}
+
+.span-right {
+  float: right;
 }

@@ -1,5 +1,5 @@
 <div class="flex-container-components-inner">
-    <p>Add New Employer Profile</p>
+    <p>Update Employer Profile</p>
     <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
     <div class="flex-container-components-inner">
         <mat-tab-group class="vertical-tabs" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
@@ -10,7 +10,7 @@
                 </ng-template>
                 <form [formGroup]="employerProfileForm" (ngSubmit)="onSubmit()">
                     <label for="name">Employer Name</label>
-                    <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder={{data.name}}>
+                    <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder="Enter employer name">
 
                     <!-- <label for="id">ID</label>
                         <input type="text" id="id" formControlName="id" class="input-custom" placeholder={{data.id}}>
@@ -18,41 +18,37 @@
                         <label for="jobProfileId">Job Profile ID</label> 
                         <input type="text" id="jobProfileId" formControlName="jobProfileId" class="input-custom" placeholder={{data.jobProfileId}}> -->
 
-                    <label for="date">Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}>
-
-                    <label for="name">Name</label>
-                    <input type="text" id="name" formControlName="name" class="input-custom" placeholder={{data.name}}>
+                    <!-- <label for="date">Date</label>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}> -->
 
                     <label for="title">Title</label>
-                    <input matInput type="text" id="title" formControlName="title" class="input-custom"
-                        placeholder={{data.title}}>
+                    <input matInput type="text" id="title" formControlName="title" class="input-custom"placeholder="">
 
                     <label for="address">Address</label>
                     <input matInput type="text" id="address" formControlName="address" class="input-custom"
-                        placeholder={{data.address}}>
+                        placeholder="">
 
                     <label for="city">City</label>
-                    <input matInput type="text" id="city" formControlName="city" class="input-custom" placeholder={{data.city}}>
+                    <input matInput type="text" id="city" formControlName="city" class="input-custom" placeholder="">
 
                     <label for="state">State</label>
                     <input matInput type="text" id="state" formControlName="state" class="input-custom"
-                        placeholder={{data.state}}>
+                        placeholder="">
 
                     <label for="zip">Zip</label>
-                    <input matInput type="text" id="zip" formControlName="zip" class="input-custom" placeholder={{data.zip}}>
+                    <input matInput type="text" id="zip" formControlName="zip" class="input-custom" placeholder="">
 
                     <label for="phone">Phone</label>
                     <input matInput type="text" id="phone" formControlName="phone" class="input-custom"
-                        placeholder={{data.phone}}>
+                        placeholder="">
 
                     <label for="email">Email</label>
                     <input matInput type="text" id="email" formControlName="email" class="input-custom"
-                        placeholder={{data.email}}>
+                        placeholder="">
 
                     <label for="website">Website</label>
                     <input matInput type="text" id="website" formControlName="website" class="input-custom" 
-                        placeholder={{data.website}}>
+                        placeholder="">
 
                     <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Submit</button>
                 </form>
@@ -64,13 +60,13 @@
                 </ng-template>
                 <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
                     <label>Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{actionForm.value.date}}>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder="">
                     <label>Action</label>
-                    <input matInput type="text" id="action" formControlName="action" class="input-custom" placeholder={{actionForm.value.action}}>
+                    <input matInput type="text" id="action" formControlName="action" class="input-custom" placeholder="">
                     <label>Method</label>
-                    <input matInput type="text" id="method" formControlName="method" class="input-custom" placeholder={{actionForm.value.method}}>
+                    <input matInput type="text" id="method" formControlName="method" class="input-custom" placeholder="">
                     <label>Action Result</label>
-                    <input matInput type="text" id="actionresult" formControlName="actionresult" class="input-custom" placeholder={{actionForm.value.actionresult}}>
+                    <input matInput type="text" id="actionresult" formControlName="actionresult" class="input-custom" placeholder="">
 
                     <button type="submit" [disabled]="!actionForm.valid" class="submit-button">Submit</button>
                 </form>
@@ -82,11 +78,11 @@
                 </ng-template>
                 <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
                     <label>Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{detailsForm.value.date}}>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder="">
                     <label>Comments</label>
-                    <input matInput type="text" id="comments" formControlName="comments" class="input-custom" placeholder={{detailsForm.value.Comments}}>
+                    <input matInput type="text" id="comments" formControlName="comments" class="input-custom" placeholder="">
                     <label>Updates</label>
-                    <input matInput type="text" id="updates" formControlName="updates" class="input-custom" placeholder={{detailsForm.value.Updates}}>
+                    <input matInput type="text" id="updates" formControlName="updates" class="input-custom" placeholder="">
 
                     <button type="submit" [disabled]="!detailsForm.valid" class="submit-button">Submit</button>
                 </form>

@@ -3,13 +3,19 @@
   <mat-form-field>
     <mat-label>Profile</mat-label>
     <mat-select [(value)]="_jobProfileSelected" matTooltip="Select your profile" (selectionChange)="onJobProfileChange($event)">
+      <mat-option [value]="null" matTooltip="Add/Edit/Update a Job Profile" matTooltipPosition="right" (click)="onJobDefaultClick() ">Add / Edit / Delete</mat-option>
       <mat-option *ngFor="let jobProfile of _jobProfiles" [value]="jobProfile">{{jobProfile.profileName}}</mat-option>
     </mat-select>
   </mat-form-field>
   <span>
-    <mat-icon class="jobprofile-icons" matTooltip="Add new profile" fontIcon="add" (click)="onCreate()"></mat-icon>
-    <mat-icon class="jobprofile-icons" matTooltip="Update profile" fontIcon="edit" *ngIf="_isSelected" (click)="onUpdate()"></mat-icon>
-    <mat-icon class="jobprofile-icons" matTooltip="Delete profile" fontIcon="delete" *ngIf="_isSelected" (click)="onDelete()"></mat-icon>
+    <mat-icon class="jobprofile-icons" matTooltip="Add new job profile" fontIcon="add" *ngIf="_showJobOptions" (click)="onCreateJobProfile()"></mat-icon>
+    <mat-icon class="jobprofile-icons" matTooltip="Update profile" fontIcon="edit" *ngIf="_showJobOptions" (click)="onEditJobProfile()"></mat-icon>
+    <mat-icon class="jobprofile-icons" matTooltip="Delete profile" fontIcon="delete" *ngIf="_showJobOptions" (click)="onDeleteJobProfile()"></mat-icon>
+  </span>
+  <span class="span-right">
+    <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add" *ngIf="_showEmployerOptions" (click)="onCreateEmployerProfile()"></mat-icon>
+    <mat-icon class="employerprofile-icons" matTooltip="Update profile" fontIcon="edit" *ngIf="_showEmployerOptions" (click)="onEditEmployerProfile()"></mat-icon>
+    <mat-icon class="employerprofile-icons" matTooltip="Delete profile" fontIcon="delete" *ngIf="_showEmployerOptions" (click)="onDeleteEmployerProfile()"></mat-icon>
   </span>
   <table mat-table *ngIf="_isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
 

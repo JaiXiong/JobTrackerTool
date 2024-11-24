@@ -1,22 +1,21 @@
 <div class="flex-container-components-inner">
     <p>Add New Job Profile</p>
     <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
-    <div class="flex-container-components-inner">
+    <mat-tab-group class="vertical-tabs" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
+        <div class="flex-container-components-inner">
             <mat-tab label="JobProfile">
                 <ng-template mat-tab-label>
                     <mat-icon>account_circle</mat-icon>
                     <span>Job Profile</span>
                 </ng-template>
                 <form [formGroup]="jobProfileForm" (ngSubmit)="onSubmit()">
-                    
-                    <label for="date">Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}>
 
-                    <label for="name">Profile Name</label>
-                    <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder="Type a job profile name">
+                    <label for="profileName">Profile Name</label>
+                    <input matInput type="text" id="profileName" formControlName="profileName" class="input-custom" placeholder="Type a job profile name">
 
                     <button type="submit" [disabled]="!jobProfileForm.valid" class="submit-button">Submit</button>
                 </form>
             </mat-tab>
     </div>
+    </mat-tab-group>
 </div>

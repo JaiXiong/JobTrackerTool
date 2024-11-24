@@ -40,15 +40,24 @@ export class DialogUserprofilesComponent {
 
   ngOnInit(): void {
     this.userProfileForm = this.formBuilder.group({
-      id: [this.data.id],
-      date: [{ value: this.data.date, disabled: true }],
-      jobProfile: [this.data.jobProfiles],
-      name: [this.data.name],
-      email: [this.data.email],
-      phone: [this.data.phone],
-      address: [this.data.address],
-      city: [this.data.city],
-      state: [this.data.state],
+      // id: [this.data.id],
+      // date: [{ value: this.data.date, disabled: true }],
+      // jobProfile: [this.data.jobProfiles],
+      // name: [this.data.name],
+      // email: [this.data.email],
+      // phone: [this.data.phone],
+      // address: [this.data.address],
+      // city: [this.data.city],
+      // state: [this.data.state],
+      id: [''],
+      //date: [{ value: this.data.date, disabled: true }],
+      jobProfile: [''],
+      name: [''],
+      email: [''],
+      phone: [''],
+      address: [''],
+      city: [''],
+      state: [''],
     });
   }
 
@@ -65,5 +74,12 @@ export class DialogUserprofilesComponent {
 
   onClose(): void {
     this.dialog.closeAll();
+  }
+
+  public onTabChange(event: any) {
+    if (event.index == 0) {
+    } else if (event.index == 1) {
+    } else {
+    }
   }
 }

@@ -1,0 +1,80 @@
+label {
+    display: block;
+    margin: .5em 0;
+    font-weight: bold;
+  }
+
+.close-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1em;
+    cursor: pointer;
+  }
+
+  .flex-container-components { //the main container for components
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    margin-top: 7%;
+    margin-left: 3%;
+    margin-right: 3%;
+    height: 100vh; /* Full viewport height */
+  }
+
+  .flex-container-components-inner { //the main container for components already inside the components container
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+    overflow: hidden !important;
+    //height: 75vh; /* Full viewport height */
+}
+
+.employer-formgroup-container {
+    display: flex-grow;
+    flex-direction: column; /* This is the default value, so it's optional */
+    //justify-content: start; /* Adjusts the spacing between items */
+    align-items: center; /* Aligns items vertically in the center */
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+    overflow: hidden !important;
+    //height: 75vh; /* Full viewport height */
+}
+
+.input-custom {
+  display: flex;
+  width: 98%;
+}
+
+.submit-button {
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+// .vertical-tabs {
+//   display: flex;
+//   flex-direction: row;
+  
+    // .mat-tab-labels {
+    //   display: flex;
+    //   flex-direction: column;
+    //   justify-content: center;
+    //   align-items: center;
+    //   width: 100%;
+    // }
+
+    //  .mat-tab-body-wrapper {
+    //   // display: flex;
+    //   // flex-direction: column;
+    //   // justify-content: center;
+    //   // align-items: center;
+    //   // width: 100%;
+    //   flex-grow: 1;
+    //  }
+//}

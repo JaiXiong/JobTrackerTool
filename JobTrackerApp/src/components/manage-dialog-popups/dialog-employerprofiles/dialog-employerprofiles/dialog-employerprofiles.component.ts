@@ -50,18 +50,18 @@ export class DialogEmployerprofilesComponent {
 
   ngOnInit(): void {
     this.employerProfileForm = this.formBuilder.group({
-      id: [this.data.id],
-      date: [{ value: this.data.date, disabled: true }],
-      jobProfileId: [this.data.jobProfileId],
-      name: [this.data.name, Validators.required],
-      title: [this.data.title],
-      address: [this.data.address],
-      city: [this.data.city],
-      state: [this.data.state],
-      zip: [this.data.zip],
-      phone: [this.data.phone],
-      email: [this.data.email],
-      website: [this.data.website],
+      id: [''],
+      //date: [{ value: this.data.date, disabled: true }],
+      jobProfileId: [''],
+      name: ['', Validators.required],
+      title: [''],
+      address: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      phone: [''],
+      email: [''],
+      website: [''],
     });
     this.actionForm = this.formBuilder.group({
       id: [''],
