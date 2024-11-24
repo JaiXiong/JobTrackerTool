@@ -48,6 +48,11 @@ export class JobTrackerService {
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerPagingData`+ '/' + jobProfileId + '/' + pageIndex + '/' + pageSize, { headers });
   }
 
+  public UpdateJobProfile(jobProfile: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfile`, jobProfile, { headers });
+  }
+
   public UpdateEmployerProfile(employerProfile: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.put<any>(`${this.jobTrackerUrl}/api/JobTracker/employerprofile`, employerProfile, { headers });
@@ -61,5 +66,10 @@ export class JobTrackerService {
   public GetDetail(employerProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/Detail`+ '/' + employerProfileId, { headers });
+  }
+
+  public CreateUserProfile(userProfile: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateUserProfile`, userProfile, { headers });
   }
 }

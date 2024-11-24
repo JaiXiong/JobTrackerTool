@@ -18,10 +18,7 @@ import { RouterModule, RouterOutlet, RouterLink, RouterLinkActive } from '@angul
   imports: 
   [
     RouterModule,
-    RouterOutlet,
     CommonModule,
-    RouterLink,
-    RouterLinkActive,
     FormsModule,
     MatTabsModule,
     MatInputModule,
@@ -30,13 +27,11 @@ import { RouterModule, RouterOutlet, RouterLink, RouterLinkActive } from '@angul
     MatIconModule,
     MatTooltipModule,
     ReactiveFormsModule,
-    NgFor,
-    JsonPipe,
   ],
-  templateUrl: './create-employerprofiles.component.html',
-  styleUrl: './create-employerprofiles.component.scss'
+  templateUrl: './dialog-employerprofiles.component.html',
+  styleUrl: './dialog-employerprofiles.component.scss'
 })
-export class CreateEmployerprofilesComponent {
+export class DialogEmployerprofilesComponent {
 
   //constructor(private jobTrackerService: JobTrackerService, private dialog: MatDialog) {}
 
@@ -49,7 +44,6 @@ export class CreateEmployerprofilesComponent {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EmployerprofileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
-    private location: Location,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog
   ) {}
@@ -226,13 +220,13 @@ export class CreateEmployerprofilesComponent {
 
   public EmployerProfileDialog(element: any): void {
     // Open the dialog
-    const dialogRef = this.dialog.open(CreateEmployerprofilesComponent, {
+    const dialogRef = this.dialog.open(DialogEmployerprofilesComponent, {
       width: '500px',
       height: '800px',
       data: element,
     });
 
-    dialogRef.afterClosed().subscribe((result: CreateEmployerprofilesComponent) => {
+    dialogRef.afterClosed().subscribe((result: DialogEmployerprofilesComponent) => {
       if (result) {
         this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
           (response) => {

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateJobprofilesComponent } from './create-jobprofiles.component';
+import { CreateJobprofilesComponent } from './dialog-jobprofiles.component';
 
 describe('CreateJobprofilesComponent', () => {
   let component: CreateJobprofilesComponent;

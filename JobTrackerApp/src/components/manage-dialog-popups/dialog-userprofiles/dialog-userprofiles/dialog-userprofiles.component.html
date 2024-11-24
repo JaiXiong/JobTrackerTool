@@ -1,0 +1,42 @@
+<div class="flex-container-components-inner">
+    <p>Add New User Profile</p>
+    <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
+    <div class="flex-container-components-inner">
+        <mat-tab-group>
+            <mat-tab label="UserProfile">
+                <ng-template mat-tab-label>
+                    <mat-icon>account_circle</mat-icon>
+                    <span>User Profile</span>
+                </ng-template>
+                <form [formGroup]="userProfileForm" (ngSubmit)="onSubmit()">
+
+                    <label for="date">Date</label>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}>
+
+                    <label for="name">Name</label>
+                    <input type="text" id="name" formControlName="name" class="input-custom" placeholder={{data.name}}>
+
+                    <label for="title">Email</label>
+                    <input matInput type="text" id="title" formControlName="title" class="input-custom" placeholder={{data.email}}>
+
+                    <label for="address">Phone</label>
+                    <input matInput type="text" id="address" formControlName="address" class="input-custom" placeholder={{data.phone}}>
+
+                    <label for="city">Address</label>
+                    <input matInput type="text" id="city" formControlName="city" class="input-custom" placeholder={{data.address}}>
+
+                    <label for="phone">City</label>
+                    <input matInput type="text" id="phone" formControlName="phone" class="input-custom" placeholder={{data.city}}>
+
+                    <label for="state">State</label>
+                    <input matInput type="text" id="state" formControlName="state" class="input-custom" placeholder={{data.state}}>
+
+                    <label for="zip">Zip</label>
+                    <input matInput type="text" id="zip" formControlName="zip" class="input-custom" placeholder={{data.zip}}>
+
+                    <button type="submit" [disabled]="!userProfileForm.valid" class="submit-button">Submit</button>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

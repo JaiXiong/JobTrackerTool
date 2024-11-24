@@ -22,21 +22,18 @@ import { JobProfile } from '../../../models/job-profile.model';
 import { EmployerProfile } from '../../../models/employer-profile.model';
 import { EmployerprofileComponent } from '../../manage-employerprofiles/employerprofile/employerprofile.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-jobprofiles/dialog-jobprofiles.component';
 
 @Component({
   selector: 'app-jobprofile',
   standalone: true,
   imports: [
     RouterModule,
-    RouterOutlet,
     CommonModule,
-    RouterLink,
-    RouterLinkActive,
     MatLabel,
     MatInputModule,
     FormsModule,
     MatTabsModule,
-    MatTabLabel,
     MatIcon,
     MatTableModule,
     MatFormFieldModule,
@@ -283,13 +280,51 @@ export class JobprofileComponent {
 
   public onCreate(): void {
     console.log('Create button clicked!');
+    const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
+      width: '500px',
+      height: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.jobTrackerService.CreateJobProfile(result).subscribe(
+          (response) => {
+            console.log('Job profile created successfully', response);
+            // Handle success response
+          },
+          (error) => {
+            console.error('Failed to create job profile', error);
+            // Handle error response
+          }
+        );
+      }
+    });
   }
 
   public onUpdate(): void {
     console.log('Update button clicked!');
+    const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
+      width: '500px',
+      data: this._employerProfile,
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.jobTrackerService.UpdateJobProfile(result).subscribe(
+          (response) => {
+            console.log('Employer profile updated successfully', response);
+            // Handle success response
+          },
+          (error) => {
+            console.error('Failed to update employer profile', error);
+            // Handle error response
+          }
+        );
+      }
+    });
   }
 
   public onDelete(): void { 
     console.log('Delete button clicked!');
+
   }
 }

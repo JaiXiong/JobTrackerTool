@@ -10,6 +10,9 @@ import { error } from 'console';
 import { response } from 'express';
 import { LoginService } from './../../services/login.service';
 import { CommonModule } from '@angular/common';
+import { UserProfile } from '../../models/user-profile.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogUserprofilesComponent } from '../manage-dialog-popups/dialog-userprofiles/dialog-userprofiles/dialog-userprofiles.component';
 
 @Component({
   selector: 'app-login',
@@ -20,10 +23,7 @@ import { CommonModule } from '@angular/common';
       MatFormFieldModule,
       MatInputModule,
       RouterModule,
-      RouterOutlet, 
       CommonModule,
-      RouterLink,
-      RouterLinkActive,
       ReactiveFormsModule,
       MatIconModule,
       FormsModule
@@ -42,7 +42,7 @@ export class LoginComponent {
   _password: string = '';
   _usernameid: string = '';
 
-  constructor(private router: Router, private loginService: LoginService) { }
+  constructor(private router: Router, private loginService: LoginService, private dialog: MatDialog) { }
 
   public login(): void {
     console.log('Login button clicked!');
@@ -55,4 +55,16 @@ export class LoginComponent {
         console.error('Login failed', error);
       });
   }
+
+  public register(element: UserProfile): void {
+    const dialogRef = this.dialog.open(DialogUserprofilesComponent, {
+      width: '250px',
+      data: element
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
 }
