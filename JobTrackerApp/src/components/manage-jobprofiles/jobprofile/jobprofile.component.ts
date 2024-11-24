@@ -23,6 +23,7 @@ import { EmployerProfile } from '../../../models/employer-profile.model';
 import { EmployerprofileComponent } from '../../manage-employerprofiles/employerprofile/employerprofile.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-jobprofiles/dialog-jobprofiles.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-jobprofile',
@@ -41,7 +42,8 @@ import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jo
     MatInputModule,
     MatPaginator,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   providers: [
     //provideAnimations(),
@@ -131,25 +133,8 @@ export class JobprofileComponent {
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
     private datePipe: DatePipe,
+    private snackBar: MatSnackBar
   ) {}
-
-  // onCreateJobProfile(): void {
-  //   const jobProfile = {
-  //     // Define the job profile data structure
-  //     // Add other fields as needed
-  //   };
-
-  //   this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
-  //     (response) => {
-  //       console.log('Job profile created successfully', response);
-  //       // Handle success response
-  //     },
-  //     (error) => {
-  //       console.error('Failed to create job profile', error);
-  //       // Handle error response
-  //     }
-  //   );
-  // }
 
   public getEmployerProfiles(): void {
     this.jobTrackerService
@@ -287,7 +272,8 @@ export class JobprofileComponent {
     console.log('Create button clicked!');
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
-      height: '800px',
+      //height: '800px',
+      data: { userProfileId: this._userNameId },
     });
     
 
@@ -295,12 +281,24 @@ export class JobprofileComponent {
       if (result) {
         this.jobTrackerService.CreateJobProfile(result).subscribe(
           (response) => {
+
             console.log('Job profile created successfully', response);
-            // Handle success response
+            this.snackBar.open('Job profile created successfully', 'Close', {
+              duration: 2000,
+              horizontalPosition: 'right', // Set horizontal position
+              verticalPosition: 'top', // Set vertical position
+            });
+
           },
           (error) => {
+
             console.error('Failed to create job profile', error);
-            // Handle error response
+            this.snackBar.open('Failed to create job profile', 'Close', {
+              duration: 2000,
+              horizontalPosition: 'right', // Set horizontal position
+              verticalPosition: 'top', // Set vertical position
+            });
+
           }
         );
       }

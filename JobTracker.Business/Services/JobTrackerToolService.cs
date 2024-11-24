@@ -17,8 +17,16 @@ namespace JobTracker.Business.Services
         }
         public async Task AddJobProfile(JobProfile jobProfile)
         {
-            var exist = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == jobProfile.Id);
-            if (exist != null)
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(c => c.Id == jobProfile.UserProfileId);
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("UserProfileNull"));
+            }
+
+            var jobProfileExist = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.ProfileName == jobProfile.ProfileName);
+            
+            if (jobProfileExist != null)
             {
                 throw new ArgumentException(_resourceManager.GetString("JobProfileExist"));
             }
