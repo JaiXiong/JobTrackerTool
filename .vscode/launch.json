@@ -9,9 +9,9 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:4200",
-            "sourceMaps": true,
             "webRoot": "${workspaceFolder}",
-            "trace": true
+            "sourceMaps": true,
+            "trace": true,
         },
         {
             "type": "firefox",

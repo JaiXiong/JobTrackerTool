@@ -20,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-create-jobprofiles',
+  selector: 'app-dialog-jobprofiles',
   standalone: true,
   imports: [
     RouterModule,
@@ -46,7 +46,7 @@ export class DialogJobprofilesComponent implements OnInit {
     private dialogRef: MatDialogRef<DialogJobprofilesComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JobProfile,
-    private snackBar: MatSnackBar,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -63,21 +63,32 @@ export class DialogJobprofilesComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // this.jobTrackerService
-    //   .CreateJobProfile(this.jobProfileForm.value)
-    //   .subscribe(
-    //     (response) => {
-    //       console.log('Job Profile created successfully', response);
-    //       // Handle success response
-    //     },
-    //     (error) => {
-    //       console.error('Failed to create job profile', error);
-    //       // Handle error response
-    //     }
-    //   );
     if (this.jobProfileForm.valid) {
       const jobProfile = this.jobProfileForm.value;
-      this.dialogRef.close(jobProfile);
+
+      this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
+        (response) => {
+
+          console.log('Job profile created successfully', response);
+          this.snackBar.open('Job profile created successfully', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        },
+        (error) => {
+
+          console.error('Failed to create job profile', error);
+          this.snackBar.open('Failed to create job profile', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        }
+      );
+
+      //this.dialogRef.close(jobProfile);
+      this.dialogRef.close();
     }
   }
 

@@ -52,10 +52,36 @@ label {
   width: 98%;
 }
 
-.submit-button {
-  margin-top: 2%;
+.create-button {
+  margin-top: 5%;
   margin-bottom: 2%;
 }
+
+.cancel-button {
+  margin-top: 5%;
+  margin-bottom: 2%;
+  margin-left: 335px;
+}
+
+.action-title {
+  color: rgb(54, 0, 179);
+  font-size: 20px;
+  font-weight: bold;
+  align-items: center;
+  text-align: center;
+}
+
+.important-redtext {
+  color: red;
+  font-size: 15px;
+  font-style: italic;
+}
+
+// .span-custom {
+//   display: flex;
+//   text-align: center; 
+//   align-items: flex-end;
+// }
 
 // .vertical-tabs {
 //   display: flex;

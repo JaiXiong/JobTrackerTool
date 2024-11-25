@@ -1,0 +1,34 @@
+span {
+    margin-right: 20px;
+}
+
+button {
+    margin-left: 10px;
+}
+
+.snackbar-icons {
+    margin-left: 10px;
+    font-size: 25px;
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    transition: color 0.3s ease; /* Smooth transition for color change */
+
+    &:hover {
+        color: #007bff; /* Change color on hover */
+  }
+}
+
+.snackbar-info {
+    display: flex;
+    text-align: center; /* Center the text */
+    align-items: flex-end;
+}
+
+// mat-icon {
+//     font-size: 25px;
+//     cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+//     transition: color 0.3s ease; /* Smooth transition for color change */
+
+//     &:hover {
+//         color: #007bff; /* Change color on hover */
+//     }
+// }

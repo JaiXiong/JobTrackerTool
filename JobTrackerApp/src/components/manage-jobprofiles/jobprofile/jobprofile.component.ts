@@ -4,14 +4,11 @@ import { MatInputModule } from '@angular/material/input';
 import {
   ActivatedRoute,
   Router,
-  RouterLink,
-  RouterLinkActive,
   RouterModule,
-  RouterOutlet,
 } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { MatTabLabel, MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { JobTrackerService } from '../../../services/jobtracker.service';
@@ -24,6 +21,7 @@ import { EmployerprofileComponent } from '../../manage-employerprofiles/employer
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-jobprofiles/dialog-jobprofiles.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles/dialog-employerprofiles.component';
 
 @Component({
   selector: 'app-jobprofile',
@@ -273,6 +271,7 @@ export class JobprofileComponent {
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
       //height: '800px',
+      disableClose: true,
       data: { userProfileId: this._userNameId },
     });
     
@@ -310,6 +309,7 @@ export class JobprofileComponent {
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
       height: '800px',
+      disableClose: true,
       data: this._employerProfile,
     });
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -333,7 +333,19 @@ export class JobprofileComponent {
   }
 
   public onCreateEmployerProfile(): void {
-    console.log('Create Employer Profile button clicked!');
+  
+    const dialogRef = this.dialog.open(DialogEmployerprofilesComponent, {
+      width: '500px',
+      height: '675px',
+      disableClose: true,
+      data: { jobProfileId: this._jobProfileSelected.id },
+    });
+    
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        dialogRef.close();
+      }
+    });
   }
 
   public onEditEmployerProfile(): void {

@@ -32,6 +32,7 @@ import {
 import { JobTrackerService } from '../../../services/jobtracker.service';
 import { EmployerProfile, ActionResult, Details } from '../../../models/employer-profile.model';
 import { error } from 'console';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-employerprofile',
@@ -47,6 +48,7 @@ import { error } from 'console';
     MatIconModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    MatSnackBarModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employerprofile.component.html',
@@ -64,7 +66,8 @@ export class EmployerprofileComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
     private location: Location,
     private jobTrackerService: JobTrackerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -104,29 +107,29 @@ export class EmployerprofileComponent implements OnInit {
     // this.setDetailsForm();
   }
 
-  public EmployerProfileDialog(element: any): void {
-    // Open the dialog
-    const dialogRef = this.dialog.open(EmployerprofileComponent, {
-      width: '500px',
-      height: '800px',
-      data: element,
-    });
+  // public EmployerProfileDialog(element: any): void {
+  //   // Open the dialog
+  //   const dialogRef = this.dialog.open(EmployerprofileComponent, {
+  //     width: '500px',
+  //     height: '800px',
+  //     data: element,
+  //   });
 
-    dialogRef.afterClosed().subscribe((result: EmployerProfile) => {
-      if (result) {
-        this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
-          (response) => {
-            console.log('Employer profile updated successfully', response);
-            // Handle success response
-          },
-          (error) => {
-            console.error('Failed to update employer profile', error);
-            // Handle error response
-          }
-        );
-      }
-    });
-  }
+  //   dialogRef.afterClosed().subscribe((result: EmployerProfile) => {
+  //     if (result) {
+  //       this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
+  //         (response) => {
+  //           console.log('Employer profile updated successfully', response);
+  //           // Handle success response
+  //         },
+  //         (error) => {
+  //           console.error('Failed to update employer profile', error);
+  //           // Handle error response
+  //         }
+  //       );
+  //     }
+  //   });
+  // }
 
   public onSubmit(): void {
     // Process checkout data here
@@ -150,11 +153,23 @@ export class EmployerprofileComponent implements OnInit {
     // );
   }
 
-  public onClose(): void {
-    
-    this.dialogRef.close();
-    //this.location.back();
-    //this.router.navigate(['/jobprofile']);
+  onClose(): void {
+    const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
+      duration: 5000,
+      horizontalPosition: 'right', // Set horizontal position
+      verticalPosition: 'top', // Set vertical position
+    });
+
+    snackBarRef.onAction().subscribe(() => {
+      console.log('Close action canceled');
+      // Do nothing, just close the snackbar
+    });
+
+    snackBarRef.afterDismissed().subscribe((info) => {
+      if (!info.dismissedByAction) {
+        this.dialogRef.close();
+      }
+    });
   }
 
   public setActionForm(): void {

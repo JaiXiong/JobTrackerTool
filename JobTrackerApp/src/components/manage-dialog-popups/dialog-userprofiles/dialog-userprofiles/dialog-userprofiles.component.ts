@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 import { UserProfile } from '../../../../models/user-profile.model';
 
 @Component({
-  selector: 'app-create-userprofiles',
+  selector: 'app-dialog-userprofiles',
   standalone: true,
   imports: [
     RouterModule,

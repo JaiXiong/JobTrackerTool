@@ -1,19 +1,19 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { JobTrackerService } from '../../../../services/jobtracker.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from 'express';
 import { EmployerProfile, ActionResult, Details } from '../../../../models/employer-profile.model';
-import { EmployerprofileComponent } from '../../../manage-employerprofiles/employerprofile/employerprofile.component';
-import { CommonModule, NgFor, JsonPipe } from '@angular/common';
+import { CommonModule} from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterModule} from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomEmployersnackbarComponent } from '../../../custom-components/custom-employer-snackbar/custom-employersnackbar/custom-employersnackbar.component';
 
 @Component({
-  selector: 'app-create-employerprofiles',
+  selector: 'app-dialog-employerprofiles',
   standalone: true,
   imports: 
   [
@@ -27,31 +27,35 @@ import { RouterModule, RouterOutlet, RouterLink, RouterLinkActive } from '@angul
     MatIconModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    MatSnackBarModule
   ],
   templateUrl: './dialog-employerprofiles.component.html',
   styleUrl: './dialog-employerprofiles.component.scss'
 })
-export class DialogEmployerprofilesComponent {
-
-  //constructor(private jobTrackerService: JobTrackerService, private dialog: MatDialog) {}
-
+export class DialogEmployerprofilesComponent implements OnInit {
   employerProfileForm!: FormGroup;
   actionForm!: FormGroup;
   detailsForm!: FormGroup;
+  selectedTabIndex: number = 0;
+  employerTab: boolean = false;
+  actionTab: boolean = false;
+  detailsTab: boolean = false;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<EmployerprofileComponent>,
+    public dialogRef: MatDialogRef<DialogEmployerprofilesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
     private jobTrackerService: JobTrackerService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.employerProfileForm = this.formBuilder.group({
-      id: [''],
+      //id: [''],
       //date: [{ value: this.data.date, disabled: true }],
+      //latestUpdate: [''],
       jobProfileId: [''],
       name: ['', Validators.required],
       title: [''],
@@ -64,181 +68,219 @@ export class DialogEmployerprofilesComponent {
       website: [''],
     });
     this.actionForm = this.formBuilder.group({
-      id: [''],
+      //id: [''],
       employerprofileid: [''],
-      date: [''],
-      latestUpdate: [''],
-      action: [''],
+      //date: [''],
+      //latestUpdate: [''],
+      action: ['', Validators.required],
       method: [''],
-      actionresult: [''],
+      actionresult: ['',],
     });
     this.detailsForm = this.formBuilder.group({
-      id: [''],
+      //id: [''],
       employerprofileid: [''],
-      date: [''],
-      latestUpdate: [''],
-      comments: [''],
+      //date: [''],
+      //latestUpdate: [''],
+      comments: ['', Validators.required],
       updates: [''],
     });
-    // this.setEmployerProfileForm();
-    // this.setActionForm();
-    // this.setDetailsForm();
   }
 
   public onSubmit(): void {
-    // Process checkout data here
-    // console.warn(
-    //   'Your order has been submitted',
-    //   this.employerProfileForm.value
-    // );
     if (this.employerProfileForm.valid) {
       const employerProfile = this.employerProfileForm.value;
-      this.dialogRef.close(employerProfile); // Close the dialog and return the data
+      //this.dialogRef.close(employerProfile); // Close the dialog and return the data
+
+      this.jobTrackerService.CreateEmployerProfile(employerProfile).subscribe(
+        (response) => {
+          console.log('Employer Profile created successfully', response);
+          this.snackBar.open('Employer Profile created successfully', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        },
+        (error) => {
+          console.error('Failed to create Employer Profile', error);
+          this.snackBar.open('Failed to create Employer Profile', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        }
+      );
     }
+  }
 
-    // this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
-    //   (response) => {
-    //     console.log('Employer Profile Updated');
-    //     //update the employer profile?
-    //   },
-    //   (error) => {
-    //     console.log('Error updating Employer Profile');
+  public onActionSubmit(): void {
+    if (this.actionForm.valid) {
+      const action = this.actionForm.value;
+      //this.dialogRef.close(action); // Close the dialog and return the data
+
+      this.jobTrackerService.CreateEmployerAction(action).subscribe(
+        (response) => {
+          console.log('Employer Action created successfully', response);
+          this.snackBar.open('Employer Action created successfully', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        },
+        (error) => {
+          console.error('Failed to create Employer Action', error);
+          this.snackBar.open('Failed to create Employer Action', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        }
+      );
+    }
+  }
+
+  public onDetailsSubmit(): void {
+    if (this.detailsForm.valid) {
+      const details = this.detailsForm.value;
+      //this.dialogRef.close(details); // Close the dialog and return the data
+
+      this.jobTrackerService.CreateEmployerDetails(details).subscribe(
+        (response) => {
+          console.log('Employer Details created successfully', response);
+          this.snackBar.open('Employer Details created successfully', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        },
+        (error) => {
+          console.error('Failed to create Employer Details', error);
+          this.snackBar.open('Failed to create Employer Details', 'Close', {
+            duration: 2000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        }
+      );
+    }
+  }
+
+  onClose(): void {
+    // const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
+    //   duration: 5000,
+    //   horizontalPosition: 'right', // Set horizontal position
+    //   verticalPosition: 'top', // Set vertical position
+    // });
+
+    // snackBarRef.onAction().subscribe(() => {
+    //   console.log('Close action canceled');
+    //   // Do nothing, just close the snackbar
+    // });
+
+    // snackBarRef.afterDismissed().subscribe((info) => {
+    //   if (!info.dismissedByAction) {
+    //     this.dialogRef.close();
     //   }
-    // );
+    // });
+    this.openSnackBar(this.selectedTabIndex);
   }
 
-  public onClose(): void {
-    
+  public onCancel(): void {
+    this.openSnackBar(0);
     this.dialogRef.close();
-    //this.location.back();
-    //this.router.navigate(['/jobprofile']);
   }
 
-  public setActionForm(): void {
-    //var actionData = this.jobTrackerService.GetJobAction(this.employerProfileForm.value.id);
-    this.jobTrackerService.GetJobAction(this.employerProfileForm.value.id).subscribe((data: ActionResult) => {
-      console.log('Action Data', data.actionResult);
-      
-      this.actionForm = this.formBuilder.group({
-        id: [data.id],
-        employerprofileid: [data.employerProfileId],
-        date: [data.date],
-        latestUpdate: [data.latestUpdate],
-        action: [data.action],
-        method: [data.method],
-        actionresult: [data.actionResult],
+  public openSnackBar(index: number): void {
+    const snackBarRef = this.snackBar.openFromComponent(CustomEmployersnackbarComponent, {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
 
-      });
-    },
-    (error) => {
-      console.error('Error getting job action', error);
+    snackBarRef.onAction().subscribe(() => {
+      this.handleSaveClick(index);
     });
   }
 
-  public setDetailsForm(): void {
-    this.jobTrackerService.GetDetail(this.employerProfileForm.value.id).subscribe((data: Details) => {
-
-      this.detailsForm = this.formBuilder.group({
-        id: [data.id],
-        employerprofileid: [data.employerProfileId],
-        date: [data.date],
-        latestUpdate: [data.latestUpdate],
-        comments: [data.comments],
-        updates: [data.updates],
-
-      });
-    },
-    (error) => {
-      console.error('Error getting details', error);
-    });
-  }
-  
-  public setEmployerProfileForm(): void {
-    this.employerProfileForm = this.formBuilder.group({
-      id: [this.data.id],
-      date: [{ value: this.data.date, disabled: true }],
-      jobProfileId: [this.data.jobProfileId],
-      name: [this.data.name, Validators.required],
-      title: [this.data.title],
-      address: [this.data.address],
-      city: [this.data.city],
-      state: [this.data.state],
-      zip: [this.data.zip],
-      phone: [this.data.phone],
-      email: [this.data.email],
-      website: [this.data.website],
-      jobaction: [this.data.jobAction],
-      details: [this.data.details],
-    });
+  public handleSaveClick(Tabindex: number): void {
+    if (Tabindex == 0) {
+      this.disableAllTabs();
+      //his.saveEmployerProfile();
+      this.enableAllTabs();
+      // this.employerTab = false;
+      // this.actionTab = true;
+      // this.detailsTab = true;
+    }
+    if (Tabindex == 1) {
+      this.disableAllTabs();
+      //this.saveEmployerAction();
+      this.enableAllTabs();
+      // this.employerTab = true;
+      // this.actionTab = false;
+      // this.detailsTab = true;
+    }
+    else {
+      this.disableAllTabs();
+      //this.saveEmployerDetail();
+      this.enableAllTabs();
+      // this.employerTab = true;
+      // this.actionTab = true;
+      // this.detailsTab = false;
+    }
   }
 
   public onTabChange(event: any) {
+    this.selectedTabIndex = event.index;
     if (event.index == 0) {
-      this.setEmployerProfileForm();
-      this.saveEmployerProfile();
+      this.selectedTabIndex = 0;
     } else if (event.index == 1) {
-      this.setActionForm();
-      this.saveEmployerAction();
+      this.selectedTabIndex = 1;
     } else {
-      this.setDetailsForm();
-      this.saveEmployerDetail();
+      this.selectedTabIndex = 2;
     }
   }
 
-  private saveEmployerProfile(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
-      (response) => {
-        console.log('Employer Profile Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Profile');
-      }
-    );
+  // private saveEmployerProfile(): void {
+  //   this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
+  //     (response) => {
+  //       console.log('Employer Profile Updated');
+  //     },
+  //     (error) => {
+  //       console.log('Error updating Employer Profile');
+  //     }
+  //   );
+  // }
+
+  // public saveEmployerAction(): void {
+  //   this.jobTrackerService.UpdateEmployerProfile(this.actionForm.value).subscribe(
+  //     (response) => {
+  //       console.log('Employer Action Updated');
+  //     },
+  //     (error) => {
+  //       console.log('Error updating Employer Action');
+  //     }
+  //   );
+  // }
+
+  // public saveEmployerDetail(): void {
+  //   this.jobTrackerService.UpdateEmployerProfile(this.detailsForm.value).subscribe(
+  //     (response) => {
+  //       console.log('Employer Detail Updated');
+  //     },
+  //     (error) => {
+  //       console.log('Error updating Employer Detail');
+  //     }
+  //   );
+  // }
+
+  private disableAllTabs(): void {
+    this.employerTab = true;
+    this.actionTab = true;
+    this.detailsTab = true;
   }
 
-  public saveEmployerAction(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.actionForm.value).subscribe(
-      (response) => {
-        console.log('Employer Action Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Action');
-      }
-    );
+  private enableAllTabs(): void {
+    this.employerTab = false;
+    this.actionTab = false;
+    this.detailsTab = false;
   }
 
-  public saveEmployerDetail(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.detailsForm.value).subscribe(
-      (response) => {
-        console.log('Employer Detail Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Detail');
-      }
-    );
-  }
-
-  public EmployerProfileDialog(element: any): void {
-    // Open the dialog
-    const dialogRef = this.dialog.open(DialogEmployerprofilesComponent, {
-      width: '500px',
-      height: '800px',
-      data: element,
-    });
-
-    dialogRef.afterClosed().subscribe((result: DialogEmployerprofilesComponent) => {
-      if (result) {
-        this.jobTrackerService.UpdateEmployerProfile(result).subscribe(
-          (response) => {
-            console.log('Employer profile updated successfully', response);
-            // Handle success response
-          },
-          (error) => {
-            console.error('Failed to update employer profile', error);
-            // Handle error response
-          }
-        );
-      }
-    });
-  }
 }

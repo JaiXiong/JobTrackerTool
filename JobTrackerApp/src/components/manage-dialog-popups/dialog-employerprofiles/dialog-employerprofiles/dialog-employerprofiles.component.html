@@ -1,16 +1,17 @@
 <div class="flex-container-components-inner">
-    <p>Update Employer Profile</p>
-    <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
+    <p class="action-title">Create Employer Profile</p>
+    <!-- <p class="important-redtext">*Required Fields</p> -->
+    <!-- <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon> -->
     <div class="flex-container-components-inner">
         <mat-tab-group class="vertical-tabs" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
-            <mat-tab label="EmployerProfile">
+            <mat-tab [disabled]="employerTab" label="EmployerProfile">
                 <ng-template mat-tab-label>
                     <mat-icon>account_circle</mat-icon>
                     <span>Employer Profile</span>
                 </ng-template>
                 <form [formGroup]="employerProfileForm" (ngSubmit)="onSubmit()">
-                    <label for="name">Employer Name</label>
-                    <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder="Enter employer name">
+                    <label for="name">Employer Name*</label>
+                    <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder="Enter employer name" matTooltip="*Required" matTooltipPosition="right">
 
                     <!-- <label for="id">ID</label>
                         <input type="text" id="id" formControlName="id" class="input-custom" placeholder={{data.id}}>
@@ -22,110 +23,68 @@
                     <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}> -->
 
                     <label for="title">Title</label>
-                    <input matInput type="text" id="title" formControlName="title" class="input-custom"placeholder="">
+                    <input matInput type="text" id="title" formControlName="title" class="input-custom" placeholder="Title of person">
 
                     <label for="address">Address</label>
-                    <input matInput type="text" id="address" formControlName="address" class="input-custom"
-                        placeholder="">
+                    <input matInput type="text" id="address" formControlName="address" class="input-custom" placeholder="1234 W Name Street">
 
                     <label for="city">City</label>
                     <input matInput type="text" id="city" formControlName="city" class="input-custom" placeholder="">
 
                     <label for="state">State</label>
-                    <input matInput type="text" id="state" formControlName="state" class="input-custom"
-                        placeholder="">
+                    <input matInput type="text" id="state" formControlName="state" class="input-custom" placeholder="">
 
                     <label for="zip">Zip</label>
                     <input matInput type="text" id="zip" formControlName="zip" class="input-custom" placeholder="">
 
                     <label for="phone">Phone</label>
-                    <input matInput type="text" id="phone" formControlName="phone" class="input-custom"
-                        placeholder="">
+                    <input matInput type="text" id="phone" formControlName="phone" class="input-custom" placeholder="">
 
                     <label for="email">Email</label>
-                    <input matInput type="text" id="email" formControlName="email" class="input-custom"
-                        placeholder="">
+                    <input matInput type="text" id="email" formControlName="email" class="input-custom" placeholder="">
 
                     <label for="website">Website</label>
-                    <input matInput type="text" id="website" formControlName="website" class="input-custom" 
-                        placeholder="">
-
-                    <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Submit</button>
+                    <input matInput type="text" id="website" formControlName="website" class="input-custom" placeholder="">
+                    <span class="span-custom">
+                        <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Save</button>
+                        <button type="cancel" (click)="onCancel()" class="cancel-button">Cancel</button>
+                    </span>
                 </form>
             </mat-tab>
-            <mat-tab label="Action" (click)="setActionForm()">
+            <mat-tab label="Action" [disabled]="actionTab">
                 <ng-template mat-tab-label>
                     <mat-icon>flag_circle</mat-icon>
                     <span>Action</span>
                 </ng-template>
                 <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
-                    <label>Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder="">
-                    <label>Action</label>
-                    <input matInput type="text" id="action" formControlName="action" class="input-custom" placeholder="">
-                    <label>Method</label>
+                    <!-- <label>Date</label>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder=""> -->
+                    <label>Action*</label>
+                    <input matInput type="text" id="action" formControlName="action" class="input-custom" placeholder="Action taken" matTooltip="*Required" matTooltipPosition="right">
+                    <label>Contact Method</label>
                     <input matInput type="text" id="method" formControlName="method" class="input-custom" placeholder="">
                     <label>Action Result</label>
-                    <input matInput type="text" id="actionresult" formControlName="actionresult" class="input-custom" placeholder="">
+                    <textarea matInput type="text" id="actionresult" formControlName="actionresult" class="input-custom" placeholder=""></textarea> 
 
-                    <button type="submit" [disabled]="!actionForm.valid" class="submit-button">Submit</button>
+                    <button type="submit" [disabled]="!actionForm.valid" class="submit-button">Save</button>
                 </form>
             </mat-tab>
-            <mat-tab label="Details" (click)="setDetailsForm()">
+            <mat-tab label="Details" [disabled]="detailsTab">
                 <ng-template mat-tab-label>
                     <mat-icon>edit_note</mat-icon>
                     <span>Details</span>
                 </ng-template>
                 <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
-                    <label>Date</label>
-                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder="">
-                    <label>Comments</label>
-                    <input matInput type="text" id="comments" formControlName="comments" class="input-custom" placeholder="">
+                    <!-- <label>Date</label>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder=""> -->
+                    <label>Comments*</label>
+                    <textarea matInput type="text" id="comments" formControlName="comments" class="input-custom" placeholder="Information about the result" matTooltip="*Required" matTooltipPosition="right"></textarea>
                     <label>Updates</label>
-                    <input matInput type="text" id="updates" formControlName="updates" class="input-custom" placeholder="">
+                    <textarea matInput type="text" id="updates" formControlName="updates" class="input-custom" placeholder=""></textarea>
 
-                    <button type="submit" [disabled]="!detailsForm.valid" class="submit-button">Submit</button>
+                    <button type="submit" [disabled]="!detailsForm.valid" class="submit-button">Save</button>
                 </form>
             </mat-tab>
         </mat-tab-group>
-        <!-- <form [formGroup]="employerProfileForm" (ngSubmit)="onSubmit()">
-            <label for="name">Employer Name</label>
-            <input type="text" id="name" formControlName="name" class="input-custom" placeholder={{data.name}}> -->
-
-        <!-- <label for="id">ID</label>
-                <input type="text" id="id" formControlName="id" class="input-custom" placeholder={{data.id}}>
-
-                <label for="jobProfileId">Job Profile ID</label> 
-                <input type="text" id="jobProfileId" formControlName="jobProfileId" class="input-custom" placeholder={{data.jobProfileId}}> -->
-
-        <!-- <label for="date">Date</label>
-                <input type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}>
-
-                <label for="name">Name</label>
-                <input type="text" id="name" formControlName="name" class="input-custom" placeholder={{data.name}}>
-
-                <label for="title">Title</label>
-                <input type="text" id="title" formControlName="title" class="input-custom" placeholder={{data.title}}>
-
-                <label for="address">Address</label>
-                <input type="text" id="address" formControlName="address" class="input-custom" placeholder={{data.address}}>
-
-                <label for="city">City</label>
-                <input type="text" id="city" formControlName="city" class="input-custom" placeholder={{data.city}}>
-
-                <label for="state">State</label>
-                <input type="text" id="state" formControlName="state" class="input-custom" placeholder={{data.state}}>
-
-                <label for="zip">Zip</label>
-                <input type="text" id="zip" formControlName="zip" class="input-custom" placeholder={{data.zip}}>
-                <label for="phone">Phone</label>
-                <input type="text" id="phone" formControlName="phone" class="input-custom" placeholder={{data.phone}}>
-                <label for="email">Email</label>
-                <input type="text" id="email" formControlName="email" class="input-custom" placeholder={{data.email}}>
-                <label for="website">Website</label>
-                <input type="text" id="website" formControlName="website" class="input-custom" placeholder={{data.website}}>
-
-                <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Submit</button>
-        </form>  -->
     </div>
 </div>

@@ -31,7 +31,26 @@ export class JobTrackerService {
     return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateUser`, user, { headers }).pipe(
       catchError(this.handleError<any>('CreateUser')));
   }
+
+  public CreateUserProfile(userProfile: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateUserProfile`, userProfile, { headers }).pipe(
+      catchError(this.handleError<any>('CreateUserProfile')));
+  }
   
+  public CreateEmployerDetails(employerDetails: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateEmployerDetails`, employerDetails, { headers }).pipe(
+      catchError(this.handleError<any>('CreateEmployerDetails')));
+  }
+
+  public CreateEmployerAction(jobAction: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateJobAction`, jobAction, { headers }).pipe(
+      catchError(this.handleError<any>('CreateJobAction')));
+  }
+
+
   public GetEmployerProfiles(jobProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerProfiles`+ '/' + jobProfileId, { headers }).pipe(
@@ -78,12 +97,6 @@ export class JobTrackerService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/Detail`+ '/' + employerProfileId, { headers }).pipe(
       catchError(this.handleError<any>('GetDetail')));
-  }
-
-  public CreateUserProfile(userProfile: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateUserProfile`, userProfile, { headers }).pipe(
-      catchError(this.handleError<any>('CreateUserProfile')));
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

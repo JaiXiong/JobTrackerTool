@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateJobprofilesComponent } from './dialog-jobprofiles.component';
+import { DialogJobprofilesComponent } from './dialog-jobprofiles.component';
 
 describe('CreateJobprofilesComponent', () => {
-  let component: CreateJobprofilesComponent;
-  let fixture: ComponentFixture<CreateJobprofilesComponent>;
+  let component: DialogJobprofilesComponent;
+  let fixture: ComponentFixture<DialogJobprofilesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateJobprofilesComponent]
+      imports: [DialogJobprofilesComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CreateJobprofilesComponent);
+    fixture = TestBed.createComponent(DialogJobprofilesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
