@@ -46,7 +46,7 @@ export class DialogEditJobprofilesComponent {
 
   ngOnInit(): void {
     this.jobProfileForm = this.formBuilder.group({
-      // id: [this.data.id],
+       id: [this.data.id],
       // date: [{ value: this.data.date, disabled: true }],
       // userProfileId: [this.data.userProfileId],
       // profileName: [this.data.profileName],
@@ -61,11 +61,11 @@ export class DialogEditJobprofilesComponent {
     if (this.jobProfileForm.valid) {
       const jobProfile = this.jobProfileForm.value;
 
-      this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
+      this.jobTrackerService.UpdateJobProfile(jobProfile).subscribe(
         (response) => {
 
           console.log('Job profile created successfully', response);
-          this.snackBar.open('Job profile created successfully', 'Close', {
+          this.snackBar.open('Job profile updated successfully', 'Close', {
             duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
@@ -75,7 +75,7 @@ export class DialogEditJobprofilesComponent {
         (error) => {
 
           console.error('Failed to create job profile', error);
-          this.snackBar.open('Failed to create job profile', 'Close', {
+          this.snackBar.open('Failed to updated job profile', 'Close', {
             duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position

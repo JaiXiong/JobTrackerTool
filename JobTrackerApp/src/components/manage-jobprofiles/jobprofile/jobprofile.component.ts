@@ -19,6 +19,7 @@ import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles/dialog-employerprofiles.component';
 import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-jobprofile',
@@ -104,7 +105,8 @@ export class JobprofileComponent {
 
   public getJobProfile(): void {
     this.jobTrackerService
-      .GetJobProfile(this.userNameId, this.jobProfile).subscribe({
+      .GetJobProfile(this.userNameId, this.jobProfile)
+      .subscribe({
         next: (response: JobProfile) => {
           console.log(response);
           this.jobProfile = response;
@@ -115,18 +117,21 @@ export class JobprofileComponent {
       });
   }
 
-  public getJobProfiles(): void {
+  public getJobProfiles(): Observable<JobProfile[]> {
     this.jobTrackerService.GetJobProfiles(this.userNameId).subscribe({
-      next: (response: JobProfile []) => {
+      next: (response: JobProfile[]) => {
         this.jobProfiles = this.convertJobProfiles(response);
+        this.jobProfileSelected = this.jobProfiles[0];
       },
       error: (error) => {
         console.error('Failed to get job profiles', error);
-      }
-  });
+        return of([]);
+      },
+    });
+    return of([]);
   }
 
-  public convertJobProfiles(response: JobProfile []): JobProfile[] {
+  public convertJobProfiles(response: JobProfile[]): JobProfile[] {
     return response.map((element: JobProfile) => {
       return {
         ...element,
@@ -139,7 +144,9 @@ export class JobprofileComponent {
     });
   }
 
-  public convertEmployerProfiles(response: EmployerProfile []): EmployerProfile[] {
+  public convertEmployerProfiles(
+    response: EmployerProfile[]
+  ): EmployerProfile[] {
     return response.map((element: EmployerProfile) => {
       return {
         ...element,
@@ -155,7 +162,7 @@ export class JobprofileComponent {
   public onNameClick(event: Event, element: EmployerProfile): void {
     event.preventDefault(); // Prevent the default anchor behavior
     this.employerProfileSelected = element.id;
-    
+
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
       width: '500px',
       height: '800px',
@@ -172,8 +179,8 @@ export class JobprofileComponent {
           error: (error) => {
             console.error('Failed to update employer profile', error);
             // Handle error response
-          }
-      });
+          },
+        });
       }
     });
   }
@@ -212,7 +219,7 @@ export class JobprofileComponent {
         },
         error: (error) => {
           console.error('Failed to get paging data', error);
-        }
+        },
       });
   }
 
@@ -241,52 +248,45 @@ export class JobprofileComponent {
       disableClose: true,
       data: this.jobProfileSelected,
     });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        this.jobTrackerService.UpdateJobProfile(result).subscribe({
-          next: (response) => {
-            console.log('Job profile updated successfully', response);
-            this.snackBar.open('Job profile updated successfully', 'Close', {
-              duration: 5000,
-              horizontalPosition: 'right', // Set horizontal position
-              verticalPosition: 'top', // Set vertical position
-            });
-          },
-          error: (error) => {
-            console.error('Failed to update job profile', error);
-            this.snackBar.open('Failed to update job profile', 'Close', {
-              duration: 5000,
-              horizontalPosition: 'right', // Set horizontal position
-              verticalPosition: 'top', // Set vertical position
-            });
-          }
-        });
-      }
+
+    dialogRef.afterClosed().subscribe(() => {
+      const selectedJobProfileId = this.jobProfileSelected.id;
+
+      //because the job profile was updated, we need to refresh the job profiles list
+      //and select the updated job profile
+      this.getJobProfiles().subscribe(() => {
+        this.jobProfileSelected = this.jobProfiles.find(
+          (profile) => profile.id === selectedJobProfileId || this.jobProfiles[0]
+        ) as JobProfile;
+        this.cdr.detectChanges();
+      });
     });
   }
 
   public onDeleteJobProfile(): void {
     console.log('Delete button clicked!');
-    this.jobTrackerService.DeleteJobProfile(this.jobProfileSelected.id).subscribe({
-      next: (response) => {
-        console.log('Job profile deleted successfully', response);
-        this.snackBar.open('Job profile deleted successfully', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'right', // Set horizontal position
-          verticalPosition: 'top', // Set vertical position
-        });
-        this.getJobProfiles();
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Failed to delete job profile', error);
-        this.snackBar.open('Failed to delete job profile', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'right', // Set horizontal position
-          verticalPosition: 'top', // Set vertical position
-        });
-      }
-    });
+    this.jobTrackerService
+      .DeleteJobProfile(this.jobProfileSelected.id)
+      .subscribe({
+        next: (response) => {
+          console.log('Job profile deleted successfully', response);
+          this.snackBar.open('Job profile deleted successfully', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
+          });
+          this.getJobProfiles();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Failed to delete job profile', error);
+          this.snackBar.open('Failed to delete job profile', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
+          });
+        },
+      });
   }
 
   public onCreateEmployerProfile(): void {
@@ -309,26 +309,28 @@ export class JobprofileComponent {
 
   public onDeleteEmployerProfile(): void {
     console.log('Delete Employer Profile button clicked!');
-    this.jobTrackerService.DeleteJobProfile(this.employerProfileSelected).subscribe({
-      next: (response) => {
-        console.log('Employer profile deleted successfully', response);
-        this.snackBar.open('Employer profile deleted successfully', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'right', // Set horizontal position
-          verticalPosition: 'top', // Set vertical position
-        });
-        this.getPageData();
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Failed to delete employer profile', error);
-        this.snackBar.open('Failed to delete employer profile', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'right', // Set horizontal position
-          verticalPosition: 'top', // Set vertical position
-        });
-      }
-    });
+    this.jobTrackerService
+      .DeleteJobProfile(this.employerProfileSelected)
+      .subscribe({
+        next: (response) => {
+          console.log('Employer profile deleted successfully', response);
+          this.snackBar.open('Employer profile deleted successfully', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top', 
+          });
+          this.getPageData();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Failed to delete employer profile', error);
+          this.snackBar.open('Failed to delete employer profile', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top', 
+          });
+        },
+      });
   }
 
   public onJobDefaultClick(): void {
