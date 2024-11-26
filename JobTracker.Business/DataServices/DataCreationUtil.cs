@@ -80,7 +80,7 @@ namespace JobTracker.Business.DataServices
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
 
-                    for (int k = 0; k < 50; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         var employerProfile = new EmployerProfile
                         {
@@ -242,7 +242,7 @@ namespace JobTracker.Business.DataServices
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
 
-                    for (int k = 0; k < 501; k++)
+                    for (int k = 0; k < 5; k++)
                     {
                         var employerProfile = new EmployerProfile
                         {

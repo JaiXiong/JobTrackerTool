@@ -52,11 +52,29 @@ export class DialogEmployerprofilesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.actionForm = this.formBuilder.group({
+      //id: [''],
+      //employerprofileid: [''],
+      //date: [''],
+      //latestUpdate: [''],
+      action: ['', Validators.required],
+      method: [''],
+      actionresult: ['',],
+    });
+    this.detailsForm = this.formBuilder.group({
+      //id: [''],
+      //employerprofileid: [''],
+      //date: [''],
+      //latestUpdate: [''],
+      comments: ['', Validators.required],
+      updates: [''],
+    });
+
     this.employerProfileForm = this.formBuilder.group({
       //id: [''],
       //date: [{ value: this.data.date, disabled: true }],
       //latestUpdate: [''],
-      jobProfileId: [''],
+      jobProfileId: [this.data.jobProfileId],
       name: ['', Validators.required],
       title: [''],
       address: [''],
@@ -66,24 +84,26 @@ export class DialogEmployerprofilesComponent implements OnInit {
       phone: [''],
       email: [''],
       website: [''],
+      result: this.actionForm,
+      detail: this.detailsForm
     });
-    this.actionForm = this.formBuilder.group({
-      //id: [''],
-      employerprofileid: [''],
-      //date: [''],
-      //latestUpdate: [''],
-      action: ['', Validators.required],
-      method: [''],
-      actionresult: ['',],
-    });
-    this.detailsForm = this.formBuilder.group({
-      //id: [''],
-      employerprofileid: [''],
-      //date: [''],
-      //latestUpdate: [''],
-      comments: ['', Validators.required],
-      updates: [''],
-    });
+    // this.actionForm = this.formBuilder.group({
+    //   //id: [''],
+    //   employerprofileid: [''],
+    //   //date: [''],
+    //   //latestUpdate: [''],
+    //   action: ['', Validators.required],
+    //   method: [''],
+    //   actionresult: ['',],
+    // });
+    // this.detailsForm = this.formBuilder.group({
+    //   //id: [''],
+    //   employerprofileid: [''],
+    //   //date: [''],
+    //   //latestUpdate: [''],
+    //   comments: ['', Validators.required],
+    //   updates: [''],
+    // });
   }
 
   public onSubmit(): void {
@@ -93,17 +113,19 @@ export class DialogEmployerprofilesComponent implements OnInit {
 
       this.jobTrackerService.CreateEmployerProfile(employerProfile).subscribe(
         (response) => {
+          
           console.log('Employer Profile created successfully', response);
           this.snackBar.open('Employer Profile created successfully', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
+          this.dialogRef.close();
         },
         (error) => {
           console.error('Failed to create Employer Profile', error);
           this.snackBar.open('Failed to create Employer Profile', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -121,7 +143,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
         (response) => {
           console.log('Employer Action created successfully', response);
           this.snackBar.open('Employer Action created successfully', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -129,7 +151,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
         (error) => {
           console.error('Failed to create Employer Action', error);
           this.snackBar.open('Failed to create Employer Action', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -147,7 +169,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
         (response) => {
           console.log('Employer Details created successfully', response);
           this.snackBar.open('Employer Details created successfully', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -155,7 +177,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
         (error) => {
           console.error('Failed to create Employer Details', error);
           this.snackBar.open('Failed to create Employer Details', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -165,28 +187,19 @@ export class DialogEmployerprofilesComponent implements OnInit {
   }
 
   onClose(): void {
-    // const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
-    //   duration: 5000,
-    //   horizontalPosition: 'right', // Set horizontal position
-    //   verticalPosition: 'top', // Set vertical position
-    // });
-
-    // snackBarRef.onAction().subscribe(() => {
-    //   console.log('Close action canceled');
-    //   // Do nothing, just close the snackbar
-    // });
-
-    // snackBarRef.afterDismissed().subscribe((info) => {
-    //   if (!info.dismissedByAction) {
-    //     this.dialogRef.close();
-    //   }
-    // });
     this.openSnackBar(this.selectedTabIndex);
   }
 
   public onCancel(): void {
     this.openSnackBar(0);
     this.dialogRef.close();
+  }
+
+  public isFormValid(): boolean {
+    if (this.employerProfileForm.value.name != '' && this.actionForm.value.action != '' && this.detailsForm.value.comments != '') {
+      return true;
+    }
+    return false;
   }
 
   public openSnackBar(index: number): void {

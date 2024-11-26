@@ -22,7 +22,7 @@ export class JobTrackerService {
 
   public CreateEmployerProfile(employerProfile: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/CreateEmployerProfile`, employerProfile, { headers }).pipe(
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerProfile`, employerProfile, { headers }).pipe(
       catchError(this.handleError<any>('CreateEmployerProfile')));
   }
 

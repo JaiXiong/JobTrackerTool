@@ -123,6 +123,22 @@ namespace JobTracker.Business.Services
             employerProfile.Date = DateTime.Now;
             employerProfile.LatestUpdate = DateTime.Now;
 
+            if (employerProfile.Result != null)
+            {
+                employerProfile.Result.Id = Guid.NewGuid();
+                employerProfile.Result.EmployerProfileId = employerProfile.Id;
+                employerProfile.Result.Date = DateTime.Now;
+                employerProfile.Result.LatestUpdate = DateTime.Now;
+            }
+
+            if (employerProfile.Detail != null)
+            {
+                employerProfile.Detail.Id = Guid.NewGuid();
+                employerProfile.Detail.EmployerProfileId = employerProfile.Id;
+                employerProfile.Detail.Date = DateTime.Now;
+                employerProfile.Detail.LatestUpdate = DateTime.Now;
+            }
+
             _dbContext.Employers.Add(employerProfile);
             await _dbContext.SaveChangesAsync();
 

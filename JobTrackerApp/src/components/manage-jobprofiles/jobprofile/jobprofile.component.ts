@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -68,38 +68,38 @@ export class JobprofileComponent {
     profileName: '',
     employerProfiles: [],
   };
-  _employerProfile: EmployerProfile = {
-    id: '',
-    date: new Date(),
-    latestUpdate: new Date(),
-    jobProfileId: '',
-    name: '',
-    title: '',
-    address: '',
-    city: '',
-    state: '',
-    zip: '',
-    phone: '',
-    email: '',
-    website: '',
-    jobAction: {
-      id: '',
-      employerProfileId: '',
-      date: '',
-      latestUpdate: '',
-      action: '',
-      method: '',
-      actionResult: '',
-    },
-    details: {
-      id: '',
-      employerProfileId: '',
-      date: '',
-      latestUpdate: '',
-      comments: '',
-      updates: '',
-    },
-  };
+  // _employerProfile: EmployerProfile = {
+  //   id: '',
+  //   date: new Date(),
+  //   latestUpdate: new Date(),
+  //   jobProfileId: '',
+  //   name: '',
+  //   title: '',
+  //   address: '',
+  //   city: '',
+  //   state: '',
+  //   zip: '',
+  //   phone: '',
+  //   email: '',
+  //   website: '',
+  //   jobAction: {
+  //     id: '',
+  //     employerProfileId: '',
+  //     date: '',
+  //     latestUpdate: '',
+  //     action: '',
+  //     method: '',
+  //     actionResult: '',
+  //   },
+  //   details: {
+  //     id: '',
+  //     employerProfileId: '',
+  //     date: '',
+  //     latestUpdate: '',
+  //     comments: '',
+  //     updates: '',
+  //   },
+  // };
   _employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
     'date',
@@ -131,7 +131,8 @@ export class JobprofileComponent {
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
     private datePipe: DatePipe,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {}
 
   public getEmployerProfiles(): void {
@@ -255,6 +256,7 @@ export class JobprofileComponent {
         (response) => {
           this.totalRecords = response.length ? response.length : 0;
           this.dataSource = this.convertEmployerProfiles(response);
+          this.cdr.detectChanges();
         },
         (error) => {
           console.error('Failed to get paging data', error);
@@ -275,32 +277,9 @@ export class JobprofileComponent {
       data: { userProfileId: this._userNameId },
     });
     
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        this.jobTrackerService.CreateJobProfile(result).subscribe(
-          (response) => {
-
-            console.log('Job profile created successfully', response);
-            this.snackBar.open('Job profile created successfully', 'Close', {
-              duration: 2000,
-              horizontalPosition: 'right', // Set horizontal position
-              verticalPosition: 'top', // Set vertical position
-            });
-
-          },
-          (error) => {
-
-            console.error('Failed to create job profile', error);
-            this.snackBar.open('Failed to create job profile', 'Close', {
-              duration: 2000,
-              horizontalPosition: 'right', // Set horizontal position
-              verticalPosition: 'top', // Set vertical position
-            });
-
-          }
-        );
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.getJobProfiles();
+      this.cdr.detectChanges();
     });
   }
 
@@ -310,7 +289,7 @@ export class JobprofileComponent {
       width: '500px',
       height: '800px',
       disableClose: true,
-      data: this._employerProfile,
+      data: this._jobProfileSelected,
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
@@ -341,10 +320,9 @@ export class JobprofileComponent {
       data: { jobProfileId: this._jobProfileSelected.id },
     });
     
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        dialogRef.close();
-      }
+    dialogRef.afterClosed().subscribe(() => {
+      this.getPageData();
+      this.cdr.detectChanges();
     });
   }
 

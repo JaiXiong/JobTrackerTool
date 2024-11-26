@@ -71,16 +71,17 @@ export class DialogJobprofilesComponent implements OnInit {
 
           console.log('Job profile created successfully', response);
           this.snackBar.open('Job profile created successfully', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
+          this.dialogRef.close();
         },
         (error) => {
 
           console.error('Failed to create job profile', error);
           this.snackBar.open('Failed to create job profile', 'Close', {
-            duration: 2000,
+            duration: 5000,
             horizontalPosition: 'right', // Set horizontal position
             verticalPosition: 'top', // Set vertical position
           });
@@ -88,7 +89,6 @@ export class DialogJobprofilesComponent implements OnInit {
       );
 
       //this.dialogRef.close(jobProfile);
-      this.dialogRef.close();
     }
   }
 

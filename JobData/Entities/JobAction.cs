@@ -12,8 +12,7 @@ namespace JobData.Entities
     {
         public Guid Id { get; set; }
         [ForeignKey("EmployerProfile")]
-        [Required]
-        public required Guid EmployerProfileId { get; set; }
+        public Guid EmployerProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
         public string? Action { get; set; }

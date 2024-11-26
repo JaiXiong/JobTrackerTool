@@ -1,7 +1,7 @@
 <div class="flex-container-components-inner">
     <p class="action-title">Create Employer Profile</p>
     <!-- <p class="important-redtext">*Required Fields</p> -->
-    <!-- <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon> -->
+    <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
     <div class="flex-container-components-inner">
         <mat-tab-group class="vertical-tabs" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
             <mat-tab [disabled]="employerTab" label="EmployerProfile">
@@ -9,7 +9,7 @@
                     <mat-icon>account_circle</mat-icon>
                     <span>Employer Profile</span>
                 </ng-template>
-                <form [formGroup]="employerProfileForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="employerProfileForm">
                     <label for="name">Employer Name*</label>
                     <input matInput type="text" id="name" formControlName="name" class="input-custom" placeholder="Enter employer name" matTooltip="*Required" matTooltipPosition="right">
 
@@ -45,10 +45,10 @@
 
                     <label for="website">Website</label>
                     <input matInput type="text" id="website" formControlName="website" class="input-custom" placeholder="">
-                    <span class="span-custom">
+                    <!-- <span class="span-custom">
                         <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Save</button>
                         <button type="cancel" (click)="onCancel()" class="cancel-button">Cancel</button>
-                    </span>
+                    </span> -->
                 </form>
             </mat-tab>
             <mat-tab label="Action" [disabled]="actionTab">
@@ -56,7 +56,7 @@
                     <mat-icon>flag_circle</mat-icon>
                     <span>Action</span>
                 </ng-template>
-                <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="actionForm">
                     <!-- <label>Date</label>
                     <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder=""> -->
                     <label>Action*</label>
@@ -66,7 +66,7 @@
                     <label>Action Result</label>
                     <textarea matInput type="text" id="actionresult" formControlName="actionresult" class="input-custom" placeholder=""></textarea> 
 
-                    <button type="submit" [disabled]="!actionForm.valid" class="submit-button">Save</button>
+                    <!-- <button type="submit" [disabled]="!actionForm.valid" class="submit-button">Save</button> -->
                 </form>
             </mat-tab>
             <mat-tab label="Details" [disabled]="detailsTab">
@@ -74,7 +74,7 @@
                     <mat-icon>edit_note</mat-icon>
                     <span>Details</span>
                 </ng-template>
-                <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="detailsForm">
                     <!-- <label>Date</label>
                     <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder=""> -->
                     <label>Comments*</label>
@@ -82,9 +82,13 @@
                     <label>Updates</label>
                     <textarea matInput type="text" id="updates" formControlName="updates" class="input-custom" placeholder=""></textarea>
 
-                    <button type="submit" [disabled]="!detailsForm.valid" class="submit-button">Save</button>
+                    <!-- <button type="submit" [disabled]="!detailsForm.valid" class="submit-button">Save</button> -->
                 </form>
             </mat-tab>
         </mat-tab-group>
+        <span class="span-custom" *ngIf="selectedTabIndex === 0">
+            <button type="button" [disabled]="!isFormValid()" (click)="onSubmit()" class="submit-button">Save</button>
+            <button type="button" (click)="onCancel()" class="cancel-button">Cancel</button>
+        </span>
     </div>
 </div>
