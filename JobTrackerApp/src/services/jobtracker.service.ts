@@ -99,6 +99,12 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetDetail')));
   }
 
+  public DeleteJobProfile(jobProfileId: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.delete<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfile`+ '/' + jobProfileId, { headers }).pipe(
+      catchError(this.handleError<any>('DeleteJobProfile')));
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);

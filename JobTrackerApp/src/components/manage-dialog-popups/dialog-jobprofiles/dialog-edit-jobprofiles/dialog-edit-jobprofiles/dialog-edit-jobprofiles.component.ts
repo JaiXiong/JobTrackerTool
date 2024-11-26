@@ -1,28 +1,22 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { JobTrackerService } from '../../../../services/jobtracker.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { JobProfile } from '../../../../models/job-profile.model';
-import {
-  RouterModule,
-} from '@angular/router';
-import { CommonModule  } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabsModule, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import { JobProfile } from '../../../../../models/job-profile.model';
+import { JobTrackerService } from '../../../../../services/jobtracker.service';
+import { DialogJobprofilesComponent } from '../../dialog-jobprofiles/dialog-jobprofiles.component';
 
 @Component({
-  selector: 'app-dialog-jobprofiles',
+  selector: 'app-dialog-edit-jobprofiles',
   standalone: true,
-  imports: [
+  imports: 
+  [
     RouterModule,
     CommonModule,
     FormsModule,
@@ -34,18 +28,17 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatSnackBarModule
   ],
-  templateUrl: './dialog-jobprofiles.component.html',
-  styleUrl: './dialog-jobprofiles.component.scss',
+  templateUrl: './dialog-edit-jobprofiles.component.html',
+  styleUrl: './dialog-edit-jobprofiles.component.scss'
 })
-export class DialogJobprofilesComponent implements OnInit {
+export class DialogEditJobprofilesComponent {
   jobProfileForm!: FormGroup;
-  isEditMode: boolean = false;
   currentProfileName: string = '';
   
   constructor(
     private jobTrackerService: JobTrackerService,
     public dialog: MatDialog,
-    private dialogRef: MatDialogRef<DialogJobprofilesComponent>,
+    private dialogRef: MatDialogRef<DialogEditJobprofilesComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JobProfile,
     private snackBar: MatSnackBar
@@ -60,7 +53,7 @@ export class DialogJobprofilesComponent implements OnInit {
       //id: [''],
       //date: [{ value: this.data.date, disabled: true }],
       userProfileId: [this.data.userProfileId],
-      profileName: ['', Validators.required],
+      profileName: [this.data.profileName, Validators.required],
     });
   }
 

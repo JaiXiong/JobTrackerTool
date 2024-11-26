@@ -111,9 +111,9 @@ export class DialogEmployerprofilesComponent implements OnInit {
       const employerProfile = this.employerProfileForm.value;
       //this.dialogRef.close(employerProfile); // Close the dialog and return the data
 
-      this.jobTrackerService.CreateEmployerProfile(employerProfile).subscribe(
-        (response) => {
-          
+      this.jobTrackerService.CreateEmployerProfile(employerProfile).subscribe({
+        next: (response) => {
+
           console.log('Employer Profile created successfully', response);
           this.snackBar.open('Employer Profile created successfully', 'Close', {
             duration: 5000,
@@ -122,7 +122,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
           });
           this.dialogRef.close();
         },
-        (error) => {
+        error: (error) => {
           console.error('Failed to create Employer Profile', error);
           this.snackBar.open('Failed to create Employer Profile', 'Close', {
             duration: 5000,
@@ -130,7 +130,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
             verticalPosition: 'top', // Set vertical position
           });
         }
-      );
+      });
     }
   }
 
@@ -139,8 +139,8 @@ export class DialogEmployerprofilesComponent implements OnInit {
       const action = this.actionForm.value;
       //this.dialogRef.close(action); // Close the dialog and return the data
 
-      this.jobTrackerService.CreateEmployerAction(action).subscribe(
-        (response) => {
+      this.jobTrackerService.CreateEmployerAction(action).subscribe({
+        next: (response) => {
           console.log('Employer Action created successfully', response);
           this.snackBar.open('Employer Action created successfully', 'Close', {
             duration: 5000,
@@ -148,7 +148,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
             verticalPosition: 'top', // Set vertical position
           });
         },
-        (error) => {
+        error: (error) => {
           console.error('Failed to create Employer Action', error);
           this.snackBar.open('Failed to create Employer Action', 'Close', {
             duration: 5000,
@@ -156,7 +156,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
             verticalPosition: 'top', // Set vertical position
           });
         }
-      );
+      });
     }
   }
 
@@ -165,8 +165,8 @@ export class DialogEmployerprofilesComponent implements OnInit {
       const details = this.detailsForm.value;
       //this.dialogRef.close(details); // Close the dialog and return the data
 
-      this.jobTrackerService.CreateEmployerDetails(details).subscribe(
-        (response) => {
+      this.jobTrackerService.CreateEmployerDetails(details).subscribe({
+        next: (response) => {
           console.log('Employer Details created successfully', response);
           this.snackBar.open('Employer Details created successfully', 'Close', {
             duration: 5000,
@@ -174,7 +174,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
             verticalPosition: 'top', // Set vertical position
           });
         },
-        (error) => {
+        error: (error) => {
           console.error('Failed to create Employer Details', error);
           this.snackBar.open('Failed to create Employer Details', 'Close', {
             duration: 5000,
@@ -182,7 +182,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
             verticalPosition: 'top', // Set vertical position
           });
         }
-      );
+      });
     }
   }
 

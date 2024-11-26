@@ -1,6 +1,11 @@
 <div class="flex-container-components-inner">
-    <p>Update Employer Profile</p>
+    <p class="action-title">Update Employer Profile</p>
     <mat-icon aria-hidden="false" aria-label="Close" (click)="onClose()" class="close-icon">close</mat-icon>
+    <!-- <span class="span-right">
+        <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add" *ngIf="showEmployerOptions" (click)="onCreateEmployerProfile()"></mat-icon>
+        <mat-icon class="employerprofile-icons" matTooltip="Update employer profile" fontIcon="edit" *ngIf="showEmployerOptions" (click)="onEditEmployerProfile()"></mat-icon>
+        <mat-icon class="employerprofile-icons" matTooltip="Delete employer profile" fontIcon="delete" *ngIf="showEmployerOptions" (click)="onDeleteEmployerProfile()"></mat-icon>
+      </span> -->
     <div class="flex-container-components-inner">
         <mat-tab-group class="vertical-tabs" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
             <mat-tab label="EmployerProfile">
@@ -54,7 +59,7 @@
                     <input matInput type="text" id="website" formControlName="website" class="input-custom" 
                         placeholder={{data.website}}>
 
-                    <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Submit</button>
+                    <button type="submit" [disabled]="!employerProfileForm.valid" class="submit-button">Update</button>
                 </form>
             </mat-tab>
             <mat-tab label="Action" (click)="setActionForm()">

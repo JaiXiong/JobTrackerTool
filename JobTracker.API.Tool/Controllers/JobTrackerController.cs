@@ -297,5 +297,39 @@ namespace JobTracker.API.tool.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpPut("jobprofile", Name = "UpdateJobProfile")]
+        public async Task<IActionResult> UpdateJobProfile([FromBody] JobProfile jobProfile)
+        {
+            if (jobProfile == null)
+            {
+                return BadRequest("JobProfile is null.");
+            }
+            try
+            {
+                await _jobTrackerToolService.UpdateJobProfile(jobProfile);
+                return CreatedAtAction(nameof(UpdateJobProfile), new { id = jobProfile.Id }, jobProfile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the job profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpDelete("jobprofile/{jobProfileId}", Name = "DeleteJobProfile")]
+        public async Task<IActionResult> DeleteJobProfile(Guid jobProfileId)
+        {
+            try
+            {
+                await _jobTrackerToolService.DeleteJobProfile(jobProfileId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the job profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

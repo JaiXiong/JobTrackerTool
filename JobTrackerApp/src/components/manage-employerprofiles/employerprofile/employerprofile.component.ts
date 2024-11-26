@@ -139,18 +139,26 @@ export class EmployerprofileComponent implements OnInit {
     // );
     if (this.employerProfileForm.valid) {
       const employerProfile = this.employerProfileForm.value;
-      this.dialogRef.close(employerProfile); // Close the dialog and return the data
+      this.jobTrackerService.UpdateEmployerProfile(employerProfile).subscribe({
+        next: (response) => {
+          console.log('Employer profile updated successfully', response);
+          this.snackBar.open('Employer Profile created successfully', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'right', // Set horizontal position
+          verticalPosition: 'top', // Set vertical position
+        });
+          this.dialogRef.close();
+        },
+        error: (error) => {
+          console.error('Failed to update employer profile', error);
+          this.snackBar.open('Failed to create Employer Profile', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'right', // Set horizontal position
+            verticalPosition: 'top', // Set vertical position
+          });
+        }
+      });
     }
-
-    // this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
-    //   (response) => {
-    //     console.log('Employer Profile Updated');
-    //     //update the employer profile?
-    //   },
-    //   (error) => {
-    //     console.log('Error updating Employer Profile');
-    //   }
-    // );
   }
 
   onClose(): void {

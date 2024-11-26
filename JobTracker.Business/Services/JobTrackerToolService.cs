@@ -324,7 +324,6 @@ namespace JobTracker.Business.Services
                 throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
             }
 
-            //employerProfile.Id = employerProfile.Id == Guid.Empty ? Guid.NewGuid() : employerProfile.Id;
             existingProfile.Name = updatedProfile.Name;
             existingProfile.Title = updatedProfile.Title;
             existingProfile.Address = updatedProfile.Address;
@@ -335,17 +334,85 @@ namespace JobTracker.Business.Services
             existingProfile.Email = updatedProfile.Email;
             existingProfile.Website = updatedProfile.Website;
             existingProfile.LatestUpdate = DateTime.Now;
-            //existingProfile.Result = updatedProfile.Result;
-            //existingProfile.Detail = updatedProfile.Detail;
+
+            if (existingProfile.Result != null)
+            {
+                existingProfile.Result.LatestUpdate = DateTime.Now;
+                existingProfile.Result = updatedProfile.Result;
+            }
+
+            if (existingProfile.Detail != null)
+            {
+                existingProfile.Detail.LatestUpdate = DateTime.Now;
+                existingProfile.Detail = updatedProfile.Detail;
+            }
 
             _dbContext.Employers.Update(existingProfile);
             await _dbContext.SaveChangesAsync();
         }
 
-        public string GetEmployerName(Guid id)
+        public async Task UpdateJobProfile(JobProfile updatedProfile)
         {
-            var name = "";
-            return name;
+            var existingProfile = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+            if (existingProfile == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("JobProfileNull"));
+            }
+            existingProfile.ProfileName = updatedProfile.ProfileName;
+            existingProfile.LatestUpdate = DateTime.Now;
+            _dbContext.JobProfiles.Update(existingProfile);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateJobAction(JobAction updatedProfile)
+        {
+            var existingProfile = await _dbContext.JobActions.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+            if (existingProfile == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("JobActionNull"));
+            }
+            existingProfile.Action = updatedProfile.Action;
+            existingProfile.Method = updatedProfile.Method;
+            existingProfile.ActionResult = updatedProfile.ActionResult;
+            existingProfile.LatestUpdate = DateTime.Now;
+            _dbContext.JobActions.Update(existingProfile);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateDetail(Detail updatedProfile)
+        {
+            var existingProfile = await _dbContext.Details.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+            if (existingProfile == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("DetailNull"));
+            }
+            existingProfile.Comments = updatedProfile.Comments;
+            existingProfile.Updates = updatedProfile.Updates;
+            existingProfile.LatestUpdate = DateTime.Now;
+            _dbContext.Details.Update(existingProfile);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteJobProfile(Guid jobProfileId)
+        {
+            var jobProfile = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == jobProfileId);
+            if (jobProfile == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("JobProfileNull"));
+            }
+            _dbContext.JobProfiles.Remove(jobProfile);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteEmployerProfile(Guid employerProfileId)
+        {
+            var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
+            if (employerProfile == null)
+            {
+                throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
+            }
+            _dbContext.Employers.Remove(employerProfile);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

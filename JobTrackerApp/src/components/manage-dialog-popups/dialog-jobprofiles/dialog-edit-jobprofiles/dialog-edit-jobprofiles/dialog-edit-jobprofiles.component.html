@@ -11,7 +11,7 @@
                 <form [formGroup]="jobProfileForm" (ngSubmit)="onSubmit()">
 
                     <label for="profileName">Profile Name</label>
-                    <input matInput type="text" id="profileName" formControlName="profileName" class="input-custom" placeholder="Add a new job profile name">
+                    <input matInput type="text" id="profileName" formControlName="profileName" class="input-custom" placeholder={{data.profileName}}>
 
                     <button type="submit" [disabled]="!jobProfileForm.valid" class="create-button">Submit</button>
                     <button type="button" (click)="onCancel()" class="cancel-button">Cancel</button>
