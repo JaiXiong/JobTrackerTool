@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { JobprofileComponent } from '../components/manage-jobprofiles/jobprofile/jobprofile.component';
 import { EmployerprofileComponent } from '../components/manage-employerprofiles/employerprofile/employerprofile.component';
 import { JobactionComponent } from '../components/manage-jobactions/jobaction/jobaction.component';
@@ -13,6 +13,9 @@ export const routes: Routes =
     {path: 'jobaction', component: JobactionComponent, title: 'JobAction Page'},
 ];
 
+export const AppRoutingModule = RouterModule.forRoot(routes, {
+    onSameUrlNavigation: 'reload'
+});
 // export const routes: Routes = [
 //     { path: '', redirectTo: '/login', pathMatch: 'full' },
 //     { path: 'jobprofile', loadComponent: () => import('../components/manage-jobprofiles/jobprofile/jobprofile.component').then(m => m.JobprofileComponent) },

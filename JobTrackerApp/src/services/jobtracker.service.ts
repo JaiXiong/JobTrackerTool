@@ -57,9 +57,9 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetEmployerProfiles')));
   }
 
-  public GetJobProfile(userNameId: any, jobProfileId: any): Observable<any> {
+  public GetJobProfile(jobProfileId: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfile`+ '/' + userNameId + '/' + jobProfileId, { headers }).pipe(
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/JobProfile`+ '/' + jobProfileId, { headers }).pipe(
       catchError(this.handleError<any>('GetJobProfile')));
   }
 
