@@ -6,7 +6,7 @@ using System.Resources;
 
 namespace JobTracker.Business.Services
 {
-    public class JobTrackerToolService : DbContext
+    public class JobTrackerToolService : DbContext, IJobTrackerToolService
     {
         private readonly JobProfileContext _dbContext;
         ResourceManager _resourceManager;
@@ -38,7 +38,7 @@ namespace JobTracker.Business.Services
             _dbContext.JobProfiles.Add(jobProfile);
             await _dbContext.SaveChangesAsync();
         }
-        public void AddWorkaction(JobAction workAction)
+        public void AddWorkAction(JobAction workAction)
         {
             workAction.Id = Guid.NewGuid();
             workAction.Action = "Action";
@@ -221,7 +221,7 @@ namespace JobTracker.Business.Services
             return jobProfiles;
         }
 
-        public async Task<EmployerProfile> GetEmployer(Guid jobProfileId, Guid employerProfileId)
+        public async Task<EmployerProfile> GetEmployerProfile(Guid jobProfileId, Guid employerProfileId)
         {
             var jobProfile = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == jobProfileId);
             var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
@@ -233,7 +233,7 @@ namespace JobTracker.Business.Services
             return employerProfile;
         }
 
-        public async Task<IEnumerable<EmployerProfile>> GetEmployers(Guid jobProfileId)
+        public async Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId)
         {
             var employerProfiles = await _dbContext.Employers
                 .Include(c => c.Result)
@@ -248,7 +248,7 @@ namespace JobTracker.Business.Services
             return employerProfiles;
         }
 
-        public async Task<IEnumerable<EmployerProfile>> GetAllEmployers()
+        public async Task<IEnumerable<EmployerProfile>> GetAllEmployerProfiles()
         {
             var employerProfiles = await _dbContext.Employers
                 .Include(c => c.Result)

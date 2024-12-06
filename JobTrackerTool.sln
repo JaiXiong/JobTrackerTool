@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login.API", "Login.API\Logi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Login.Business", "Login.Business\Login.Business.csproj", "{88C78D8F-557D-466F-8379-12EEB0C11781}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobTracker.API.ToolTests", "JobTracker.API.ToolTests\JobTracker.API.ToolTests.csproj", "{838C8A09-AC81-4285-9555-AD6C10BFB596}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{88C78D8F-557D-466F-8379-12EEB0C11781}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88C78D8F-557D-466F-8379-12EEB0C11781}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C78D8F-557D-466F-8379-12EEB0C11781}.Release|Any CPU.Build.0 = Release|Any CPU
+		{838C8A09-AC81-4285-9555-AD6C10BFB596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{838C8A09-AC81-4285-9555-AD6C10BFB596}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{838C8A09-AC81-4285-9555-AD6C10BFB596}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{838C8A09-AC81-4285-9555-AD6C10BFB596}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

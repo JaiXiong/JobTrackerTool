@@ -9,10 +9,10 @@ namespace JobTracker.API.tool.Controllers
     public class JobTrackerController : ControllerBase
     {
         private readonly ILogger<JobTrackerController> _logger;
-        private readonly JobTrackerToolService _jobTrackerToolService;
+        private readonly IJobTrackerToolService _jobTrackerToolService;
         //private readonly JobTrackerToolService _jobTrackerDBcontext;
 
-        public JobTrackerController(ILogger<JobTrackerController> logger, JobTrackerToolService jobTrackerToolService, JobTrackerToolService jobTrackerDBcontext)
+        public JobTrackerController(ILogger<JobTrackerController> logger, IJobTrackerToolService jobTrackerToolService)
         {
             _logger = logger;
             _jobTrackerToolService = jobTrackerToolService;
@@ -24,7 +24,7 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                var employerProfile = await _jobTrackerToolService.GetEmployer(jobProfileId, employerProfileId);
+                var employerProfile = await _jobTrackerToolService.GetEmployerProfile(jobProfileId, employerProfileId);
                 return employerProfile;
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                var employerProfiles = await _jobTrackerToolService.GetEmployers(jobProfileId);
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
                 return employerProfiles;
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                var employerProfiles = await _jobTrackerToolService.GetAllEmployers();
+                var employerProfiles = await _jobTrackerToolService.GetAllEmployerProfiles();
                 return employerProfiles;
             }
             catch (Exception ex)
