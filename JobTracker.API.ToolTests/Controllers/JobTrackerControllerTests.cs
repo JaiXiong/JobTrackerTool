@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Resources;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -35,6 +36,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices = new Mock<IJobTrackerToolService>();
             _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object);
         }
+
         #region Job Profile Tests
         [TestMethod()]
         public async Task GetJobProfileTest()
@@ -164,6 +166,38 @@ namespace JobTracker.API.tool.Controllers.Tests
             Assert.AreEqual(500, objectResult.StatusCode);
             Assert.AreEqual("Internal server error", objectResult.Value);
         }
-        #endregion 
+        #endregion
+
+        #region Employer Profile Tests
+        [TestMethod()]
+        public async Task GetEmployerProfile()
+        {
+            var expectedEmployerProfile = new EmployerProfile
+            {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+            };
+
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id))
+                .ReturnsAsync(expectedEmployerProfile);
+
+            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result, expectedEmployerProfile);
+            Assert.AreEqual(result.Id, expectedEmployerProfile.Id);
+        }
+        #endregion
     }
 }
