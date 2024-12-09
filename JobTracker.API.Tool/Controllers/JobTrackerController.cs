@@ -331,5 +331,20 @@ namespace JobTracker.API.tool.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpDelete("employerprofile/{employerProfileId}", Name = "DeleteEmployerProfile")]
+        public async Task<IActionResult> DeleteEmployerProfile(Guid employerProfileId)
+        {
+            try
+            {
+                await _jobTrackerToolService.DeleteEmployerProfile(employerProfileId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the employer profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }

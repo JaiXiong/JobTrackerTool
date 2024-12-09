@@ -166,6 +166,32 @@ namespace JobTracker.API.tool.Controllers.Tests
             Assert.AreEqual(500, objectResult.StatusCode);
             Assert.AreEqual("Internal server error", objectResult.Value);
         }
+
+        [TestMethod()]
+        public async Task DeleteJobProfile()
+        {
+            var jobProfileId = Guid.NewGuid();
+
+            _mockServices.Setup(s => s.DeleteJobProfile(jobProfileId))
+                .Returns(Task.CompletedTask);
+
+            var result = await _controller.DeleteJobProfile(jobProfileId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod()]
+        public async Task DeleteJobProfileFails()
+        {
+            var jobProfileId = Guid.NewGuid();
+
+            _mockServices.Setup(s => s.DeleteJobProfile(jobProfileId))
+                .ThrowsAsync(new ArgumentException("Job Profile Delete Failed"));
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                async () => await _controller.DeleteJobProfile(jobProfileId));
+        }
         #endregion
 
         #region Employer Profile Tests
@@ -197,6 +223,320 @@ namespace JobTracker.API.tool.Controllers.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(result, expectedEmployerProfile);
             Assert.AreEqual(result.Id, expectedEmployerProfile.Id);
+        }
+
+        [TestMethod()]
+        public async Task GetEmployerProfileFails()
+        {
+            var expectedEmployerProfile = new EmployerProfile
+            {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+            };
+
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id))
+                .ThrowsAsync(new ArgumentException("Failed to get Employer Profile"));
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                async () => await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id));
+        }
+
+        [TestMethod()]
+        public async Task GetEmployerProfiles()
+        {
+            var jobProfileId = Guid.NewGuid();
+            var expectedEmployerProfiles = new List<EmployerProfile>
+            {
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                },
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                }
+            };
+
+            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId))
+                .ReturnsAsync(expectedEmployerProfiles);
+
+            var result = await _controller.GetEmployerProfiles(jobProfileId);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedEmployerProfiles.Count, result.Count());
+            CollectionAssert.AreEqual(expectedEmployerProfiles, result.ToList());
+        }
+
+        [TestMethod]
+        public async Task GetEmployerProfilesFail()
+        {
+            var jobProfileId = Guid.NewGuid();
+            var expectedEmployerProfiles = new List<EmployerProfile>
+            {
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                },
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                }
+            };
+
+            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId))
+                .ThrowsAsync(new ArgumentException("Get All Employer Profiles Failed"));
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                async () => await _controller.GetEmployerProfiles(jobProfileId));
+        }
+
+        [TestMethod()]
+        public async Task UpdateEmployerProfile()
+        {
+            var expectedEmployerProfile = new EmployerProfile
+            {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+            };
+
+            _mockServices.Setup(s => s.UpdateEmployerProfile(expectedEmployerProfile))
+                .Returns(Task.CompletedTask);
+
+            var result = await _controller.UpdateEmployerProfile(expectedEmployerProfile);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
+            var createdAtActionResult = result as CreatedAtActionResult;
+            Assert.AreEqual(nameof(_controller.UpdateEmployerProfile), createdAtActionResult.ActionName);
+            Assert.AreEqual(expectedEmployerProfile.Id, ((EmployerProfile)createdAtActionResult.Value).Id);
+        }
+
+        [TestMethod()]
+        public async Task UpdateEmployerProfileFails()
+        {
+            var expectedEmployerProfile = new EmployerProfile
+            {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+            };
+
+            _mockServices.Setup(s => s.UpdateEmployerProfile(expectedEmployerProfile))
+                .ThrowsAsync(new ArgumentException("Update Employer Profile Failed"));
+
+            var result = await _controller.UpdateEmployerProfile(expectedEmployerProfile);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult.StatusCode);
+            Assert.AreEqual("Internal server error", objectResult.Value);
+        }
+
+        [TestMethod()]
+        public async Task GetEmployerPagingData()
+        {
+            var jobProfileId = Guid.NewGuid();
+            var pageSize = 10;
+            var pageIndex = 1;
+            var expectedEmployerProfiles = new List<EmployerProfile>
+            {
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                },
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                }
+            };
+            
+            _mockServices.Setup(s => s.GetEmployerPagingData(jobProfileId, pageIndex, pageSize))
+                .ReturnsAsync(expectedEmployerProfiles);
+
+            var result = await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedEmployerProfiles.Count, result.Count());
+            CollectionAssert.AreEqual(expectedEmployerProfiles, result.ToList());
+        }
+
+        [TestMethod]
+        public async Task GetEmployerPagingDataFails()
+        {
+            var jobProfileId = Guid.NewGuid();
+            var pageSize = 10;
+            var pageIndex = 1;
+            var expectedEmployerProfiles = new List<EmployerProfile>
+            {
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                },
+                new EmployerProfile
+                {
+                Id = Guid.NewGuid(),
+                JobProfileId = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = "Test",
+                Title = "Test",
+                Address = "Test",
+                City = "Test",
+                State = "Test",
+                Zip = "Test",
+                Phone = "Test",
+                Email = "Test",
+                Website = "Test"
+                }
+            };
+
+            _mockServices.Setup(s => s.GetEmployerPagingData(jobProfileId, pageIndex, pageSize))
+                .ThrowsAsync(new ArgumentException("Employer Paging Failed"));
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                async () => await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize));
+        }
+
+        [TestMethod]
+        public async Task DeleteEmployerProfile()
+        {
+            var employerProfileId = Guid.NewGuid();
+
+            _mockServices.Setup(s => s.DeleteEmployerProfile(employerProfileId))
+                .Returns(Task.CompletedTask);
+
+            var result = await _controller.DeleteEmployerProfile(employerProfileId);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod()]
+        public async Task DeleteEmployerProfileFails()
+        {
+            var employerProfileId = Guid.NewGuid();
+
+            _mockServices.Setup(s => s.DeleteEmployerProfile(employerProfileId))
+                .ThrowsAsync(new ArgumentException("Employer Profile Delete Failed"));
+
+            await Assert.ThrowsExceptionAsync<ArgumentException>(
+                async () => await _controller.DeleteEmployerProfile(employerProfileId));
         }
         #endregion
     }
