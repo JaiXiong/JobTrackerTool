@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -19,7 +19,8 @@ import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles/dialog-employerprofiles.component';
 import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
+import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-jobprofile',
@@ -48,7 +49,7 @@ import { Observable, of } from 'rxjs';
   templateUrl: './jobprofile.component.html',
   styleUrl: './jobprofile.component.scss',
 })
-export class JobprofileComponent {
+export class JobprofileComponent implements OnInit, OnDestroy {
   title = 'JobTrackerApp';
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
   totalRecords: number = 0;
@@ -59,16 +60,8 @@ export class JobprofileComponent {
   jobProfiles: JobProfile[] = [];
   jobProfile!: JobProfile;
   jobProfileSelected!: JobProfile;
-  // jobProfileSelected: JobProfile = {
-  //   id: '',
-  //   userProfileId: '',
-  //   date: new Date(),
-  //   latestUpdate: new Date(),
-  //   profileName: '',
-  //   employerProfiles: [],
-  // };
   employerProfileSelected: string = '';
-  employerProfiles: EmployerProfile[] = [];
+  //employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
     'date',
     'name',
@@ -90,11 +83,34 @@ export class JobprofileComponent {
       this.userNameId = params['usernameid'];
       this.userName = params['name'];
     });
-    this.getJobProfiles();
+
+    if (localStorage.getItem('jobProfileId')) {
+      this.isSelected = true;
+    }
+    
+    this.getJobProfiles().subscribe({
+      next: (profiles: JobProfile[]) => {
+        this.jobProfiles = profiles;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error in subscription:', error);
+        //this.snackBar.open('Failed to load profiles', 'Close', { duration: 3000 });
+      }
+    });
+
+    this.getPageData();
+  }
+
+  private destroy$ = new Subject<void>();
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    localStorage.removeItem('jobProfile');
   }
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
@@ -104,36 +120,55 @@ export class JobprofileComponent {
   ) {}
 
   public getJobProfile(): void {
-    this.jobTrackerService
-      .GetJobProfile(this.userNameId, this.jobProfile)
-      .subscribe({
-        next: (response: JobProfile) => {
-          console.log(response);
-          this.jobProfile = response;
-        },
-        error: (error) => {
-          console.error('Failed to get job profile', error);
-        },
-      });
+    this.jobTrackerService.GetJobProfile(this.jobProfileSelected.id).subscribe({
+      next: (response: JobProfile) => {
+        console.log(response);
+        this.jobProfile = response;
+      },
+      error: (error) => {
+        console.error('Failed to get job profile', error);
+      },
+    });
   }
 
   public getJobProfiles(): Observable<JobProfile[]> {
-    this.jobTrackerService.GetJobProfiles(this.userNameId).subscribe({
-      next: (response: JobProfile[]) => {
-        this.jobProfiles = this.convertJobProfiles(response);
-        this.jobProfileSelected = this.jobProfiles[0];
-      },
-      error: (error) => {
-        console.error('Failed to get job profiles', error);
-        return of([]);
-      },
-    });
-    return of([]);
+    if (!this.userNameId) {
+      console.error('userNameId is undefined');
+      return of([]);
+    }
+    
+    return this.jobTrackerService
+      .GetJobProfiles(this.userNameId)
+      .pipe(
+        tap((response: JobProfile[]) => {
+          if (!response) {
+            console.warn('No profiles returned');
+            this.jobProfiles = [];
+            return;
+          }
+          this.jobProfiles = this.convertJobProfiles(response);
+        }),
+        catchError((error) => {
+          console.error('Failed to get job profiles', error);
+          this.jobProfiles = [];
+          return of([]);
+        }),
+        takeUntil(this.destroy$)
+      );
+      // .subscribe({
+      //   next: () => {
+      //     this.cdr.detectChanges();
+      //   },
+      //   error: (error) => {
+      //     console.error('Error in subscription:', error);
+      //   },
+      // });
   }
 
   public convertJobProfiles(response: JobProfile[]): JobProfile[] {
     return response.map((element: JobProfile) => {
       return {
+        //short for all properties in jobprofile
         ...element,
         date: this.datePipe.transform(element.date, 'M/dd/yyyy hh:mm a') as any,
         latestUpdate: this.datePipe.transform(
@@ -149,6 +184,7 @@ export class JobprofileComponent {
   ): EmployerProfile[] {
     return response.map((element: EmployerProfile) => {
       return {
+        //short for all properties in employerprofile
         ...element,
         date: this.datePipe.transform(element.date, 'M/dd/yyyy hh:mm a') as any,
         latestUpdate: this.datePipe.transform(
@@ -160,7 +196,7 @@ export class JobprofileComponent {
   }
 
   public onNameClick(event: Event, element: EmployerProfile): void {
-    event.preventDefault(); // Prevent the default anchor behavior
+    event.preventDefault(); 
     this.employerProfileSelected = element.id;
 
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
@@ -173,12 +209,11 @@ export class JobprofileComponent {
       if (result) {
         this.jobTrackerService.UpdateEmployerProfile(result).subscribe({
           next: (response) => {
-            console.log('Employer profile updated successfully', response);
-            // Handle success response
+            //console.log('Employer profile updated successfully', response);
+            console.log('Employer profile updated successfully');
           },
           error: (error) => {
             console.error('Failed to update employer profile', error);
-            // Handle error response
           },
         });
       }
@@ -187,6 +222,13 @@ export class JobprofileComponent {
 
   public onJobProfileChange(event: any) {
     this.jobProfileSelected = event.value;
+    localStorage.setItem('jobProfileId', this.jobProfileSelected.id);
+
+    if (!this.jobProfileSelected) {
+      console.error('No job profile selected during job profile change');
+      return;
+    }
+
     this.getPageData();
     this.isSelected = true;
     this.showJobOptions = false;
@@ -200,25 +242,48 @@ export class JobprofileComponent {
   }
 
   public getPageData(): void {
-    if (!this.jobProfileSelected) {
-      console.error('No job profile selected');
-      return;
-    }
+    const jobProfileId =
+      this.jobProfileSelected?.id || localStorage.getItem('jobProfileId');
 
-    this.jobTrackerService
-      .GetEmployerPagingData(
-        this.jobProfileSelected.id,
-        this.pageIndex,
-        this.pageSize
+      if (!jobProfileId) {
+        console.error('No job profile selected during paging');
+        return;
+      }
+    
+      this.getJobProfiles().pipe(
+        tap((profiles) => {
+          this.jobProfiles = profiles;
+          this.jobProfileSelected = profiles.find(
+            (profile) => profile.id === jobProfileId
+          ) as JobProfile;
+          this.cdr.markForCheck();
+        }),
+        switchMap(() => {
+          if (!this.jobProfileSelected) {
+            console.error('No job profile found with the given ID');
+            return of([]);
+          }
+    
+          return this.jobTrackerService.GetEmployerPagingData(jobProfileId, this.pageIndex, this.pageSize).pipe(
+            tap((response) => {
+              this.totalRecords = response.length ? response.length : 0;
+              this.dataSource = this.convertEmployerProfiles(response);
+              this.cdr.detectChanges();
+            })
+          );
+        }),
+        catchError((error) => {
+          console.error('Failed to get paging data', error);
+          return of([]);
+        }),
+        takeUntil(this.destroy$)
       )
       .subscribe({
-        next: (response) => {
-          this.totalRecords = response.length ? response.length : 0;
-          this.dataSource = this.convertEmployerProfiles(response);
+        next: () => {
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Failed to get paging data', error);
+          console.error('Error in subscription:', error);
         },
       });
   }
@@ -228,7 +293,6 @@ export class JobprofileComponent {
   }
 
   public onCreateJobProfile(): void {
-    console.log('Create button clicked!');
     const dialogRef = this.dialog.open(DialogJobprofilesComponent, {
       width: '500px',
       disableClose: true,
@@ -256,7 +320,7 @@ export class JobprofileComponent {
       //and select the updated job profile
       this.getJobProfiles().subscribe(() => {
         this.jobProfileSelected = this.jobProfiles.find(
-          (profile) => profile.id === selectedJobProfileId || this.jobProfiles[0]
+          (profile) => profile.id === selectedJobProfileId
         ) as JobProfile;
         this.cdr.detectChanges();
       });
@@ -269,21 +333,21 @@ export class JobprofileComponent {
       .DeleteJobProfile(this.jobProfileSelected.id)
       .subscribe({
         next: (response) => {
-          console.log('Job profile deleted successfully', response);
+          //console.log('Job profile deleted successfully', response);
           this.snackBar.open('Job profile deleted successfully', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
           });
           this.getJobProfiles();
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Failed to delete job profile', error);
+          //console.error('Failed to delete job profile', error);
           this.snackBar.open('Failed to delete job profile', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
           });
         },
       });
@@ -313,28 +377,27 @@ export class JobprofileComponent {
       .DeleteJobProfile(this.employerProfileSelected)
       .subscribe({
         next: (response) => {
-          console.log('Employer profile deleted successfully', response);
+          //console.log('Employer profile deleted successfully', response);
           this.snackBar.open('Employer profile deleted successfully', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',
-            verticalPosition: 'top', 
+            verticalPosition: 'top',
           });
           this.getPageData();
           this.cdr.detectChanges();
         },
         error: (error) => {
-          console.error('Failed to delete employer profile', error);
+          //console.error('Failed to delete employer profile', error);
           this.snackBar.open('Failed to delete employer profile', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',
-            verticalPosition: 'top', 
+            verticalPosition: 'top',
           });
         },
       });
   }
 
   public onJobDefaultClick(): void {
-    console.log('Job Default button clicked!');
     this.showJobOptions = true;
     this.isSelected = false;
     this.showEmployerOptions = false;

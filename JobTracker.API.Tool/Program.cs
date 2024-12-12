@@ -31,7 +31,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBusinessErrors.ResourceFileName", typeof(Program).Assembly));
 
 // Register JobTrackerToolService
-builder.Services.AddScoped<JobTrackerToolService>();
+builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
 
 // Register the DbContext with a connection string
 builder.Services.AddDbContext<JobProfileContext>(options =>
