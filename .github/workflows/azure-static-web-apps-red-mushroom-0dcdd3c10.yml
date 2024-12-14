@@ -19,11 +19,6 @@ jobs:
         with:
           submodules: true
           lfs: false
-
-      - name: Build Angular app
-        run: npm run build -- --configuration=prod
-        working-directory: JobTrackerApp
-
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
