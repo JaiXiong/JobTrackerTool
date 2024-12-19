@@ -8,7 +8,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Read allowed origins from configuration
+builder.Configuration.AddEnvironmentVariables();
+var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
+//var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY", EnvironmentVariableTarget.User);
+
+if (string.IsNullOrEmpty(jwtSecretKey))
+{
+    throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
+}
+
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -20,13 +28,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "http://localhost:5000",
-            ValidAudience = "http://localhost:5000",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
+            ValidIssuer = "http://localhost:3000",
+            ValidAudience = "http://localhost:3000",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
     });
-
-// Add services to the container.
 
 builder.Services.AddCors(options =>
 {
