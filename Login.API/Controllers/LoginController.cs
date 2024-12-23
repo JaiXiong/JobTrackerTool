@@ -45,7 +45,7 @@ namespace Login.API.Controllers
 
         //}
 
-        [HttpPost("login", Name = "Login")]
+        [HttpPost("loginauth", Name = "Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             //TODO
