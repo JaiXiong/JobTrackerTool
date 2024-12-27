@@ -13,21 +13,23 @@ import { CommonModule } from '@angular/common';
 import { UserProfile } from '../../models/user-profile.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUserprofilesComponent } from '../manage-dialog-popups/dialog-userprofiles/dialog-userprofiles/dialog-userprofiles.component';
+import { PopupformModularComponent } from "../modular/popupform/popupform-modular/popupform-modular.component";
+import { RegisteruserComponent } from "../manage-users/registeruser/registeruser.component";
 
 @Component({
   selector: 'app-login',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports:
-    [
-      MatFormFieldModule,
-      MatInputModule,
-      RouterModule,
-      CommonModule,
-      ReactiveFormsModule,
-      MatIconModule,
-      FormsModule
-    ],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    RouterModule,
+    CommonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    FormsModule,
+    RegisteruserComponent
+],
   providers:
     [
       //provideAnimations(),
@@ -41,6 +43,7 @@ export class LoginComponent {
   _username: string = '';
   _password: string = '';
   _usernameid: string = '';
+  _isRegister: boolean = false;
 
   constructor(private router: Router, private loginService: LoginService, private dialog: MatDialog) { }
 
@@ -56,6 +59,12 @@ export class LoginComponent {
       });
   }
 
+  public registerPopup(event: Event): void {
+    event.preventDefault();
+    this._isRegister = !this._isRegister;
+  }
+
+  
   public register(element: UserProfile): void {
     const dialogRef = this.dialog.open(DialogUserprofilesComponent, {
       width: '250px',
@@ -67,4 +76,7 @@ export class LoginComponent {
     });
   }
 
+  handleClose() {
+    this._isRegister = false;
+  }
 }

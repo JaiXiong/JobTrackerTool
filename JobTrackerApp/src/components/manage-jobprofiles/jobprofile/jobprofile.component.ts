@@ -17,8 +17,8 @@ import { EmployerprofileComponent } from '../../manage-employerprofiles/employer
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-jobprofiles/dialog-jobprofiles.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles/dialog-employerprofiles.component';
-import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
+import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles.component';
+import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
 import { Observable, of, Subject } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 

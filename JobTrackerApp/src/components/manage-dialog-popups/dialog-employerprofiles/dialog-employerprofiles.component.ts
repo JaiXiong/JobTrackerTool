@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { JobTrackerService } from '../../../../services/jobtracker.service';
+import { JobTrackerService } from '../../../services/jobtracker.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EmployerProfile, ActionResult, Details } from '../../../../models/employer-profile.model';
+import { EmployerProfile, ActionResult, Details } from '../../../models/employer-profile.model';
 import { CommonModule} from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -10,7 +10,7 @@ import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule} from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { CustomEmployersnackbarComponent } from '../../../custom-components/custom-employer-snackbar/custom-employersnackbar/custom-employersnackbar.component';
+import { CustomEmployersnackbarComponent } from '../../custom-components/custom-employer-snackbar/custom-employersnackbar/custom-employersnackbar.component';
 
 @Component({
   selector: 'app-dialog-employerprofiles',

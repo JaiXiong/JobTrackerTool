@@ -8,9 +8,9 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { JobProfile } from '../../../../../models/job-profile.model';
-import { JobTrackerService } from '../../../../../services/jobtracker.service';
-import { DialogJobprofilesComponent } from '../../dialog-jobprofiles/dialog-jobprofiles.component';
+import { JobProfile } from '../../../../models/job-profile.model';
+import { JobTrackerService } from '../../../../services/jobtracker.service';
+import { DialogJobprofilesComponent } from '../dialog-jobprofiles/dialog-jobprofiles.component';
 
 @Component({
   selector: 'app-dialog-edit-jobprofiles',

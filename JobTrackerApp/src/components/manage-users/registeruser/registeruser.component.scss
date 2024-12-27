@@ -1,0 +1,43 @@
+.register-label-custom {
+  padding: 10px;
+  font-weight: 500;
+}
+
+.register-email-textbox-custom {
+  //padding: 10px;
+  //font-weight: 500;
+  margin-left: 26px;
+}
+
+.register-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: large;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+.register-button {
+  display: flex;
+  justify-content: flex-end; // Align the button to the right
+  padding-top: 10px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding-top: 10%;
+  padding-bottom: 5%;
+  padding-right: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; // Full viewport height
+}

@@ -1,0 +1,19 @@
+<div class="flex-container-components-inner">
+    <p>Add New User Profile</p>
+    <mat-icon aria-hidden="false" aria-label="Close" (click)="onCloseRegister()" class="close-icon">close</mat-icon>
+    <div class="flex-container-components-inner">
+        <form [formGroup]="userProfileForm" (ngSubmit)="onSubmitRegister()">
+
+            <!-- <label for="date">Date</label>
+                    <input matInput type="text" id="date" formControlName="date" class="input-custom" placeholder={{data.date}}> -->
+            <label for="email">Email</label>
+            <input matInput type="text" id="email" formControlName="title" class="input-custom"
+                placeholder=''>
+
+            <label for="password">Password</label>
+            <input type="text" id="password" formControlName="name" class="input-custom" placeholder=''>
+
+            <button type="submit" [disabled]="!userProfileForm.valid" class="submit-button">Submit</button>
+        </form>
+    </div>
+</div>

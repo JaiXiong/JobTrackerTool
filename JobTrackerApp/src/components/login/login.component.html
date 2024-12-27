@@ -2,22 +2,32 @@
   <div class="login-container">
     <form>
         <div class="login-form">
-            <div>
+            <div *ngIf="!_isRegister">
                 <mat-label class="login-label-custom">Username</mat-label>
                 <input matInput placeholder="Enter your username" required [(ngModel)]="_username" name="username">
               </div>
           
-              <div>
+              <div *ngIf="!_isRegister">
                 <mat-label class="login-label-custom">Password</mat-label>
                 <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password" style="margin-left: 3px;">
               </div>
-              <div class="login-button">
+              <div class="login-button" *ngIf="!_isRegister">
                 <button  mat-raised-button color="primary" (click)="login()">Login</button>
               </div>
-        </div>
-      
 
-      
+              <span class="login-label-custom" style="align-items: center;" *ngIf="!_isRegister"><a  href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a></span>
+              <app-registeruser *ngIf="_isRegister"></app-registeruser>
+        </div>
+        <div>
+          <!-- Don't have an account? <a routerLink="/register">Register</a> -->
+           
+          <!-- Don't have an account? <button mat-raised-button color="primary" (click)="registerPopup()">Register</button> -->
+          <!-- Don't have an account? <a  href="#" (click)="registerPopup()">Register</a> -->
+          <!-- <app-popupform-modular *ngIf="_isRegister"></app-popupform-modular> -->
+        </div>
     </form>
+    <!-- <div>
+      Don't have an account? <a routerLink="/register">Register</a>
+    </div> -->
   </div>
 </div>
