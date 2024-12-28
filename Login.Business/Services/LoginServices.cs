@@ -1,4 +1,5 @@
-﻿using JobTracker.API.Tool.DbData;
+﻿using JobData.Entities;
+using JobTracker.API.Tool.DbData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -62,6 +63,31 @@ namespace Login.Business.Services
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task Register(string email, string pw)
+        {
+            var exist = _dbContext.UserProfiles.Any(u => u.Email == email);
+
+            if (exist)
+            {
+                throw new ArgumentException(_resourceManager.GetString("UserExist"));
+            }
+
+            var delimiter = new char[] { '@' };
+
+            var user = new UserProfile
+            {
+                Id = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = email.Substring(0, email.IndexOf('@')),
+                Email = email,
+                Password = pw
+            };
+
+            _dbContext.UserProfiles.Add(user);
+            await _dbContext.SaveChangesAsync();
         }
 
         public string LoginEncrypt(string item)

@@ -9,4 +9,9 @@
   <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password"
     style="margin-left: 3px;">
 </div>
-<app-submitbutton-modular></app-submitbutton-modular>
+<div>
+  <mat-label class="register-label-custom">Confirm Password</mat-label>
+  <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_confirmPassword" name="comfirmpassword"
+    style="margin-left: 3px;">
+</div>
+<app-submitbutton-modular [(ngModel)]="_registerUser"/>

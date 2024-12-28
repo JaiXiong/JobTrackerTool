@@ -1,17 +1,29 @@
 import { Component } from '@angular/core';
+import { JobTrackerService } from '../../../services/jobtracker.service';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-submitbutton-modular',
   standalone: true,
-  imports: [],
+  imports: 
+  [
+
+  ],
   templateUrl: './submitbutton-modular.component.html',
   styleUrl: './submitbutton-modular.component.scss'
 })
 export class SubmitbuttonModularComponent {
 
-  //WE might not use this, but keep this here for now
-  public onSubmitRegister(): void {
-    console.log('Register button clicked!');
+  constructor(private loginService: LoginService) { }
+
+  public onSubmitRegister(email: string, pw: string): void {
+    this.loginService.RegisterUser(email, pw).subscribe(
+      response => {
+        console.log('Register button clicked!');
+      },
+      error => {
+        console.error('Register failed', error);
+      });
   }
 
   public submit(): void {

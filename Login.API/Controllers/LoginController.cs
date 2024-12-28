@@ -79,6 +79,32 @@ namespace Login.API.Controllers
 
         }
 
-
+        [HttpPost("register", Name = "Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
+        {
+            //TODO
+            //for now we have no login since this is low priority
+            //ideally we need to encrypt and salt the username and password using some engine etc. store it in db
+            //then when we check we need to decrypt and unsalt to get these values again.
+            if (string.IsNullOrEmpty(registerRequest.Email) || string.IsNullOrEmpty(registerRequest.Password))
+            {
+                throw new ArgumentNullException("Username or password invalid");
+            }
+            try
+            {
+                //var delimiter = new char[] { '@' };
+                //var username = _loginServices.LoginDecrpyt(registerRequest.Email.Split(delimiter)[0]);
+                //var password = _loginServices.LoginDecrpyt(registerRequest.Password);
+                await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+                //var token = _loginServices.GenerateToken(username, password);
+                //return CreatedAtAction(nameof(Login), new { username = username, password = password });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the employer profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
