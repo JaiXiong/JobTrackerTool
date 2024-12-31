@@ -1,17 +1,23 @@
 <p class="register-label">Create New User</p>
-<div>
-  <mat-label class="register-label-custom">Email</mat-label>
-  <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_email" name="email">
-</div>
-
-<div>
-  <mat-label class="register-label-custom">Password</mat-label>
-  <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password"
-    style="margin-left: 3px;">
-</div>
-<div>
-  <mat-label class="register-label-custom">Confirm Password</mat-label>
-  <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_confirmPassword" name="comfirmpassword"
-    style="margin-left: 3px;">
-</div>
-<app-submitbutton-modular [(ngModel)]="_registerUser"/>
+<form>
+  <div>
+    <mat-label class="register-label-custom">Email</mat-label>
+    <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_email" name="email">
+  </div>
+  
+  <div>
+    <mat-label class="register-label-custom">Password</mat-label>
+    <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password"
+      style="margin-left: 3px;">
+  </div>
+  <div>
+    <mat-label class="register-label-custom">Confirm Password</mat-label>
+    <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_confirmPassword" name="comfirmpassword"
+      style="margin-left: 3px;">
+  </div>
+  <!-- [formData]="{ email: _email, password: _password, confirmPassword: _confirmPassword }" -->
+  <app-submitbutton-modular
+    [_registerUser]="{ email: _email, password: _password, confirmPassword: _confirmPassword }"
+    (onSubmit)="onSubmitRegisterUser()">
+  </app-submitbutton-modular>
+</form>

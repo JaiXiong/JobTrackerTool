@@ -79,17 +79,15 @@ namespace Login.API.Controllers
 
         }
 
-        [HttpPost("register", Name = "Register")]
+        [HttpPost("registeruser", Name = "RegisterUser")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
             //TODO
-            //for now we have no login since this is low priority
-            //ideally we need to encrypt and salt the username and password using some engine etc. store it in db
-            //then when we check we need to decrypt and unsalt to get these values again.
             if (string.IsNullOrEmpty(registerRequest.Email) || string.IsNullOrEmpty(registerRequest.Password))
             {
                 throw new ArgumentNullException("Username or password invalid");
             }
+
             try
             {
                 //var delimiter = new char[] { '@' };

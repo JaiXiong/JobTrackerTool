@@ -6,6 +6,13 @@ using System.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHttpsRedirection(options =>
+    {
+        options.HttpsPort = 5001;
+    });
+}
 
 // Read allowed origins from configuration
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();

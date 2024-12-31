@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Resources;
 using System.Security.Claims;
+using Utils.Encryption;
 
 namespace Login.Business.Services
 {
@@ -13,6 +14,7 @@ namespace Login.Business.Services
         private readonly ResourceManager _resourceManager;
         private readonly JobProfileContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly Encryption _encyption;
 
         public LoginServices(ResourceManager resourceManager, JobProfileContext context, IConfiguration configuration)
         {
@@ -83,7 +85,7 @@ namespace Login.Business.Services
                 LatestUpdate = DateTime.Now,
                 Name = email.Substring(0, email.IndexOf('@')),
                 Email = email,
-                Password = pw
+                Password = _encyption.HashPassword(pw)
             };
 
             _dbContext.UserProfiles.Add(user);

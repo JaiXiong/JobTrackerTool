@@ -9,7 +9,7 @@ namespace Utils.Encryption
 {
     public class Encryption
     {
-        public string Hash(string data)
+        public string HashPassword(string data)
         {
             return BCrypt.Net.BCrypt.HashPassword(data);
         }

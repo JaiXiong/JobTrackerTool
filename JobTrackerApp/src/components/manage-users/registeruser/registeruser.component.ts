@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators, Form } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormGroup,
+  FormBuilder,
+  Validators,
+  Form,
+} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { ClosebuttonModularComponent } from "../../modular/closebutton-modular/closebutton-modular.component";
+import { ClosebuttonModularComponent } from '../../modular/closebutton-modular/closebutton-modular.component';
 import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular/submitbutton-modular.component';
 
 @Component({
@@ -22,8 +29,8 @@ import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular
     MatTooltipModule,
     ReactiveFormsModule,
     ClosebuttonModularComponent,
-    SubmitbuttonModularComponent
-],
+    SubmitbuttonModularComponent,
+  ],
   templateUrl: './registeruser.component.html',
   styleUrl: './registeruser.component.scss',
 })
@@ -50,13 +57,14 @@ export class RegisteruserComponent {
     // });
   }
 
-  _register = input('');
-
-  // public onSubmitRegister(): void {
-  //   console.log('Register button clicked!');
-  // }
-
-  // public onCloseRegister(): void {
-  //   console.log('Close button clicked!');
-  // }
+  public onSubmitRegisterUser(): void {
+    // const formData = {
+    //   email: this._email,
+    //   password: this._password,
+    //   confirmPassword: this._confirmPassword,
+    // };
+    this._registerUser.value.email = this._email;
+    this._registerUser.value.password = this._password;
+    this._registerUser.value.confirmPassword = this._confirmPassword;
+  }
 }

@@ -198,7 +198,7 @@ namespace JobTracker.API.tool.Controllers
                 {
                     Name = registerRequest.Email.Substring(0, '@'),
                     Email = registerRequest.Email,
-                    Password = _encyption.Hash(registerRequest.Password)
+                    Password = _encyption.HashPassword(registerRequest.Password)
                 };
                 _jobTrackerToolService.ValidateNewUser(userProfile);
                 await _jobTrackerToolService.AddUserProfile(userProfile);

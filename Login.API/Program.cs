@@ -17,6 +17,14 @@ if (string.IsNullOrEmpty(jwtSecretKey))
     throw new InvalidOperationException("JWT secret key is not set in the environment variables.");
 }
 
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHttpsRedirection(options =>
+    {
+        options.HttpsPort = 3001;
+    });
+}
+
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
