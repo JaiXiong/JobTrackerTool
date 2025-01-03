@@ -57,9 +57,13 @@ builder.Services.AddCors(options =>
 // Register ResourceManager
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("LoginErrors.ResourceFileName", typeof(Program).Assembly));
 
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<JobProfileContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
+
 builder.Services.AddScoped<LoginServices>();
+builder.Services.AddScoped<Utils.Encryption.Encryption>();
+
 builder.Services.AddControllers();  
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

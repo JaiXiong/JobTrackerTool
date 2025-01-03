@@ -12,11 +12,11 @@ namespace Login.Business.Services
     public class LoginServices
     {
         private readonly ResourceManager _resourceManager;
-        private readonly JobProfileContext _dbContext;
+        private readonly IJobProfileContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly Encryption _encyption;
 
-        public LoginServices(ResourceManager resourceManager, JobProfileContext context, IConfiguration configuration, Encryption encryption)
+        public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption)
         {
             _resourceManager = resourceManager;
             _dbContext = context;

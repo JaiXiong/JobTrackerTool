@@ -26,7 +26,7 @@ public class LoginServicesTests
         _mockConfiguration.Setup(config => config["Jwt:Audience"]).Returns("TestAudience");
         _mockConfiguration.Setup(config => config["Jwt:ExpiresInMinutes"]).Returns("15");
 
-        _mockDbContext = new Mock<JobProfileContext>(new DbContextOptions<JobProfileContext>());
+        _mockDbContext = new Mock<IJobProfileContext>();
         _mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();
 
