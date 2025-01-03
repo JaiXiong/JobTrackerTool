@@ -16,11 +16,12 @@ namespace Login.Business.Services
         private readonly IConfiguration _configuration;
         private readonly Encryption _encyption;
 
-        public LoginServices(ResourceManager resourceManager, JobProfileContext context, IConfiguration configuration)
+        public LoginServices(ResourceManager resourceManager, JobProfileContext context, IConfiguration configuration, Encryption encryption)
         {
             _resourceManager = resourceManager;
             _dbContext = context;
             _configuration = configuration;
+            _encyption = encryption;
         }
         public async Task<string> LoginAuth(string username, string pw)
         {

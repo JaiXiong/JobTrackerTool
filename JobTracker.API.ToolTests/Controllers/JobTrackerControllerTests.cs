@@ -16,6 +16,7 @@ using System.Resources;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -25,6 +26,7 @@ namespace JobTracker.API.tool.Controllers.Tests
         private readonly Mock<ILogger<JobTrackerController>> _mockLogger;
         private readonly Mock<JobProfileContext> _mockProfileContext;
         private readonly Mock<ResourceManager> _mockResourceManager;
+        private readonly Mock<Encryption> _mockEncryption;
         private readonly Mock<IJobTrackerToolService> _mockServices;
         private readonly JobTrackerController _controller;
 
@@ -34,7 +36,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockProfileContext = new Mock<JobProfileContext>(new DbContextOptions<JobProfileContext>());
             _mockResourceManager = new Mock<ResourceManager>();
             _mockServices = new Mock<IJobTrackerToolService>();
-            _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object);
+            _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object, _mockEncryption.Object);
         }
 
         #region Job Profile Tests

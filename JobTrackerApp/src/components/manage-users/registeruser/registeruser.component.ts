@@ -58,11 +58,7 @@ export class RegisteruserComponent {
   }
 
   public onSubmitRegisterUser(): void {
-    // const formData = {
-    //   email: this._email,
-    //   password: this._password,
-    //   confirmPassword: this._confirmPassword,
-    // };
+    
     this._registerUser.value.email = this._email;
     this._registerUser.value.password = this._password;
     this._registerUser.value.confirmPassword = this._confirmPassword;

@@ -3,7 +3,7 @@ using JobData.Entities;
 
 namespace JobTracker.API.Tool.DbData
 {
-    public class JobProfileContext: DbContext
+    public class JobProfileContext: DbContext, IJobProfileContext
     {
         public JobProfileContext(DbContextOptions<JobProfileContext> options) : base(options)
         { }

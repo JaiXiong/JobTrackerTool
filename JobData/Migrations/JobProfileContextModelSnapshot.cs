@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace JobData.Migrations
 {
-    [DbContext(typeof(JobProfileContext))]
+    [DbContext(typeof(JobTracker.API.Tool.DbData.JobProfileContext))]
     partial class JobProfileContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

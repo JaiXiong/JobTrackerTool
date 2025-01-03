@@ -57,7 +57,7 @@ builder.Services.AddCors(options =>
 // Register ResourceManager
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("LoginErrors.ResourceFileName", typeof(Program).Assembly));
 
-builder.Services.AddDbContext<JobProfileContext>(options =>
+builder.Services.AddDbContext<DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<LoginServices>();
 builder.Services.AddControllers();  
