@@ -24,7 +24,7 @@ namespace JobTracker.API.tool.Controllers.Tests
     public class JobTrackerControllerTests
     {
         private readonly Mock<ILogger<JobTrackerController>> _mockLogger;
-        private readonly Mock<JobProfileContext> _mockProfileContext;
+        private readonly Mock<IJobProfileContext> _mockProfileContext;
         private readonly Mock<ResourceManager> _mockResourceManager;
         private readonly Mock<Encryption> _mockEncryption;
         private readonly Mock<IJobTrackerToolService> _mockServices;
@@ -33,8 +33,9 @@ namespace JobTracker.API.tool.Controllers.Tests
         public JobTrackerControllerTests()
         {
             _mockLogger = new Mock<ILogger<JobTrackerController>>();
-            _mockProfileContext = new Mock<JobProfileContext>(new DbContextOptions<JobProfileContext>());
+            _mockProfileContext = new Mock<IJobProfileContext>();
             _mockResourceManager = new Mock<ResourceManager>();
+            _mockEncryption = new Mock<Encryption>();
             _mockServices = new Mock<IJobTrackerToolService>();
             _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object, _mockEncryption.Object);
         }

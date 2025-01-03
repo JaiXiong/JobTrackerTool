@@ -351,6 +351,11 @@ namespace JobTracker.API.tool.Controllers
                 await _jobTrackerToolService.DeleteJobProfile(jobProfileId);
                 return Ok();
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the job profile.");
+                throw new ArgumentException("An error occurred while deleting the job profile.");
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the job profile.");
@@ -365,6 +370,11 @@ namespace JobTracker.API.tool.Controllers
             {
                 await _jobTrackerToolService.DeleteEmployerProfile(employerProfileId);
                 return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the employer profile.");
+                throw new ArgumentException("An error occurred while deleting the employer profile.");
             }
             catch (Exception ex)
             {
