@@ -12,11 +12,11 @@
     <mat-icon class="jobprofile-icons" matTooltip="Update job profile" fontIcon="edit" *ngIf="isSelected" (click)="onEditJobProfile()"></mat-icon>
     <mat-icon class="jobprofile-icons" matTooltip="Delete job profile" fontIcon="delete" *ngIf="isSelected" (click)="onDeleteJobProfile()"></mat-icon>
   </span>
-  <!-- <span class="span-right">
+  <span class="span-right">
     <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add" *ngIf="showEmployerOptions" (click)="onCreateEmployerProfile()"></mat-icon>
     <mat-icon class="employerprofile-icons" matTooltip="Update employer profile" fontIcon="edit" *ngIf="showEmployerOptions" (click)="onEditEmployerProfile()"></mat-icon>
     <mat-icon class="employerprofile-icons" matTooltip="Delete employer profile" fontIcon="delete" *ngIf="showEmployerOptions" (click)="onDeleteEmployerProfile()"></mat-icon>
-  </span> -->
+  </span>
   <table mat-table *ngIf="isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
 
     <!--- Note that these columns can be defined in any order.

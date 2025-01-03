@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Resources;
 using System.Text;
+using Utils.Encryption;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +63,7 @@ builder.Services.AddDbContext<JobProfileContext>(options =>
 builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
 
 builder.Services.AddScoped<LoginServices>();
-builder.Services.AddScoped<Utils.Encryption.Encryption>();
+builder.Services.AddScoped<Encryption>();
 
 builder.Services.AddControllers();  
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

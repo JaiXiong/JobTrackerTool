@@ -13,13 +13,14 @@ export class LoginService {
     
     public Login(username: string, password: string): Observable<any> { 
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        const body = { username, password };
-        const params = new HttpParams().set('username', username).set('password', password);
+        var email = username;
+        const body = { email, password };
+        //const params = new HttpParams().set('username', username).set('password', password);
         
         //return this.http.post<any>(`${this.loginUrl}/api/Login/loginauth`, body, { headers });
         //TODO:
         //need to do the same to this, only pass body not the params
-        return this.http.post<any>(`${this.loginUrl}/api/Login/loginauth`, {}, { headers, params }).pipe(
+        return this.http.post<any>(`${this.loginUrl}/api/Login/loginauth`, body, { headers }).pipe(
             catchError(this.handleError<any>('Login')));
     }
 

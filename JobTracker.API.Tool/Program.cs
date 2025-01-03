@@ -3,6 +3,7 @@ using JobTracker.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Resources;
+using Utils.Encryption;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,7 @@ builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBus
 
 // Register JobTrackerToolService
 builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
+builder.Services.AddScoped<Encryption>();
 
 // Register the DbContext with a connection string
 builder.Services.AddDbContext<JobProfileContext>(options =>
