@@ -9,12 +9,12 @@ namespace Utils.Encryption
 {
     public class Encryption
     {
-        public string HashPassword(string data)
+        public virtual string HashPassword(string data)
         {
             return BCrypt.Net.BCrypt.HashPassword(data);
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public virtual bool VerifyPassword(string password, string hashedPassword)
         {
             return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }

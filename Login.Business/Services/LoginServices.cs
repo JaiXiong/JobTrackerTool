@@ -1,5 +1,6 @@
 ﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -47,7 +48,14 @@ namespace Login.Business.Services
 
         public string GenerateToken(string username, string pw)
         {
-            var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWT_SECRET_KEY"]));
+            var secretKey = _configuration["JWT_SECRET_KEY"];
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                throw new ArgumentException("JWT_SECRET_KEY is not configured.");
+            }
+            var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
+
+            //var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWT_SECRET_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -70,9 +78,9 @@ namespace Login.Business.Services
 
         public async Task Register(string email, string pw)
         {
-            var exist = _dbContext.UserProfiles.Any(u => u.Email == email);
+            var exist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Email == email);
 
-            if (exist)
+            if (exist != null)
             {
                 throw new ArgumentException(_resourceManager.GetString("UserExist"));
             }
@@ -89,7 +97,7 @@ namespace Login.Business.Services
                 Password = _encyption.HashPassword(pw)
             };
 
-            _dbContext.UserProfiles.Add(user);
+            await _dbContext.UserProfiles.AddAsync(user);
             await _dbContext.SaveChangesAsync();
         }
 

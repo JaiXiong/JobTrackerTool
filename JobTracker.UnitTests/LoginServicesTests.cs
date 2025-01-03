@@ -4,6 +4,7 @@ using Login.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using Moq.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Resources;
 using Utils.Encryption;
@@ -21,7 +22,7 @@ public class LoginServicesTests
     public LoginServicesTests()
     {
         _mockConfiguration = new Mock<IConfiguration>();
-        _mockConfiguration.Setup(config => config["Jwt:Key"]).Returns("your-very-secure-key-1234567890");
+        _mockConfiguration.Setup(config => config["JWT_SECRET_KEY"]).Returns("your-very-secure-key-12345678901011");
         _mockConfiguration.Setup(config => config["Jwt:Issuer"]).Returns("Test.com");
         _mockConfiguration.Setup(config => config["Jwt:Audience"]).Returns("TestAudience");
         _mockConfiguration.Setup(config => config["Jwt:ExpiresInMinutes"]).Returns("15");
@@ -56,10 +57,10 @@ public class LoginServicesTests
         mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.Expression).Returns(userProfiles.Expression);
         mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.ElementType).Returns(userProfiles.ElementType);
         mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.GetEnumerator()).Returns(userProfiles.GetEnumerator());
-        mockDbSet.Setup(m => m.FirstOrDefaultAsync(It.IsAny<Expression<Func<UserProfile, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userProfile);
 
         _mockDbContext.Setup(db => db.UserProfiles).Returns(mockDbSet.Object);
+        _mockDbContext.Setup(db => db.GetUserProfileAsync(It.IsAny<Expression<Func<UserProfile, bool>>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userProfile);
 
         _mockEncryption.Setup(e => e.VerifyPassword(password, hashedPassword)).Returns(true);
 
@@ -90,28 +91,17 @@ public class LoginServicesTests
     public async Task Register_ShouldAddUser_WhenCalled()
     {
         // Arrange
-        var email = "test@example.com";
-        var password = "testpassword";
-        var hashedPassword = "hashedpassword";
-
-        var userProfile = new UserProfile
+        var userProfiles = new List<UserProfile>
         {
-            Id = Guid.NewGuid(),
-            Name = email,
-            Password = hashedPassword,
-            Email = email
-        };
+            new UserProfile {Name = "existing", Email = "existing@example.com", Password = "pw" }
+        }.AsQueryable();
 
-        _mockEncryption.Setup(e => e.HashPassword(password)).Returns(hashedPassword);
-
-        _mockDbContext.Setup(db => db.UserProfiles.AddAsync(It.IsAny<UserProfile>(), default))
-            .ReturnsAsync(new Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<UserProfile>(null));
-
-        _mockDbContext.Setup(db => db.SaveChangesAsync(default))
-            .ReturnsAsync(1);
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(userProfiles);
+        _mockResourceManager.Setup(rm => rm.GetString("UserExist")).Returns("User already exists");
+        _mockEncryption.Setup(e => e.HashPassword(It.IsAny<string>())).Returns("hashedPassword");
 
         // Act
-        await _loginServices.Register(email, password);
+        await _loginServices.Register("newuser@example.com", "password");
 
         // Assert
         _mockDbContext.Verify(db => db.UserProfiles.AddAsync(It.IsAny<UserProfile>(), default), Times.Once);

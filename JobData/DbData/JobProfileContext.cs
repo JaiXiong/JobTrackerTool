@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using JobData.Entities;
+using System.Linq.Expressions;
 
 namespace JobTracker.API.Tool.DbData
 {
@@ -23,5 +24,9 @@ namespace JobTracker.API.Tool.DbData
         public DbSet<JobAction> JobActions { get; set; }
         public DbSet<Detail> Details { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual Task<UserProfile> GetUserProfileAsync(Expression<Func<UserProfile, bool>> predicate, CancellationToken cancellationToken = default)
+        {
+            return UserProfiles.FirstOrDefaultAsync(predicate, cancellationToken);
+        }
     }
 }
