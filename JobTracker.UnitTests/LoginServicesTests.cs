@@ -37,7 +37,6 @@ public class LoginServicesTests
     [Fact]
     public async Task LoginAuth_ShouldReturnUserId_WhenUserExists()
     {
-        // Arrange
         var username = "testuser";
         var password = "testpassword";
         var hashedPassword = "hashedpassword";
@@ -64,11 +63,8 @@ public class LoginServicesTests
 
         _mockEncryption.Setup(e => e.VerifyPassword(password, hashedPassword)).Returns(true);
 
-
-        // Act
         var result = await _loginServices.LoginAuth(username, password);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(userProfile.Id.ToString(), result);
     }
@@ -76,21 +72,17 @@ public class LoginServicesTests
     [Fact]
     public void GenerateToken_ShouldReturnToken_WhenCalled()
     {
-        // Arrange
         var username = "testuser";
         var password = "testpassword";
 
-        // Act
         var token = _loginServices.GenerateToken(username, password);
 
-        // Assert
         Assert.NotNull(token);
     }
 
     [Fact]
     public async Task Register_ShouldAddUser_WhenCalled()
     {
-        // Arrange
         var userProfiles = new List<UserProfile>
         {
             new UserProfile {Name = "existing", Email = "existing@example.com", Password = "pw" }
@@ -100,10 +92,8 @@ public class LoginServicesTests
         _mockResourceManager.Setup(rm => rm.GetString("UserExist")).Returns("User already exists");
         _mockEncryption.Setup(e => e.HashPassword(It.IsAny<string>())).Returns("hashedPassword");
 
-        // Act
         await _loginServices.Register("newuser@example.com", "password");
 
-        // Assert
         _mockDbContext.Verify(db => db.UserProfiles.AddAsync(It.IsAny<UserProfile>(), default), Times.Once);
         _mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
     }

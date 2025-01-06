@@ -15,12 +15,10 @@ if (!builder.Environment.IsDevelopment())
     });
 }
 
-// Read allowed origins from configuration
+// Read allowed origins from configuration file in appsettings
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
-// Add services to the container.
-
-// Add CORS policy
+// Add the CORS policy, for now we allow all, buckle down later
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -33,26 +31,26 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Add services
 builder.Services.AddControllers();
 
-// Register ResourceManager
+// Register ResourceManager so we can catch errors
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBusinessErrors.ResourceFileName", typeof(Program).Assembly));
 
-// Register JobTrackerToolService
+// Register JobTrackerToolService and Encryption
 builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
 builder.Services.AddScoped<Encryption>();
 
-// Register the DbContext with a connection string
+// Register the DbContext with a connection string in the appsettings
 builder.Services.AddDbContext<JobProfileContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register the Swagger generator, defining one or more Swagger documents
+// Register the Swagger generator so we can view it
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTracker API", Version = "v1" });
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();

@@ -1,21 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using JobTracker.API.tool.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JobData.Entities;
+﻿using JobData.Entities;
 using JobTracker.Business.Services;
 using Moq;
-using Castle.Core.Logging;
 using Microsoft.Extensions.Logging;
 using JobTracker.API.Tool.DbData;
-using Microsoft.EntityFrameworkCore;
 using System.Resources;
-using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers.Tests
@@ -69,7 +58,6 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod()]
         public async Task GetJobProfileTestFails()
         {
-            //Arrange
             var jobProfileId = Guid.NewGuid();
 
             _mockServices.Setup(s => s.GetJobProfile(jobProfileId))

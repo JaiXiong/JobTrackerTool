@@ -55,7 +55,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Register ResourceManager
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("LoginErrors.ResourceFileName", typeof(Program).Assembly));
 
 builder.Services.AddDbContext<JobProfileContext>(options =>
@@ -66,13 +65,11 @@ builder.Services.AddScoped<LoginServices>();
 builder.Services.AddScoped<Encryption>();
 
 builder.Services.AddControllers();  
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
