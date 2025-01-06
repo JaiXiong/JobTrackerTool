@@ -10,7 +10,7 @@ using Utils.Encryption;
 
 namespace Login.Business.Services
 {
-    public class LoginServices
+    public class LoginServices : ILoginServices
     {
         private readonly ResourceManager _resourceManager;
         private readonly IJobProfileContext _dbContext;
@@ -24,19 +24,20 @@ namespace Login.Business.Services
             _configuration = configuration;
             _encyption = encryption;
         }
-        public async Task<string> LoginAuth(string username, string pw)
+        public async Task<string> LoginAuth(string email, string pw)
         {
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrEmpty(email))
             {
-                throw new ArgumentException(_resourceManager.GetString("UsernameError"));
+                throw new ArgumentException(_resourceManager.GetString("UserEmailError"));
             }
 
             if (string.IsNullOrEmpty(pw))
             {
                 throw new ArgumentException(_resourceManager.GetString("PasswordError"));
             }
-
-            var user = _dbContext.UserProfiles.FirstOrDefault(u => u.Name == username);
+            var delimiter = new char[] { '@' };
+            var username = email.Split(delimiter)[0];
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == username);
 
             if (user == null)
             {
@@ -101,19 +102,19 @@ namespace Login.Business.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public string LoginEncrypt(string item)
-        {
-            //TODO
-            var encryptedItem = item;
-            return encryptedItem;
-        }
+        //public string LoginEncrypt(string item)
+        //{
+        //    //TODO
+        //    var encryptedItem = item;
+        //    return encryptedItem;
+        //}
 
-        public string LoginDecrpyt(string item)
-        {
-            //TODO
-            var decryptedItem = item;
+        //public string LoginDecrpyt(string item)
+        //{
+        //    //TODO
+        //    var decryptedItem = item;
 
-            return decryptedItem;
-        }
+        //    return decryptedItem;
+        //}
     }
 }

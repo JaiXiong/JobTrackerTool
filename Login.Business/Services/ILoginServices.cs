@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Login.Business.Services
 {
-    internal interface ILoginServices
+    public interface ILoginServices
     {
+        Task<string> LoginAuth(string username, string password);
+        Task Register(string email, string password);
+
+        string GenerateToken(string username, string password);
+        //Task Logout();
     }
 }

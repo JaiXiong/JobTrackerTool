@@ -33,16 +33,21 @@ namespace Login.API.Controllers
             try
             {
                 
-                var delimiter = new char[] { '@' };
-                var username = _loginServices.LoginDecrpyt(loginRequest.Email.Split(delimiter)[0]);
-                var password = _loginServices.LoginDecrpyt(loginRequest.Password);
+                //var delimiter = new char[] { '@' };
+                var username = loginRequest.Email;
+                var password = loginRequest.Password;
 
-                var userid = await _loginServices.LoginAuth(username, password);
+                var userId = await _loginServices.LoginAuth(username, password);
 
-                var token = _loginServices.GenerateToken(username, password);
-
-                //return CreatedAtAction(nameof(Login), new { username = username, password = password });
-                return Ok(new { id = userid, name = username, token });
+                if (userId != null)
+                {
+                    var token = _loginServices.GenerateToken(username, password);
+                    return Ok(new { id = userId, name = username, token });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             }
             catch (Exception ex)
             {
