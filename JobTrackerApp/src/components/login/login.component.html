@@ -16,7 +16,10 @@
               </div>
 
               <span class="login-label-custom" style="align-items: center;" *ngIf="!_isRegister"><a  href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a></span>
-              <app-registeruser *ngIf="_isRegister"></app-registeruser>
+              <app-registeruser 
+              *ngIf="_isRegister" 
+              (registerComplete)="onRegisterComplete()">
+            </app-registeruser>
         </div>
         <div>
           <!-- Don't have an account? <a routerLink="/register">Register</a> -->

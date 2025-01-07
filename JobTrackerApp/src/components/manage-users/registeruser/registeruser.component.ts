@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -40,6 +40,7 @@ export class RegisteruserComponent {
   _email: string = '';
   _password: string = '';
   _confirmPassword: string = '';
+  @Output() registerComplete = new EventEmitter<void>();
 
   constructor(private formBuilder: FormBuilder) {
     this._registerUser = this.formBuilder.group({
@@ -50,11 +51,6 @@ export class RegisteruserComponent {
   }
 
   ngOnInit(): void {
-    // this.userProfileForm = this.formBuilder.group({
-    //   email: ['', Validators.required],
-    //   password: ['', Validators.required],
-    //   confirmPassword: ['', Validators.required],
-    // });
   }
 
   public onSubmitRegisterUser(): void {
@@ -62,5 +58,9 @@ export class RegisteruserComponent {
     this._registerUser.value.email = this._email;
     this._registerUser.value.password = this._password;
     this._registerUser.value.confirmPassword = this._confirmPassword;
+  }
+
+  handleCloseRegister() {
+    this.registerComplete.emit();
   }
 }

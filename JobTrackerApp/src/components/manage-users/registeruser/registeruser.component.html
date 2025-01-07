@@ -18,6 +18,7 @@
   <!-- [formData]="{ email: _email, password: _password, confirmPassword: _confirmPassword }" -->
   <app-submitbutton-modular
     [_registerUser]="{ email: _email, password: _password, confirmPassword: _confirmPassword }"
+    (closeRegister)="handleCloseRegister()"
     (onSubmit)="onSubmitRegisterUser()">
   </app-submitbutton-modular>
 </form>

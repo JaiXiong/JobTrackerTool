@@ -19,7 +19,7 @@ import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles.component';
 import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -76,6 +76,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   isSelected: boolean = false;
   showJobOptions: boolean = true;
   showEmployerOptions: boolean = false;
+
+  private jobProfilesSubject = new BehaviorSubject<JobProfile[]>([]);
 
   ngOnInit(): void {
     // Retrieve the username from the query parameters
@@ -155,14 +157,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroy$)
       );
-      // .subscribe({
-      //   next: () => {
-      //     this.cdr.detectChanges();
-      //   },
-      //   error: (error) => {
-      //     console.error('Error in subscription:', error);
-      //   },
-      // });
   }
 
   public convertJobProfiles(response: JobProfile[]): JobProfile[] {
@@ -209,7 +203,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       if (result) {
         this.jobTrackerService.UpdateEmployerProfile(result).subscribe({
           next: (response) => {
-            //console.log('Employer profile updated successfully', response);
             console.log('Employer profile updated successfully');
           },
           error: (error) => {
@@ -299,14 +292,14 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       data: { userProfileId: this.userNameId },
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.getJobProfiles();
-      this.cdr.detectChanges();
+    dialogRef.afterClosed().pipe(
+      switchMap(() => this.getJobProfiles())
+    ).subscribe(profiles => {
+      this.jobProfilesSubject.next(profiles);
     });
   }
 
   public onEditJobProfile(): void {
-    console.log('Update button clicked!');
     const dialogRef = this.dialog.open(DialogEditJobprofilesComponent, {
       width: '500px',
       disableClose: true,
@@ -328,12 +321,10 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteJobProfile(): void {
-    console.log('Delete button clicked!');
     this.jobTrackerService
       .DeleteJobProfile(this.jobProfileSelected.id)
       .subscribe({
         next: (response) => {
-          //console.log('Job profile deleted successfully', response);
           this.snackBar.open('Job profile deleted successfully', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',
@@ -343,7 +334,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         error: (error) => {
-          //console.error('Failed to delete job profile', error);
+          console.error('Failed to delete job profile', error);
           this.snackBar.open('Failed to delete job profile', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',
@@ -377,7 +368,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       .DeleteJobProfile(this.employerProfileSelected)
       .subscribe({
         next: (response) => {
-          //console.log('Employer profile deleted successfully', response);
           this.snackBar.open('Employer profile deleted successfully', 'Close', {
             duration: 5000,
             horizontalPosition: 'right',

@@ -73,4 +73,8 @@ export class LoginComponent {
   handleClose() {
     this._isRegister = false;
   }
+
+  onRegisterComplete() {
+    this._isRegister = false;
+  }
 }

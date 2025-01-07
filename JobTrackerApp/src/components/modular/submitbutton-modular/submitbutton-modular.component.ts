@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { JobTrackerService } from '../../../services/jobtracker.service';
 import { LoginService } from '../../../services/login.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-submitbutton-modular',
@@ -15,8 +16,9 @@ import { LoginService } from '../../../services/login.service';
 export class SubmitbuttonModularComponent {
   @Input() _registerUser: any;
   @Output() onSubmit = new EventEmitter<any>();
+  @Output() closeRegister = new EventEmitter<void>();
   
-  constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService, private snackBar: MatSnackBar) { }
 
   public onSubmitRegister(email: string, pw: string): void {
     this.loginService.RegisterUser(email, pw).subscribe(
@@ -36,7 +38,12 @@ export class SubmitbuttonModularComponent {
     console.log(this._registerUser);
     this.loginService.RegisterUser(this._registerUser.email, this._registerUser.password).subscribe({
       next: response => {
-        console.log('Register button clicked!');
+        this.snackBar.open('Registered successfully', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+        this.closeRegister.emit();
       },
       error: error => {
         console.error('Register failed', error);
