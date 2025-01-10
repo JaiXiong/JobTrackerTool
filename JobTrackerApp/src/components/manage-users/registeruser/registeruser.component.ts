@@ -28,7 +28,6 @@ import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular
     MatIconModule,
     MatTooltipModule,
     ReactiveFormsModule,
-    ClosebuttonModularComponent,
     SubmitbuttonModularComponent,
   ],
   templateUrl: './registeruser.component.html',

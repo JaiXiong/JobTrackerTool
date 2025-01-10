@@ -7,7 +7,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
-import { JobTrackerService } from '../../../services/jobtracker.service-old';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,6 +20,7 @@ import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dial
 import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
+import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 
 @Component({
   selector: 'app-jobprofile',

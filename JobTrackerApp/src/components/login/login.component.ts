@@ -4,12 +4,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
-import { LoginService } from '../../services/login.service-old';
 import { CommonModule } from '@angular/common';
 import { UserProfile } from '../../models/user-profile.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogUserprofilesComponent } from '../manage-dialog-popups/dialog-userprofiles/dialog-userprofiles/dialog-userprofiles.component';
 import { RegisteruserComponent } from "../manage-users/registeruser/registeruser.component";
+import { LoginService } from '../../services/login/login.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -26,10 +27,7 @@ import { RegisteruserComponent } from "../manage-users/registeruser/registeruser
     RegisteruserComponent
 ],
   providers:
-    [
-      //provideAnimations(),
-      //{ provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } }
-    ],
+    [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

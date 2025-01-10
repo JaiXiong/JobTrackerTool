@@ -7,20 +7,13 @@ import { authGuard } from '../services/auth/auth.guard';
 
 export const routes: Routes = 
 [
-    {path: '', redirectTo: 'login', pathMatch: 'full', canActivate: [authGuard]},
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: 'login', component: LoginComponent, title: 'Login Page'},
-    {path: 'jobprofile', component: JobprofileComponent, title: 'Home Page'},
-    {path: 'employerprofile', component: EmployerprofileComponent, title: 'Employer Page'},
-    {path: 'jobaction', component: JobactionComponent, title: 'JobAction Page'},
+    {path: 'jobprofile', component: JobprofileComponent, title: 'Home Page', canActivate: [authGuard]},
+    {path: 'employerprofile', component: EmployerprofileComponent, title: 'Employer Page', canActivate: [authGuard]},
+    {path: 'jobaction', component: JobactionComponent, title: 'JobAction Page', canActivate: [authGuard]},
 ];
 
 export const AppRoutingModule = RouterModule.forRoot(routes, {
     onSameUrlNavigation: 'reload'
 });
-// export const routes: Routes = [
-//     { path: '', redirectTo: '/login', pathMatch: 'full' },
-//     { path: 'jobprofile', loadComponent: () => import('../components/manage-jobprofiles/jobprofile/jobprofile.component').then(m => m.JobprofileComponent) },
-//     { path: 'employerprofile', loadComponent: () => import('../components/manage-employerprofiles/employerprofile/employerprofile.component').then(m => m.EmployerprofileComponent) },
-//     { path: 'jobaction', loadComponent: () => import('../components/manage-jobactions/jobaction/jobaction.component').then(m => m.JobactionComponent) },
-//     { path: 'login', loadComponent: () => import('../components/login/login.component').then(m => m.LoginComponent) }
-//   ];
