@@ -1,14 +1,18 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { EMPTY } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  console.log('Interceptor running');
-  // Skip auth for login/refresh endpoints if needed, for now we don't
-  // if (req.url.includes('refreshtoken')) {
-  //   return next(req);
-  // }
+  const router = inject(Router);
 
   const jwtToken = getJwtToken();
-  console.log('Token from storage:', jwtToken);
+
+  if (!jwtToken && !req.url.includes('login')) {
+    alert('Something happened! You are not logged in. Please log in first.');
+    router.navigate(['/login']);
+    return EMPTY;
+  }
 
   if (jwtToken) {
     const cloned = req.clone({
@@ -16,20 +20,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         Authorization: `Bearer ${jwtToken}`,
       },
     });
-    
-    console.log('Request headers:', cloned.headers.get('Authorization'));
     return next(cloned);
   }
-  console.log('No token found, proceeding without auth');
+
+  if (req.url.includes('login') || req.url.includes('register')) {
+    return next(req);
+  }
+
+  router.navigate(['/login']);
   return next(req);
 };
 
 function getJwtToken(): string | null {
   const token = localStorage.getItem('JWT_TOKEN');
-  if (!token) {
-    return null;
-  }
-  
-  console.log('Retrieved token:', token);
   return token;
 }

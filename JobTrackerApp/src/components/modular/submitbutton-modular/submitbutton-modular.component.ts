@@ -21,13 +21,17 @@ export class SubmitbuttonModularComponent {
   constructor(private loginService: LoginService, private snackBar: MatSnackBar) { }
 
   public onSubmitRegister(email: string, pw: string): void {
-    this.loginService.RegisterUser(email, pw).subscribe(
-      response => {
-        console.log('Register button clicked!');
+    this.loginService.RegisterUser(email, pw).subscribe({
+      next: (response) => {
+        console.log('Response received:', response);
       },
-      error => {
-        console.error('Register failed', error);
-      });
+      complete: () => {
+        console.log('Request completed');
+      },
+      error: (error) => {
+        console.log('Error received:', error);
+      }
+    });
   }
 
   public submit(): void {

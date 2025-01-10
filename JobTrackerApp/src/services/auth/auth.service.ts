@@ -104,7 +104,6 @@ export class AuthService {
   public logout() {
     localStorage.removeItem(this.JWT_TOKEN);
     this.isAuthicatedSubject.next(false);
-    //window.location.reload();
   }
 }
 
