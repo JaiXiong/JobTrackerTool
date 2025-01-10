@@ -23,10 +23,6 @@ namespace Login.API.Controllers
         [HttpPost("loginauth", Name = "Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            //TODO
-            //for now we have no login since this is low priority
-            //ideally we need to encrypt and salt the username and password using some engine etc. store it in db
-            //then when we check we need to decrypt and unsalt to get these values again.
             if (string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
             {
                 throw new ArgumentNullException("Username or password invalid");
@@ -63,7 +59,6 @@ namespace Login.API.Controllers
         [HttpPost("registeruser", Name = "RegisterUser")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
-            //TODO
             if (string.IsNullOrEmpty(registerRequest.Email) || string.IsNullOrEmpty(registerRequest.Password))
             {
                 throw new ArgumentNullException("Username or password invalid");
@@ -85,7 +80,6 @@ namespace Login.API.Controllers
         [HttpGet("currentuser", Name = "CurrentUser")]
         public async Task<IActionResult> CurrentUser()
         {
-            //TODO
             try
             {
                 var user = await _loginServices.GetCurrentUser();
@@ -98,10 +92,10 @@ namespace Login.API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("refreshtoken", Name = "RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
-            //TODO
             try
             {
                 var authHeader = Request.Headers["Authorization"].ToString();

@@ -1,11 +1,13 @@
 using JobData.Entities;
 using JobTracker.Business.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class JobTrackerController : ControllerBase
@@ -185,28 +187,6 @@ namespace JobTracker.API.tool.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting the detail.");
-                return StatusCode(500, "Internal server error");
-            }
-        }
-
-        [HttpPost("register", Name = "Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
-        {
-            try
-            {
-                var userProfile = new UserProfile
-                {
-                    Name = registerRequest.Email.Substring(0, '@'),
-                    Email = registerRequest.Email,
-                    Password = _encyption.HashPassword(registerRequest.Password)
-                };
-                _jobTrackerToolService.ValidateNewUser(userProfile);
-                await _jobTrackerToolService.AddUserProfile(userProfile);
-                return CreatedAtAction(nameof(Register), new { id = userProfile.Id }, userProfile);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while creating the user profile.");
                 return StatusCode(500, "Internal server error");
             }
         }
