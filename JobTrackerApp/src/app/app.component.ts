@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { LogoutbuttonModularComponent } from '../components/modular/logoutbutton-modular/logoutbutton-modular/logoutbutton-modular.component';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +21,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTabsModule,
     MatInputModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    LogoutbuttonModularComponent
   ],
   providers: 
   [
@@ -35,12 +37,10 @@ export class AppComponent {
   constructor(private router: Router) {}
 
   public mainpage() {
-    console.log('Main page button clicked!');
     this.router.navigate(['/jobprofile']);
   }
 
   public logout(): void {
-    console.log('Logout button clicked!');
     this.router.navigate(['/login']);
   }
 }
