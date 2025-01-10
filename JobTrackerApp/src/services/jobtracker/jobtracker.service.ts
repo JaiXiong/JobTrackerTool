@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, of, pipe } from 'rxjs';
-import { environment } from './../environments/environment';
+import { environment } from '../../environments/environment';
 // Fetches from `http://my-prod-url` in production, `http://my-dev-url` in development.
 //fetch(environment.jobTrackerUrl);
 

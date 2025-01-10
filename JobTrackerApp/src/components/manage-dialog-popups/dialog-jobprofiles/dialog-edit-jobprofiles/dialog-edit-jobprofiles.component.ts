@@ -9,7 +9,7 @@ import { MatTabsModule, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { JobProfile } from '../../../../models/job-profile.model';
-import { JobTrackerService } from '../../../../services/jobtracker.service';
+import { JobTrackerService } from '../../../../services/jobtracker.service-old';
 import { DialogJobprofilesComponent } from '../dialog-jobprofiles/dialog-jobprofiles.component';
 
 @Component({

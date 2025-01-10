@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { JobTrackerService } from '../../../services/jobtracker.service';
-import { LoginService } from '../../../services/login.service';
+import { JobTrackerService } from '../../../services/jobtracker.service-old';
+import { LoginService } from '../../../services/login.service-old';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
