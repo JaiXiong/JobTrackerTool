@@ -29,7 +29,7 @@ if (!builder.Environment.IsDevelopment())
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    .AddJwtBearer("Bearer", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -37,8 +37,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "http://localhost:3000",
-            ValidAudience = "http://localhost:3000",
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
     });
@@ -63,6 +63,8 @@ builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
 
 builder.Services.AddScoped<LoginServices>();
 builder.Services.AddScoped<Encryption>();
+builder.Services.AddScoped<LoginBusiness>();
+
 
 builder.Services.AddControllers();  
 builder.Services.AddEndpointsApiExplorer();

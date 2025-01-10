@@ -11,7 +11,8 @@ namespace Login.Business.Services
         Task<string> LoginAuth(string username, string password);
         Task Register(string email, string password);
 
-        string GenerateToken(string username, string password);
+        string GenerateToken(string username);
+        string GenerateRefreshToken(string username);
         //Task Logout();
     }
 }

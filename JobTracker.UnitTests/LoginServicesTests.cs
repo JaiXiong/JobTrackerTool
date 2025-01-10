@@ -18,6 +18,7 @@ public class LoginServicesTests
     private readonly Mock<IJobProfileContext> _mockDbContext;
     private readonly Mock<ResourceManager> _mockResourceManager;
     private readonly Mock<Encryption> _mockEncryption;
+    private readonly Mock<LoginBusiness> _mockLoginBusiness;
 
     public LoginServicesTests()
     {
@@ -30,8 +31,9 @@ public class LoginServicesTests
         _mockDbContext = new Mock<IJobProfileContext>();
         _mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();
+        _mockLoginBusiness = new Mock<LoginBusiness>();
 
-        _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object, _mockEncryption.Object);
+        _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object, _mockEncryption.Object, _mockLoginBusiness.Object);
     }
 
     [Fact]
@@ -73,9 +75,9 @@ public class LoginServicesTests
     public void GenerateToken_ShouldReturnToken_WhenCalled()
     {
         var username = "testuser";
-        var password = "testpassword";
+        //var password = "testpassword";
 
-        var token = _loginServices.GenerateToken(username, password);
+        var token = _loginServices.GenerateToken(username);
 
         Assert.NotNull(token);
     }

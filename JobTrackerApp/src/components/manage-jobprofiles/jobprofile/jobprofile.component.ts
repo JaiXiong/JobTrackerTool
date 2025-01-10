@@ -291,7 +291,9 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: { userProfileId: this.userNameId },
     });
-
+    
+    //use switchMap to chain the observable
+    //use behavior subject to emit the new job profiles because we're tracking the job profiles already
     dialogRef.afterClosed().pipe(
       switchMap(() => this.getJobProfiles())
     ).subscribe(profiles => {
