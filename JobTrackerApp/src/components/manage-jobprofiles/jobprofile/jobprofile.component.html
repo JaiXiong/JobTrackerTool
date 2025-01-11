@@ -17,11 +17,8 @@
     <mat-icon class="employerprofile-icons" matTooltip="Update employer profile" fontIcon="edit" *ngIf="showEmployerOptions" (click)="onEditEmployerProfile()"></mat-icon>
     <mat-icon class="employerprofile-icons" matTooltip="Delete employer profile" fontIcon="delete" *ngIf="showEmployerOptions" (click)="onDeleteEmployerProfile()"></mat-icon>
   </span>
-  <table mat-table *ngIf="isSelected" [dataSource]="dataSource" class="mat-elevation-z8 table-border">
+  <table mat-table *ngIf="isSelected" [dataSource]="dataSource" matSort (matSortChange)="sortData(sort)" class="mat-elevation-z8 table-border">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
-  
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element"> 

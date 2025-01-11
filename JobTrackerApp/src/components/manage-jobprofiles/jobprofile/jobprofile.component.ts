@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, viewChild, ViewChild } from '@angular/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -21,6 +21,7 @@ import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialo
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-jobprofile',
@@ -52,6 +53,7 @@ import { JobTrackerService } from '../../../services/jobtracker/jobtracker.servi
 export class JobprofileComponent implements OnInit, OnDestroy {
   title = 'JobTrackerApp';
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   totalRecords: number = 0;
   pageSize: number = 15;
   pageIndex: number = 0;
@@ -215,6 +217,11 @@ export class JobprofileComponent implements OnInit, OnDestroy {
 
   public onJobProfileChange(event: any) {
     this.jobProfileSelected = event.value;
+
+    if (this.jobProfileSelected === null) {
+      this.jobProfileSelected = this.jobProfiles[0];
+    }
+
     localStorage.setItem('jobProfileId', this.jobProfileSelected.id);
 
     if (!this.jobProfileSelected) {
@@ -389,6 +396,26 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       });
   }
 
+  
+  public sortData(sort: Sort) {
+    const data = this.dataSource;
+    if (!sort.active || sort.direction === '') {
+      return;
+    }
+
+    this.dataSource = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'name':
+          return compare(a.name, b.name, isAsc);
+        case 'date':
+          return compare(a.date, b.date, isAsc);
+        default:
+          return 0;
+      }
+    });
+  }
+
   public onJobDefaultClick(): void {
     this.showJobOptions = true;
     this.isSelected = false;
@@ -396,3 +423,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     this.dataSource = [];
   }
 }
+
+function compare(item1: any, item2: any, isAsc: boolean): number {
+  throw new Error('Function not implemented.');
+}
+

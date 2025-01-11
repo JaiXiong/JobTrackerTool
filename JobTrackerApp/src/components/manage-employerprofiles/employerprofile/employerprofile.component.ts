@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
-  InjectionToken,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -24,15 +24,15 @@ import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   RouterModule,
-  RouterOutlet,
-  RouterLink,
-  RouterLinkActive,
-  Router
 } from '@angular/router';
 import { JobTrackerService } from '../../../services/jobtracker.service-old';
-import { EmployerProfile, ActionResult, Details } from '../../../models/employer-profile.model';
-import { error } from 'console';
+import {
+  EmployerProfile,
+  ActionResult,
+  Details,
+} from '../../../models/employer-profile.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-employerprofile',
@@ -48,7 +48,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatTooltipModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './employerprofile.component.html',
@@ -58,13 +58,12 @@ export class EmployerprofileComponent implements OnInit {
   employerProfileForm!: FormGroup;
   actionForm!: FormGroup;
   detailsForm!: FormGroup;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private router: Router,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<EmployerprofileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
-    private location: Location,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
@@ -132,41 +131,40 @@ export class EmployerprofileComponent implements OnInit {
   // }
 
   public onSubmit(): void {
-    // Process checkout data here
-    // console.warn(
-    //   'Your order has been submitted',
-    //   this.employerProfileForm.value
-    // );
     if (this.employerProfileForm.valid) {
       const employerProfile = this.employerProfileForm.value;
       this.jobTrackerService.UpdateEmployerProfile(employerProfile).subscribe({
         next: (response) => {
           console.log('Employer profile updated successfully', response);
           this.snackBar.open('Employer Profile created successfully', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'right', // Set horizontal position
-          verticalPosition: 'top', // Set vertical position
-        });
+            duration: 5000,
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
+          });
           this.dialogRef.close();
         },
         error: (error) => {
           console.error('Failed to update employer profile', error);
           this.snackBar.open('Failed to create Employer Profile', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
           });
-        }
+        },
       });
     }
   }
 
   onClose(): void {
-    const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
-      duration: 5000,
-      horizontalPosition: 'right', // Set horizontal position
-      verticalPosition: 'top', // Set vertical position
-    });
+    const snackBarRef = this.snackBar.open(
+      'Changes will be lost. Close without saving?',
+      'Cancel',
+      {
+        duration: 5000,
+        horizontalPosition: 'right', 
+        verticalPosition: 'top', 
+      }
+    );
 
     snackBarRef.onAction().subscribe(() => {
       console.log('Close action canceled');
@@ -182,43 +180,48 @@ export class EmployerprofileComponent implements OnInit {
 
   public setActionForm(): void {
     //var actionData = this.jobTrackerService.GetJobAction(this.employerProfileForm.value.id);
-    this.jobTrackerService.GetJobAction(this.employerProfileForm.value.id).subscribe((data: ActionResult) => {
-      console.log('Action Data', data.actionResult);
-      
-      this.actionForm = this.formBuilder.group({
-        id: [data.id],
-        employerprofileid: [data.employerProfileId],
-        date: [data.date],
-        latestUpdate: [data.latestUpdate],
-        action: [data.action],
-        method: [data.method],
-        actionresult: [data.actionResult],
+    this.jobTrackerService
+      .GetJobAction(this.employerProfileForm.value.id)
+      .subscribe(
+        (data: ActionResult) => {
+          console.log('Action Data', data.actionResult);
 
-      });
-    },
-    (error) => {
-      console.error('Error getting job action', error);
-    });
+          this.actionForm = this.formBuilder.group({
+            id: [data.id],
+            employerprofileid: [data.employerProfileId],
+            date: [data.date],
+            latestUpdate: [data.latestUpdate],
+            action: [data.action],
+            method: [data.method],
+            actionresult: [data.actionResult],
+          });
+        },
+        (error) => {
+          console.error('Error getting job action', error);
+        }
+      );
   }
 
   public setDetailsForm(): void {
-    this.jobTrackerService.GetDetail(this.employerProfileForm.value.id).subscribe((data: Details) => {
-
-      this.detailsForm = this.formBuilder.group({
-        id: [data.id],
-        employerprofileid: [data.employerProfileId],
-        date: [data.date],
-        latestUpdate: [data.latestUpdate],
-        comments: [data.comments],
-        updates: [data.updates],
-
-      });
-    },
-    (error) => {
-      console.error('Error getting details', error);
-    });
+    this.jobTrackerService
+      .GetDetail(this.employerProfileForm.value.id)
+      .subscribe(
+        (data: Details) => {
+          this.detailsForm = this.formBuilder.group({
+            id: [data.id],
+            employerprofileid: [data.employerProfileId],
+            date: [data.date],
+            latestUpdate: [data.latestUpdate],
+            comments: [data.comments],
+            updates: [data.updates],
+          });
+        },
+        (error) => {
+          console.error('Error getting details', error);
+        }
+      );
   }
-  
+
   public setEmployerProfileForm(): void {
     this.employerProfileForm = this.formBuilder.group({
       id: [this.data.id],
@@ -252,45 +255,42 @@ export class EmployerprofileComponent implements OnInit {
   }
 
   private saveEmployerProfile(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.employerProfileForm.value).subscribe(
-      (response) => {
-        console.log('Employer Profile Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Profile');
-      }
-    );
+    this.jobTrackerService
+      .UpdateEmployerProfile(this.employerProfileForm.value)
+      .subscribe(
+        (response) => {
+          console.log('Employer Profile Updated');
+        },
+        (error) => {
+          console.log('Error updating Employer Profile');
+        }
+      );
   }
 
   public saveEmployerAction(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.actionForm.value).subscribe(
-      (response) => {
-        console.log('Employer Action Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Action');
-      }
-    );
+    this.jobTrackerService
+      .UpdateEmployerProfile(this.actionForm.value)
+      .subscribe(
+        (response) => {
+          console.log('Employer Action Updated');
+        },
+        (error) => {
+          console.log('Error updating Employer Action');
+        }
+      );
   }
 
   public saveEmployerDetail(): void {
-    this.jobTrackerService.UpdateEmployerProfile(this.detailsForm.value).subscribe(
-      (response) => {
-        console.log('Employer Detail Updated');
-      },
-      (error) => {
-        console.log('Error updating Employer Detail');
-      }
-    );
+    this.jobTrackerService
+      .UpdateEmployerProfile(this.detailsForm.value)
+      .subscribe(
+        (response) => {
+          console.log('Employer Detail Updated');
+        },
+        (error) => {
+          console.log('Error updating Employer Detail');
+        }
+      );
   }
-  
+
 }
-// function inject(
-//   MAT_DIALOG_DATA: InjectionToken<any>
-// ): (
-//   target: typeof EmployerprofileComponent,
-//   propertyKey: undefined,
-//   parameterIndex: 2
-// ) => void {
-//   throw new Error('Function not implemented.');
-// }

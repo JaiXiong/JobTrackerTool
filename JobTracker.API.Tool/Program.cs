@@ -1,11 +1,17 @@
 using JobTracker.API.Tool.DbData;
 using JobTracker.Business.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Resources;
+using System.Text;
 using Utils.Encryption;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
+var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -30,6 +36,21 @@ builder.Services.AddCors(options =>
                  .AllowCredentials();
         });
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
+        };
+    });
 
 // Add services
 builder.Services.AddControllers();

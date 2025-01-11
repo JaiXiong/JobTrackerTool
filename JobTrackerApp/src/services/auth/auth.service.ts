@@ -47,11 +47,12 @@ export class AuthService {
   }
 
   public isTokenExpired() {
-    const tokens = localStorage.getItem(this.JWT_TOKEN);
-    if (!tokens) {
+    const token = localStorage.getItem(this.JWT_TOKEN);
+    if (!token) {
       return true;
     }
-    const token = JSON.parse(tokens).access_token;
+    //console.log('logging: '+JSON.parse(tokens).access_token);
+    //const token = JSON.parse(tokens).access_token;
     const decoded = jwtDecode(token);
     if (!decoded.exp) {
       return true;
@@ -59,8 +60,8 @@ export class AuthService {
     const expirationDate = decoded.exp * 1000;
     const now = Date.now();
 
-    console.log('Token expiration:', new Date(expirationDate));
-    console.log('Current time:', new Date(now));
+    //console.log('Token expiration:', new Date(expirationDate));
+    //console.log('Current time:', new Date(now));
 
     return expirationDate < now;
   }

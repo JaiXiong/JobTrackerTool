@@ -263,16 +263,15 @@ namespace JobTracker.Business.Services
 
         public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
-            //var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == userProfileId)
-            //.Skip(pageIndex * pageSize)
-            //.Take(pageSize).ToListAsync();
             var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == jobProfileId)
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize).ToListAsync();
+
             if (employerProfiles == null)
             {
                 throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
             }
+
             return employerProfiles;
         }
 
