@@ -1,12 +1,18 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, viewChild, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,7 +27,8 @@ import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialo
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-jobprofile',
@@ -42,9 +49,9 @@ import { MatSort, Sort } from '@angular/material/sort';
     MatDialogModule,
     MatTooltipModule,
     MatSnackBarModule,
+    MatSortModule
   ],
   providers: [
-    //provideAnimations(),
     DatePipe,
   ],
   templateUrl: './jobprofile.component.html',
@@ -61,7 +68,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   userName: string = '';
   jobProfiles: JobProfile[] = [];
   jobProfile!: JobProfile;
-  jobProfileSelected!: JobProfile;
+  jobProfileSelected!: JobProfile | null;
   employerProfileSelected: string = '';
   //employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
@@ -74,7 +81,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     'website',
     'latestupdate',
   ];
-  dataSource: EmployerProfile[] = [];
+  //dataSource: EmployerProfile[] = [];
+  dataSource = new MatTableDataSource<EmployerProfile>();
   isSelected: boolean = false;
   showJobOptions: boolean = true;
   showEmployerOptions: boolean = false;
@@ -91,7 +99,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     if (localStorage.getItem('jobProfileId')) {
       this.isSelected = true;
     }
-    
+
     this.getJobProfiles().subscribe({
       next: (profiles: JobProfile[]) => {
         this.jobProfiles = profiles;
@@ -100,10 +108,14 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error in subscription:', error);
         //this.snackBar.open('Failed to load profiles', 'Close', { duration: 3000 });
-      }
+      },
     });
 
     this.getPageData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   private destroy$ = new Subject<void>();
@@ -120,19 +132,25 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private datePipe: DatePipe,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private _liveAnnouncer: LiveAnnouncer
   ) {}
 
   public getJobProfile(): void {
-    this.jobTrackerService.GetJobProfile(this.jobProfileSelected.id).subscribe({
-      next: (response: JobProfile) => {
-        console.log(response);
-        this.jobProfile = response;
-      },
-      error: (error) => {
-        console.error('Failed to get job profile', error);
-      },
-    });
+    if (this.jobProfileSelected) {
+      console.error('No job profile selected');
+      this.jobTrackerService
+        .GetJobProfile(this.jobProfileSelected.id)
+        .subscribe({
+          next: (response: JobProfile) => {
+            console.log(response);
+            this.jobProfile = response;
+          },
+          error: (error) => {
+            console.error('Failed to get job profile', error);
+          },
+        });
+    }
   }
 
   public getJobProfiles(): Observable<JobProfile[]> {
@@ -140,25 +158,23 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       console.error('userNameId is undefined');
       return of([]);
     }
-    
-    return this.jobTrackerService
-      .GetJobProfiles(this.userNameId)
-      .pipe(
-        tap((response: JobProfile[]) => {
-          if (!response) {
-            console.warn('No profiles returned');
-            this.jobProfiles = [];
-            return;
-          }
-          this.jobProfiles = this.convertJobProfiles(response);
-        }),
-        catchError((error) => {
-          console.error('Failed to get job profiles', error);
+
+    return this.jobTrackerService.GetJobProfiles(this.userNameId).pipe(
+      tap((response: JobProfile[]) => {
+        if (!response) {
+          console.warn('No profiles returned');
           this.jobProfiles = [];
-          return of([]);
-        }),
-        takeUntil(this.destroy$)
-      );
+          return;
+        }
+        this.jobProfiles = this.convertJobProfiles(response);
+      }),
+      catchError((error) => {
+        console.error('Failed to get job profiles', error);
+        this.jobProfiles = [];
+        return of([]);
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
   public convertJobProfiles(response: JobProfile[]): JobProfile[] {
@@ -192,7 +208,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   }
 
   public onNameClick(event: Event, element: EmployerProfile): void {
-    event.preventDefault(); 
+    event.preventDefault();
     this.employerProfileSelected = element.id;
 
     const dialogRef = this.dialog.open(EmployerprofileComponent, {
@@ -219,10 +235,14 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     this.jobProfileSelected = event.value;
 
     if (this.jobProfileSelected === null) {
-      this.jobProfileSelected = this.jobProfiles[0];
+      this.jobProfileSelected = null;
+      localStorage.removeItem('jobProfileId');
+      this.cdr.detectChanges();
     }
 
-    localStorage.setItem('jobProfileId', this.jobProfileSelected.id);
+    if (this.jobProfileSelected) {
+      localStorage.setItem('jobProfileId', this.jobProfileSelected.id);
+    }
 
     if (!this.jobProfileSelected) {
       console.error('No job profile selected during job profile change');
@@ -245,12 +265,13 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     const jobProfileId =
       this.jobProfileSelected?.id || localStorage.getItem('jobProfileId');
 
-      if (!jobProfileId) {
-        console.error('No job profile selected during paging');
-        return;
-      }
-    
-      this.getJobProfiles().pipe(
+    if (!jobProfileId) {
+      console.error('No job profile selected during paging');
+      return;
+    }
+
+    this.getJobProfiles()
+      .pipe(
         tap((profiles) => {
           this.jobProfiles = profiles;
           this.jobProfileSelected = profiles.find(
@@ -263,14 +284,18 @@ export class JobprofileComponent implements OnInit, OnDestroy {
             console.error('No job profile found with the given ID');
             return of([]);
           }
-    
-          return this.jobTrackerService.GetEmployerPagingData(jobProfileId, this.pageIndex, this.pageSize).pipe(
-            tap((response) => {
-              this.totalRecords = response.length ? response.length : 0;
-              this.dataSource = this.convertEmployerProfiles(response);
-              this.cdr.detectChanges();
-            })
-          );
+
+          return this.jobTrackerService
+            .GetEmployerPagingData(jobProfileId, this.pageIndex, this.pageSize)
+            .pipe(
+              tap((response) => {
+                this.totalRecords = response.length ? response.length : 0;
+                //this.dataSource = this.convertEmployerProfiles(response);
+                this.dataSource.data = this.convertEmployerProfiles(response);
+                this.dataSource.sort = this.sort;
+                this.cdr.detectChanges();
+              })
+            );
         }),
         catchError((error) => {
           console.error('Failed to get paging data', error);
@@ -298,14 +323,15 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: { userProfileId: this.userNameId },
     });
-    
+
     //use switchMap to chain the observable
     //use behavior subject to emit the new job profiles because we're tracking the job profiles already
-    dialogRef.afterClosed().pipe(
-      switchMap(() => this.getJobProfiles())
-    ).subscribe(profiles => {
-      this.jobProfilesSubject.next(profiles);
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(switchMap(() => this.getJobProfiles()))
+      .subscribe((profiles) => {
+        this.jobProfilesSubject.next(profiles);
+      });
   }
 
   public onEditJobProfile(): void {
@@ -316,7 +342,9 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      const selectedJobProfileId = this.jobProfileSelected.id;
+      const selectedJobProfileId = this.jobProfileSelected
+        ? this.jobProfileSelected.id
+        : null;
 
       //because the job profile was updated, we need to refresh the job profiles list
       //and select the updated job profile
@@ -330,6 +358,10 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteJobProfile(): void {
+    if (!this.jobProfileSelected) {
+      console.error('No job profile selected');
+      return;
+    }
     this.jobTrackerService
       .DeleteJobProfile(this.jobProfileSelected.id)
       .subscribe({
@@ -358,7 +390,11 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       width: '500px',
       height: '675px',
       disableClose: true,
-      data: { jobProfileId: this.jobProfileSelected.id },
+      data: {
+        jobProfileId: this.jobProfileSelected
+          ? this.jobProfileSelected.id
+          : null,
+      },
     });
 
     dialogRef.afterClosed().subscribe(() => {
@@ -396,35 +432,22 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       });
   }
 
-  
   public sortData(sort: Sort) {
-    const data = this.dataSource;
-    if (!sort.active || sort.direction === '') {
-      return;
+    if (sort.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sort.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
     }
-
-    this.dataSource = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
-      switch (sort.active) {
-        case 'name':
-          return compare(a.name, b.name, isAsc);
-        case 'date':
-          return compare(a.date, b.date, isAsc);
-        default:
-          return 0;
-      }
-    });
   }
 
   public onJobDefaultClick(): void {
     this.showJobOptions = true;
     this.isSelected = false;
     this.showEmployerOptions = false;
-    this.dataSource = [];
+    this.dataSource = new MatTableDataSource<EmployerProfile>();
   }
 }
 
 function compare(item1: any, item2: any, isAsc: boolean): number {
   throw new Error('Function not implemented.');
 }
-
