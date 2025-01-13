@@ -170,16 +170,16 @@ export class DialogEmployerprofilesComponent implements OnInit {
           console.log('Employer Details created successfully', response);
           this.snackBar.open('Employer Details created successfully', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
           });
         },
         error: (error) => {
           console.error('Failed to create Employer Details', error);
           this.snackBar.open('Failed to create Employer Details', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
           });
         }
       });

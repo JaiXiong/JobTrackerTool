@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { JobTrackerService } from '../../../../services/jobtracker.service-old';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule, MatTabGroup, MatTab } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from '../../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-dialog-jobprofiles',
@@ -48,17 +49,16 @@ export class DialogJobprofilesComponent implements OnInit {
     private dialogRef: MatDialogRef<DialogJobprofilesComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JobProfile,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
+    this.notificationService.dialogClose$.subscribe(() => {
+      this.dialogRef.close();
+    });
+
     this.jobProfileForm = this.formBuilder.group({
-      // id: [this.data.id],
-      // date: [{ value: this.data.date, disabled: true }],
-      // userProfileId: [this.data.userProfileId],
-      // profileName: [this.data.profileName],
-      //id: [''],
-      //date: [{ value: this.data.date, disabled: true }],
       userProfileId: [this.data.userProfileId],
       profileName: ['', Validators.required],
     });
@@ -72,21 +72,13 @@ export class DialogJobprofilesComponent implements OnInit {
         (response) => {
 
           console.log('Job profile created successfully', response);
-          this.snackBar.open('Job profile created successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          this.notificationService.CreateJobProfile('Job profile created successfully', 5000);
           this.dialogRef.close();
         },
         (error) => {
 
           console.error('Failed to create job profile', error);
-          this.snackBar.open('Failed to create job profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          this.notificationService.CreateJobProfile('Failed to create job profile', 5000);
         }
       );
 
@@ -95,22 +87,7 @@ export class DialogJobprofilesComponent implements OnInit {
   }
 
   public onClose(): void {
-    const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
-      duration: 5000,
-      horizontalPosition: 'right', // Set horizontal position
-      verticalPosition: 'top', // Set vertical position
-    });
-
-    snackBarRef.onAction().subscribe(() => {
-      console.log('Close action canceled');
-      // Do nothing, just close the snackbar
-    });
-
-    snackBarRef.afterDismissed().subscribe((info) => {
-      if (!info.dismissedByAction) {
-        this.dialogRef.close();
-      }
-    });
+    this.notificationService.ChangesWillBeLost('Changes will be lost. Close without saving?', 5000);
   }
 
   public onCancel(): void {

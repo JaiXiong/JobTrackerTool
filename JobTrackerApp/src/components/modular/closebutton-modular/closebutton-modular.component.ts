@@ -21,8 +21,8 @@ export class ClosebuttonModularComponent {
   public onClose(): void {
     const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
       duration: 5000,
-      horizontalPosition: 'right', // Set horizontal position
-      verticalPosition: 'top', // Set vertical position
+      horizontalPosition: 'right', 
+      verticalPosition: 'top', 
     });
   }
 

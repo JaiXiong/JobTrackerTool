@@ -29,6 +29,7 @@ import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { NotificationService } from '../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-jobprofile',
@@ -133,7 +134,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    private notificationService: NotificationService
   ) {}
 
   public getJobProfile(): void {
@@ -245,7 +247,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     }
 
     if (!this.jobProfileSelected) {
-      console.error('No job profile selected during job profile change');
+      //console.error('No job profile selected during job profile change');
       return;
     }
 
@@ -366,21 +368,23 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       .DeleteJobProfile(this.jobProfileSelected.id)
       .subscribe({
         next: (response) => {
-          this.snackBar.open('Job profile deleted successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          // this.snackBar.open('Job profile deleted successfully', 'Close', {
+          //   duration: 5000,
+          //   horizontalPosition: 'right',
+          //   verticalPosition: 'top',
+          // });
+          this.notificationService.DeleteJobProfile("Job profile deleted successfully", 5000);
           this.getJobProfiles();
           this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Failed to delete job profile', error);
-          this.snackBar.open('Failed to delete job profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          // this.snackBar.open('Failed to delete job profile', 'Close', {
+          //   duration: 5000,
+          //   horizontalPosition: 'right',
+          //   verticalPosition: 'top',
+          // });
+          this.notificationService.DeleteJobProfile("Failed to delete job profile", 5000);
         },
       });
   }
@@ -413,21 +417,26 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       .DeleteJobProfile(this.employerProfileSelected)
       .subscribe({
         next: (response) => {
-          this.snackBar.open('Employer profile deleted successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          // this.snackBar.open('Employer profile deleted successfully', 'Close', {
+          //   duration: 5000,
+          //   horizontalPosition: 'right',
+          //   verticalPosition: 'top',
+          // });
+          this.notificationService.DeleteEmployerProfile("Employer profile deleted successfully", 5000);
           this.getPageData();
           this.cdr.detectChanges();
         },
+        complete: () => {
+          console.log('Delete Employer Profile completed');
+        },
         error: (error) => {
           //console.error('Failed to delete employer profile', error);
-          this.snackBar.open('Failed to delete employer profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          // this.snackBar.open('Failed to delete employer profile', 'Close', {
+          //   duration: 5000,
+          //   horizontalPosition: 'right',
+          //   verticalPosition: 'top',
+          // });
+          this.notificationService.DeleteEmployerProfile("Failed to delete employer profile", 5000);
         },
       });
   }
@@ -446,8 +455,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     this.showEmployerOptions = false;
     this.dataSource = new MatTableDataSource<EmployerProfile>();
   }
-}
 
-function compare(item1: any, item2: any, isAsc: boolean): number {
-  throw new Error('Function not implemented.');
+  public somePractice(): void {
+    
+  }
 }

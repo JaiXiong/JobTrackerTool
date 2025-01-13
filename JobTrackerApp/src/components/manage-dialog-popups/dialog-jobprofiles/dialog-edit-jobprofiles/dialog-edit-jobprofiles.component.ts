@@ -67,8 +67,8 @@ export class DialogEditJobprofilesComponent {
           console.log('Job profile created successfully', response);
           this.snackBar.open('Job profile updated successfully', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
           });
           this.dialogRef.close();
         },
@@ -77,8 +77,8 @@ export class DialogEditJobprofilesComponent {
           console.error('Failed to create job profile', error);
           this.snackBar.open('Failed to updated job profile', 'Close', {
             duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
+            horizontalPosition: 'right', 
+            verticalPosition: 'top', 
           });
         }
       );
@@ -90,8 +90,8 @@ export class DialogEditJobprofilesComponent {
   public onClose(): void {
     const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
       duration: 5000,
-      horizontalPosition: 'right', // Set horizontal position
-      verticalPosition: 'top', // Set vertical position
+      horizontalPosition: 'right', 
+      verticalPosition: 'top', 
     });
 
     snackBarRef.onAction().subscribe(() => {
