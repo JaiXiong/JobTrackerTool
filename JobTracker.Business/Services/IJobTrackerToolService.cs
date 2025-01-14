@@ -23,6 +23,7 @@ namespace JobTracker.Business.Services
         Task<EmployerProfile> GetEmployerProfile(Guid jobProfileId, Guid employerProfileId);
         Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId);
         Task<IEnumerable<EmployerProfile>> GetAllEmployerProfiles();
+        Task<int> GetTotalEmployerCount(Guid jobProfileId);
         Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId,  int pageIndex, int pageSize);
         Task<JobAction> GetJobAction(Guid employerProfileId);
         Task<IEnumerable<JobAction>> GetAllJobActions();

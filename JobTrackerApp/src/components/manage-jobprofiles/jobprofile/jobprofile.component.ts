@@ -14,7 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { JobProfile } from '../../../models/job-profile.model';
 import { EmployerProfile } from '../../../models/employer-profile.model';
@@ -47,6 +47,7 @@ import { NotificationService } from '../../../services/notifications/notificatio
     MatSelectModule,
     MatInputModule,
     MatPaginator,
+    MatPaginatorModule,
     MatDialogModule,
     MatTooltipModule,
     MatSnackBarModule,
@@ -293,9 +294,18 @@ export class JobprofileComponent implements OnInit, OnDestroy {
             .GetEmployerPagingData(jobProfileId, this.pageIndex, this.pageSize)
             .pipe(
               tap((response) => {
-                this.totalRecords = response.length ? response.length : 0;
+                this.totalRecords = response.totalCount;
+                //this.totalRecords = 
+                // this.jobTrackerService.GetEmployerTotalCount(localStorage.getItem('jobProfileId')).subscribe({
+                //   next: (response) => {
+                //     this.totalRecords = response;
+                //   },
+                //   error: (error) => {
+                //     console.error('Failed to get total count', error);
+                //   }
+                // });
                 //this.dataSource = this.convertEmployerProfiles(response);
-                this.dataSource.data = this.convertEmployerProfiles(response);
+                this.dataSource.data = this.convertEmployerProfiles(response.data);
                 this.dataSource.sort = this.sort;
                 this.cdr.detectChanges();
               })

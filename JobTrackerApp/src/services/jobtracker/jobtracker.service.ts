@@ -103,6 +103,12 @@ export class JobTrackerService {
       catchError(this.handleError<any>('DeleteJobProfile')));
   }
 
+  public GetEmployerTotalCount(jobProfileId: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerTotalCount`+ '/' + jobProfileId, { headers }).pipe(
+      catchError(this.handleError<any>('GetEmployerTotalCount')));
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);

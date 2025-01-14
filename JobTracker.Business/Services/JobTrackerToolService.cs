@@ -276,6 +276,11 @@ namespace JobTracker.Business.Services
             return employerProfiles;
         }
 
+        public async Task<int> GetTotalEmployerCount(Guid jobProfileId)
+        {
+            return await _dbContext.Employers.Where(c => c.JobProfileId == jobProfileId).CountAsync();
+        }
+
         public async Task<JobAction> GetJobAction(Guid employerProfileId)
         {
             var jobAction = await _dbContext.JobActions.FirstOrDefaultAsync(c => c.EmployerProfileId == employerProfileId);

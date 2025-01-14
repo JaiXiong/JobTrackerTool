@@ -1,3 +1,4 @@
+using JobData.Dtos;
 using JobData.Entities;
 using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -26,12 +27,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("employerprofile/{jobprofileid}/{employerprofileid}", Name = "GetEmployerName")]
-        public async Task<EmployerProfile> GetEmployerProfile(Guid jobProfileId, Guid employerProfileId)
+        public async Task<IActionResult> GetEmployerProfile(Guid jobProfileId, Guid employerProfileId)
         {
             try
             {
                 var employerProfile = await _jobTrackerToolService.GetEmployerProfile(jobProfileId, employerProfileId);
-                return employerProfile;
+                return Ok(employerProfile);
             }
             catch (Exception ex)
             {
@@ -41,12 +42,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("employerprofiles/{jobprofileid}", Name = "GetEmployerNames")]
-        public async Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId)
+        public async Task<IActionResult> GetEmployerProfiles(Guid jobProfileId)
         {
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
-                return employerProfiles;
+                return Ok(employerProfiles);
             }
             catch (Exception ex)
             {
@@ -57,12 +58,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("employerprofiles", Name = "GetAllEmployerNames")]
-        public async Task<IEnumerable<EmployerProfile>> GetAllEmployerProfiles()
+        public async Task<IActionResult> GetAllEmployerProfiles()
         {
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetAllEmployerProfiles();
-                return employerProfiles;
+                return Ok(employerProfiles);
             }
             catch (Exception ex)
             {
@@ -73,11 +74,11 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("jobprofile/{jobprofileid}", Name = "GetJobProfile")]
-        public async Task<JobProfile> GetJobProfile(Guid jobprofileid)
+        public async Task<IActionResult> GetJobProfile(Guid jobprofileid)
         {
             try
             {
-                return await _jobTrackerToolService.GetJobProfile(jobprofileid); ;
+                return Ok(await _jobTrackerToolService.GetJobProfile(jobprofileid));
             }
             catch (Exception ex)
             {
@@ -87,12 +88,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("jobprofiles/{userProfileId}", Name = "GetJobProfiles")]
-        public async Task<IEnumerable<JobProfile>> GetJobProfiles(Guid userProfileId)
+        public async Task<IActionResult> GetJobProfiles(Guid userProfileId)
         {
             try
             {
                 var jobProfiles = await _jobTrackerToolService.GetJobProfiles(userProfileId);
-                return jobProfiles;
+                return Ok(jobProfiles);
             }
             catch (Exception ex)
             {
@@ -102,12 +103,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("jobprofiles", Name = "GetAllJobProfiles")]
-        public async Task<IEnumerable<JobProfile>> GetAllJobProfiles()
+        public async Task<IActionResult> GetAllJobProfiles()
         {
             try
             {
                 var jobProfiles = await _jobTrackerToolService.GetAllJobProfiles();
-                return jobProfiles;
+                return Ok(jobProfiles);
             }
             catch (Exception ex)
             {
@@ -117,12 +118,17 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("employerpagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
-        public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        public async Task<IActionResult> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
-                return employerProfiles;
+                var totalCount = await _jobTrackerToolService.GetTotalEmployerCount(jobProfileId);
+
+                var response = new PagingResponse<EmployerProfile>(employerProfiles, totalCount);
+
+                return Ok(response);
+                //return employerProfiles;
             }
             catch (Exception ex)
             {
@@ -132,12 +138,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("jobaction", Name = "GetAllJobAction")]
-        public async Task<IEnumerable<JobAction>> GetAllJobAction()
+        public async Task<IActionResult> GetAllJobAction()
         {
             try
             {
                 var jobActions = await _jobTrackerToolService.GetAllJobActions();
-                return jobActions;
+                return Ok(jobActions);
             }
             catch (Exception ex)
             {
@@ -162,12 +168,12 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("detail", Name = "GetAllDetail")]
-        public async Task<IEnumerable<Detail>> GetAllDetail()
+        public async Task<IActionResult> GetAllDetail()
         {
             try
             {
                 var details = await _jobTrackerToolService.GetAllDetails();
-                return details;
+                return Ok(details);
             }
             catch (Exception ex)
             {
@@ -295,7 +301,8 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 await _jobTrackerToolService.UpdateEmployerProfile(employerProfile);
-                return CreatedAtAction(nameof(UpdateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
+                //return CreatedAtAction(nameof(UpdateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -314,7 +321,8 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 await _jobTrackerToolService.UpdateJobProfile(jobProfile);
-                return CreatedAtAction(nameof(UpdateJobProfile), new { id = jobProfile.Id }, jobProfile);
+                //return CreatedAtAction(nameof(UpdateJobProfile), new { id = jobProfile.Id }, jobProfile);
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -329,7 +337,7 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 await _jobTrackerToolService.DeleteJobProfile(jobProfileId);
-                return Ok();
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
@@ -349,7 +357,7 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 await _jobTrackerToolService.DeleteEmployerProfile(employerProfileId);
-                return Ok();
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
