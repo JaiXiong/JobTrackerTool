@@ -104,6 +104,8 @@ export class AuthService {
 
   public logout() {
     localStorage.removeItem(this.JWT_TOKEN);
+    this.cookieService.delete(this.REFRESH_TOKEN);
+    localStorage.removeItem('jobProfileId');
     this.isAuthicatedSubject.next(false);
   }
 }

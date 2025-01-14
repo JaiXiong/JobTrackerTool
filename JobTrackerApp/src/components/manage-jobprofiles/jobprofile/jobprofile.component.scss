@@ -5,11 +5,11 @@
     border: 1px solid #ccc;
   }
 
-  table {
+  //table {
     //margin-top: 10%;
     //margin-left: 5%;
     //margin-right: 5%;
-  }
+  //}
 
   .table-border{
     border: 1px solid #ccc;
@@ -25,13 +25,13 @@
     font-size: 2em;
     font-weight: bold;
     color: #0000FF;
-    text-align: center; /* Center the text */
+    text-align: center; 
   }
 
   .download-icon {
-    width: 24px; /* Set the width of the icon */
-    height: 24px; /* Set the height of the icon */
-    margin-right: 8px; /* Add some space between the icon and the text */
+    width: 24px; 
+    height: 24px; 
+    margin-right: 8px; 
     vertical-align: middle; /* Align the icon vertically with the text */
 }
 
@@ -67,6 +67,7 @@
   }
 }
 
-.span-right {
+.employer-icons-span-right {
   float: right;
+  margin-top: 50px;
 }

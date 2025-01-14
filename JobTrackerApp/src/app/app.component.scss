@@ -1,9 +1,9 @@
 .flex-container { //the main container
     display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
-    //height: 100vh; /* Full viewport height */
+    flex-direction: column; 
+    //justify-content: start; 
+    align-items: center; 
+    //height: 100vh; 
   }
   
   .flex-item {
@@ -14,57 +14,47 @@
   }
 
   .mainpage-title {
-    //opacity: .9;
-    //background-color: lightblue;
-    //padding: 5px;
-    //margin: 10px;
-    //border: 1px solid #ccc;
-    //padding-left: 700px; /* Add some space to the left of the text */
-    text-align: center; /* Center the text */
+    text-align: center; 
     color: rgb(0, 0, 0);
     font-size: 5em;
-    transform: scale(1.1); /* Adjust the scale factor as needed */
-    transform-origin: top left; /* Ensure scaling starts from the top left corner */
+    transform: scale(1.1); 
+    transform-origin: top left;
   }
 
   .mainpage-tabs {
-    display: flex; /* Display the tabs in a row */
-    //justify-content: center; /* Center the tabs */
-    margin-top: 20px; /* Add some space above the tabs */
-    //width: 75%; /* Take up full width */
-    //padding-left: 250px; /* Add some space to the left of the tabs */
+    display: flex; 
+    margin-top: 20px; 
   }
 
   .job-titles {
-    //padding-left: 1000px; /* Add some space to the left of the text */
-    text-align: center; /* Center the text */
+    text-align: center; 
   }
   .footer-info {
-    width: 100%; /* Take up full width */
-    text-align: center; /* Center text */
-    padding: 10px 0; /* Add padding */
-    background-color: #f1f1f1; /* Light background color */
-    position: fixed; /* Fix the footer at the bottom */
-    z-index: 1000; /* Set z-index to ensure it's above other elements */
-    bottom: 0; /* Align to the bottom */
-    left: 0; /* Align to the left */
+    width: 100%; 
+    text-align: center; 
+    padding: 10px 0; 
+    background-color: #f1f1f1; 
+    position: fixed; 
+    z-index: 1000; 
+    bottom: 0;
+    left: 0; 
   }
   .header-info {
-    width: 100%; /* Take up full width */
-    text-align: left; /* Center text */
-    padding: 10px 0; /* Add padding */
-    background-color: #f1f1f1; /* Light background color */
-    position: fixed; /* Fix the footer at the bottom */
+    width: 100%; 
+    text-align: left; 
+    padding: 10px 0; 
+    background-color: #f1f1f1;
+    position: relative; /* Fix the footer at the bottom */
     z-index: 1000; /* Set z-index to ensure it's above other elements */
-    top: 0; /* Align to the bottom */
-    left: 0; /* Align to the left */
+    top: 0; 
+    left: 0; 
   }
 
   .download-icon {
-    width: 24px; /* Set the width of the icon */
-    height: 24px; /* Set the height of the icon */
-    margin-right: 8px; /* Add some space between the icon and the text */
-    vertical-align: middle; /* Align the icon vertically with the text */
+    width: 24px;
+    height: 24px; 
+    margin-right: 8px; 
+    vertical-align: middle; 
 }
 
 .background-container {
@@ -87,13 +77,42 @@
 }
 
 // .logout-button {
-// float: right; /* Float the button to the right */
+// float: right; 
 // }
 
+html {
+  height: 100%;              /* for the page to take full window height */
+  box-sizing: border-box;    /* to have the footer displayed at the bottom of the page without scrolling */
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;       /* enable the "border-box effect" everywhere */
+}
+
+.body-for-sticky {
+  position: relative;        /* for the footer to move with the page size */
+  min-height: 100%;          /* for the footer to be at the bottom */
+  padding-bottom: 6rem;      /* Space available between last element and bottom border of the page */
+}
+
+.sticky-footer {
+  position: absolute;        /* for it to disappear under last body element */
+  bottom: 0;                 /* so the footer can stick to the bottom */
+  width: 100%;               
+  display: flex;             
+  justify-content: center;   
+  align-items: center;       
+  text-align: center;
+  background-color: #f8f9fa; 
+  padding: 10px 0;           
+}
+
 .title-icon {
-  //font-size: large; /* Set the size of the icon */
-  width: auto; /* Set the width of the icon */
-  margin-left: 20px; /* Add some space between the icon and the text */
+  //font-size: large;
+  width: auto; 
+  margin-left: 20px; 
   cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
   transition: color 0.3s ease; /* Smooth transition for color change */
 

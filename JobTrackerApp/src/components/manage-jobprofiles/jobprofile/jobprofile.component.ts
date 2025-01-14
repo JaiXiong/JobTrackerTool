@@ -99,6 +99,9 @@ export class JobprofileComponent implements OnInit, OnDestroy {
 
     if (localStorage.getItem('jobProfileId')) {
       this.isSelected = true;
+      this.jobProfileSelected = this.jobProfiles.find(
+        (profile) => profile.id === localStorage.getItem('jobProfileId')
+      ) as JobProfile;
     }
 
     this.getJobProfiles().subscribe({

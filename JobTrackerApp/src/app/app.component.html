@@ -1,8 +1,7 @@
-<div class="header-info">
+<!-- <div class="header-info">
   <div class="flex-container">
     <mat-icon class="title-icon" fontIcon="home" matTooltip="Go to main page" (click)="mainpage()"></mat-icon>
     JobTrackerApp
-    <!-- <button class="logout-button" mat-raised-button color="primary" (click)="logout()">Logout</button> -->
      <app-logoutbutton-modular></app-logoutbutton-modular>
   </div>
 </div>
@@ -13,12 +12,27 @@
 
 <div class="footer-info">
   <div>Copyright information &copy; 2023 Jai Xiong. All rights reserved.</div>
-  <!-- <div>
+  <div>
     <a href="https://www.flaticon.com/free-icons/download-pdf" title="download pdf icons">
       Download pdf by Freepik - Flaticon
     </a>
-  </div> -->
+  </div>
+</div> -->
+
+<html>
+<div class="header-info">
+  <div class="flex-container">
+    <mat-icon class="title-icon" fontIcon="home" matTooltip="Go to main page" (click)="mainpage()"></mat-icon>
+    JobTrackerApp
+    <app-logoutbutton-modular></app-logoutbutton-modular>
+  </div>
 </div>
+<router-outlet></router-outlet>
+<body class="body-for-sticky">
+  <div class="footer sticky-footer">Copyright information &copy; 2023 Jai Xiong. All rights reserved. </div>
+</body>
+
+</html>
 
 
 

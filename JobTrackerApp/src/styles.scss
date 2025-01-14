@@ -5,25 +5,25 @@ mat-dialog-content { overflow: visible !important; }
 
 .flex-container-components { //the main container for components
     display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
+    flex-direction: column; 
+    //justify-content: start; 
+    align-items: center; 
     margin-top: 7%;
     margin-left: 3%;
     margin-right: 3%;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
   }
 
 .flex-container-components-inner { //the main container for components already inside the components container
     display: flex-grow;
-    flex-direction: column; /* This is the default value, so it's optional */
-    //justify-content: start; /* Adjusts the spacing between items */
-    align-items: center; /* Aligns items vertically in the center */
+    flex-direction: column; 
+    //justify-content: start; 
+    align-items: center; 
     margin-top: 70px;
     margin-left: 3%;
     margin-right: 3%;
     overflow: hidden !important;
-    //height: 75vh; /* Full viewport height */
+    //height: calc(100vh - 70px); 
 }
 
 .horizontal-button-container {
