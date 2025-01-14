@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JobData.Dtos
 {
-    internal class UserProfileDto
+    public class UserProfileDto
     {
         public Guid Id { get; set; }
         public DateTime Date { get; set; }

@@ -1,14 +1,18 @@
 ﻿using JobData.Dtos;
 using JobData.Entities;
-//using AutoMapper;
+using AutoMapper;
 
 namespace Utils.AutoMapper
 {
-    public class DataMapper
+    public class DataMapper : Profile
     {
-        public DtoMapJobProfile()
+        public DataMapper()
         {
-            //CreateMap<JobProfile, JobProfileDto>();
+            CreateMap<JobProfile, JobProfileDto>();
+            CreateMap<EmployerProfile, EmployerProfileDto>();
+            CreateMap<UserProfile, UserProfileDto>();
+            CreateMap<JobAction, JobActionDto>();
+            CreateMap<Detail, DetailDto>();
         }
     }
 }

@@ -7,11 +7,15 @@ using Microsoft.OpenApi.Models;
 using System.Resources;
 using System.Text;
 using Utils.Encryption;
+using AutoMapper;
+using Utils.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
+
+builder.Services.AddAutoMapper(typeof(DataMapper));
 
 if (!builder.Environment.IsDevelopment())
 {
