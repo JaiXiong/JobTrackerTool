@@ -108,7 +108,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error in subscription:', error);
-        //this.snackBar.open('Failed to load profiles', 'Close', { duration: 3000 });
       },
     });
 
@@ -368,23 +367,13 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       .DeleteJobProfile(this.jobProfileSelected.id)
       .subscribe({
         next: (response) => {
-          // this.snackBar.open('Job profile deleted successfully', 'Close', {
-          //   duration: 5000,
-          //   horizontalPosition: 'right',
-          //   verticalPosition: 'top',
-          // });
-          this.notificationService.DeleteJobProfile("Job profile deleted successfully", 5000);
+          this.notificationService.showNotification("Job profile deleted successfully", 5000);
           this.getJobProfiles();
           this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Failed to delete job profile', error);
-          // this.snackBar.open('Failed to delete job profile', 'Close', {
-          //   duration: 5000,
-          //   horizontalPosition: 'right',
-          //   verticalPosition: 'top',
-          // });
-          this.notificationService.DeleteJobProfile("Failed to delete job profile", 5000);
+          this.notificationService.showNotification("Failed to delete job profile", 5000);
         },
       });
   }
@@ -417,12 +406,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       .DeleteJobProfile(this.employerProfileSelected)
       .subscribe({
         next: (response) => {
-          // this.snackBar.open('Employer profile deleted successfully', 'Close', {
-          //   duration: 5000,
-          //   horizontalPosition: 'right',
-          //   verticalPosition: 'top',
-          // });
-          this.notificationService.DeleteEmployerProfile("Employer profile deleted successfully", 5000);
+          this.notificationService.showNotification("Employer profile deleted successfully", 5000);
           this.getPageData();
           this.cdr.detectChanges();
         },
@@ -430,13 +414,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
           console.log('Delete Employer Profile completed');
         },
         error: (error) => {
-          //console.error('Failed to delete employer profile', error);
-          // this.snackBar.open('Failed to delete employer profile', 'Close', {
-          //   duration: 5000,
-          //   horizontalPosition: 'right',
-          //   verticalPosition: 'top',
-          // });
-          this.notificationService.DeleteEmployerProfile("Failed to delete employer profile", 5000);
+          console.error('Failed to delete employer profile', error);
+          this.notificationService.showNotification("Failed to delete employer profile", 5000);
         },
       });
   }

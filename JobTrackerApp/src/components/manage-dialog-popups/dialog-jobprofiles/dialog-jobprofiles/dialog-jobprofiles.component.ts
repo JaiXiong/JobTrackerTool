@@ -72,13 +72,13 @@ export class DialogJobprofilesComponent implements OnInit {
         (response) => {
 
           console.log('Job profile created successfully', response);
-          this.notificationService.CreateJobProfile('Job profile created successfully', 5000);
+          this.notificationService.showNotification('Job profile created successfully', 5000);
           this.dialogRef.close();
         },
         (error) => {
 
           console.error('Failed to create job profile', error);
-          this.notificationService.CreateJobProfile('Failed to create job profile', 5000);
+          this.notificationService.showNotification('Failed to create job profile', 5000);
         }
       );
 

@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule} from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomEmployersnackbarComponent } from '../../custom-components/custom-employer-snackbar/custom-employersnackbar/custom-employersnackbar.component';
+import { NotificationService } from '../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-dialog-employerprofiles',
@@ -48,7 +49,8 @@ export class DialogEmployerprofilesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -87,23 +89,6 @@ export class DialogEmployerprofilesComponent implements OnInit {
       result: this.actionForm,
       detail: this.detailsForm
     });
-    // this.actionForm = this.formBuilder.group({
-    //   //id: [''],
-    //   employerprofileid: [''],
-    //   //date: [''],
-    //   //latestUpdate: [''],
-    //   action: ['', Validators.required],
-    //   method: [''],
-    //   actionresult: ['',],
-    // });
-    // this.detailsForm = this.formBuilder.group({
-    //   //id: [''],
-    //   employerprofileid: [''],
-    //   //date: [''],
-    //   //latestUpdate: [''],
-    //   comments: ['', Validators.required],
-    //   updates: [''],
-    // });
   }
 
   public onSubmit(): void {
@@ -115,20 +100,13 @@ export class DialogEmployerprofilesComponent implements OnInit {
         next: (response) => {
 
           console.log('Employer Profile created successfully', response);
-          this.snackBar.open('Employer Profile created successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          
+          this.notificationService.showNotification('Employer Profile created successfully', 5000);
           this.dialogRef.close();
         },
         error: (error) => {
           console.error('Failed to create Employer Profile', error);
-          this.snackBar.open('Failed to create Employer Profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          this.notificationService.showNotification('Failed to create Employer Profile', 5000);
         }
       });
     }
@@ -142,19 +120,11 @@ export class DialogEmployerprofilesComponent implements OnInit {
       this.jobTrackerService.CreateEmployerAction(action).subscribe({
         next: (response) => {
           console.log('Employer Action created successfully', response);
-          this.snackBar.open('Employer Action created successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          this.notificationService.showNotification('Employer Action created successfully', 5000);
         },
         error: (error) => {
           console.error('Failed to create Employer Action', error);
-          this.snackBar.open('Failed to create Employer Action', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', // Set horizontal position
-            verticalPosition: 'top', // Set vertical position
-          });
+          this.notificationService.showNotification('Failed to create Employer Action', 5000);
         }
       });
     }
@@ -168,19 +138,11 @@ export class DialogEmployerprofilesComponent implements OnInit {
       this.jobTrackerService.CreateEmployerDetails(details).subscribe({
         next: (response) => {
           console.log('Employer Details created successfully', response);
-          this.snackBar.open('Employer Details created successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Employer Details created successfully', 5000);
         },
         error: (error) => {
           console.error('Failed to create Employer Details', error);
-          this.snackBar.open('Failed to create Employer Details', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Failed to create Employer Details', 5000);
         }
       });
     }

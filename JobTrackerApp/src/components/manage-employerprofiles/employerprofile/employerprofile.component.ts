@@ -33,6 +33,7 @@ import {
 } from '../../../models/employer-profile.model';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
+import { NotificationService } from '../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-employerprofile',
@@ -66,7 +67,8 @@ export class EmployerprofileComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: EmployerProfile,
     private jobTrackerService: JobTrackerService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -136,20 +138,12 @@ export class EmployerprofileComponent implements OnInit {
       this.jobTrackerService.UpdateEmployerProfile(employerProfile).subscribe({
         next: (response) => {
           console.log('Employer profile updated successfully', response);
-          this.snackBar.open('Employer Profile created successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Employer Profile created successfully', 5000);
           this.dialogRef.close();
         },
         error: (error) => {
           console.error('Failed to update employer profile', error);
-          this.snackBar.open('Failed to create Employer Profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Failed to create Employer Profile', 5000);
         },
       });
     }

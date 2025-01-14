@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { JobProfile } from '../../../../models/job-profile.model';
 import { JobTrackerService } from '../../../../services/jobtracker.service-old';
 import { DialogJobprofilesComponent } from '../dialog-jobprofiles/dialog-jobprofiles.component';
+import { NotificationService } from '../../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-dialog-edit-jobprofiles',
@@ -41,10 +42,15 @@ export class DialogEditJobprofilesComponent {
     private dialogRef: MatDialogRef<DialogEditJobprofilesComponent>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: JobProfile,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
+    this.notificationService.dialogClose$.subscribe(() => {
+      this.dialogRef.close();
+    });
+
     this.jobProfileForm = this.formBuilder.group({
        id: [this.data.id],
       // date: [{ value: this.data.date, disabled: true }],
@@ -63,23 +69,13 @@ export class DialogEditJobprofilesComponent {
 
       this.jobTrackerService.UpdateJobProfile(jobProfile).subscribe(
         (response) => {
-
-          console.log('Job profile created successfully', response);
-          this.snackBar.open('Job profile updated successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Job profile updated successfully', 5000);
           this.dialogRef.close();
         },
         (error) => {
 
           console.error('Failed to create job profile', error);
-          this.snackBar.open('Failed to updated job profile', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'right', 
-            verticalPosition: 'top', 
-          });
+          this.notificationService.showNotification('Failed to updated job profile', 5000);
         }
       );
 
@@ -88,22 +84,7 @@ export class DialogEditJobprofilesComponent {
   }
 
   public onClose(): void {
-    const snackBarRef = this.snackBar.open('Changes will be lost. Close without saving?', 'Cancel', {
-      duration: 5000,
-      horizontalPosition: 'right', 
-      verticalPosition: 'top', 
-    });
-
-    snackBarRef.onAction().subscribe(() => {
-      console.log('Close action canceled');
-      // Do nothing, just close the snackbar
-    });
-
-    snackBarRef.afterDismissed().subscribe((info) => {
-      if (!info.dismissedByAction) {
-        this.dialogRef.close();
-      }
-    });
+    this.notificationService.showNotification('Changes will be lost. Close without saving?', 5000);
   }
 
   public onCancel(): void {
