@@ -295,16 +295,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
             .pipe(
               tap((response) => {
                 this.totalRecords = response.totalCount;
-                //this.totalRecords = 
-                // this.jobTrackerService.GetEmployerTotalCount(localStorage.getItem('jobProfileId')).subscribe({
-                //   next: (response) => {
-                //     this.totalRecords = response;
-                //   },
-                //   error: (error) => {
-                //     console.error('Failed to get total count', error);
-                //   }
-                // });
-                //this.dataSource = this.convertEmployerProfiles(response);
                 this.dataSource.data = this.convertEmployerProfiles(response.data);
                 this.dataSource.sort = this.sort;
                 this.cdr.detectChanges();
