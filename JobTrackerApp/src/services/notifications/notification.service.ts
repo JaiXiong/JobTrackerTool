@@ -35,7 +35,7 @@ export class NotificationService {
 
     snackBarRef.afterDismissed().subscribe((info) => {
       if (!info.dismissedByAction) {
-        //this.dialogRef.close();
+        //send signal to close the dialog where this is called
         this.dialogCloseSubject.next();
       }
     });

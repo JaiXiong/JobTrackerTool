@@ -214,6 +214,7 @@ namespace JobTracker.Business.Services
             var jobProfiles = await _dbContext.JobProfiles
                 .Include(c => c.Employers)
                 .ToListAsync();
+
             if (jobProfiles == null)
             {
                 throw new ArgumentNullException(_resourceManager.GetString("JobProfileNull"));
