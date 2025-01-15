@@ -30,6 +30,8 @@ import { JobTrackerService } from '../../../services/jobtracker/jobtracker.servi
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { NotificationService } from '../../../services/notifications/notification.service';
+import { UploadModularComponent } from "../../modular/upload-modular/upload-modular.component";
+import { DownloadModularComponent } from '../../modular/download-modular/download-modular.component';
 
 @Component({
   selector: 'app-jobprofile',
@@ -51,8 +53,10 @@ import { NotificationService } from '../../../services/notifications/notificatio
     MatDialogModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatSortModule
-  ],
+    MatSortModule,
+    UploadModularComponent,
+    DownloadModularComponent
+],
   providers: [
     DatePipe,
   ],
@@ -436,9 +440,5 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     this.isSelected = false;
     this.showEmployerOptions = false;
     this.dataSource = new MatTableDataSource<EmployerProfile>();
-  }
-
-  public somePractice(): void {
-    
   }
 }
