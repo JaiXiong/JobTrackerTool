@@ -109,6 +109,21 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetEmployerTotalCount')));
   }
 
+  public DownloadEmployerProfile(jobProfileId: any): void {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.get(`${this.jobTrackerUrl}/api/JobTracker/DownloadEmployerProfile` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
+      const blob = new Blob([data as BlobPart], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    });
+  }
+
+  public UpLoad(formData: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(`${this.jobTrackerUrl}/api/JobTracker/Upload`, formData, { headers }).pipe(
+      catchError(this.handleError<any>('Upload')));
+    }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);

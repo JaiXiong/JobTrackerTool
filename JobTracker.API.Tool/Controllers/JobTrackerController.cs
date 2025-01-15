@@ -4,6 +4,7 @@ using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers
@@ -197,7 +198,7 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpPost("userprofile",Name="CreateUserProfile")]
+        [HttpPost("userprofile", Name = "CreateUserProfile")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserProfile userProfile)
         {
             _jobTrackerToolService.ValidateNewUser(userProfile);
@@ -234,7 +235,7 @@ namespace JobTracker.API.tool.Controllers
                 _logger.LogError(ex, "An error occurred while creating the job profile.");
                 return StatusCode(500, "Internal server error");
             }
-            
+
         }
 
         [HttpPost("employerprofile", Name = "CreateEmployerProfile")]
@@ -367,6 +368,43 @@ namespace JobTracker.API.tool.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while deleting the employer profile.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("download/{jobProfileId}", Name ="Download")]
+        public async Task<IActionResult>Download(Guid jobProfileId)
+        {
+            try
+            {
+                var toBeDownloaded = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+
+                return Ok(toBeDownloaded);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+                throw new ArgumentException("An error occurred while downloading the employer profile.");
+            }
+        }
+
+        [HttpPost("upload", Name ="Upload")]
+        public async Task<IActionResult> Upload(IFormFile uploadFile)
+        {
+            if (uploadFile == null || uploadFile.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            try
+            {
+                // Process the file here
+
+                return Ok("File uploaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while uploading the file.");
                 return StatusCode(500, "Internal server error");
             }
         }

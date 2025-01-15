@@ -9,9 +9,17 @@
     </mat-select>
   </mat-form-field>
   <span>
-    <button mat-mini-fab aria-label="Example icon button with a menu icon">
+    <!-- <button mat-mini-fab [matMenuTriggerFor]="menu" aria-label="Example icon button with a menu icon">
       <mat-icon>menu</mat-icon>
     </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onCreateJobProfile()">Add new job profile</button>
+      <button mat-menu-item (click)="onEditJobProfile()">Update job profile</button>
+      <button mat-menu-item (click)="onDeleteJobProfile()">Delete job profile</button>
+    </mat-menu> -->
     <mat-icon class="jobprofile-icons" matTooltip="Add new job profile" fontIcon="add" *ngIf="showJobOptions"
       (click)="onCreateJobProfile()"></mat-icon>
     <mat-icon class="jobprofile-icons" matTooltip="Update job profile" fontIcon="edit" *ngIf="isSelected"
@@ -20,9 +28,17 @@
       (click)="onDeleteJobProfile()"></mat-icon>
   </span>
   <span class="employer-icons-span-right">
-    <button mat-mini-fab aria-label="Example icon button with a menu icon">
+    <!-- <button mat-mini-fab [matMenuTriggerFor]="menu2" aria-label="Example icon button with a menu icon">
       <mat-icon>menu</mat-icon>
     </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu2"aria-label="Example icon button with a vertical three dot icon">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu2="matMenu">
+      <button mat-menu-item (click)="onCreateEmployerProfile()">Add new employer profile</button>
+      <button mat-menu-item (click)="onEditEmployerProfile()">Update employer profile</button>
+      <button mat-menu-item (click)="onDeleteEmployerProfile()">Delete employer profile</button>
+    </mat-menu> -->
     <app-upload-modular *ngIf="showEmployerOptions" ></app-upload-modular>
     <app-download-modular *ngIf="showEmployerOptions" ></app-download-modular>
     <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add"

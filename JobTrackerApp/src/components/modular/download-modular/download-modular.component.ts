@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
+import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 
 @Component({
   selector: 'app-download-modular',
@@ -12,7 +13,11 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './download-modular.component.scss'
 })
 export class DownloadModularComponent {
+  @Input() _jobProfileId: string = '';
+
+  constructor(private _jobTrackerService: JobTrackerService) { }
+
   onDownloadEmployerProfile(): void {
-    console.log('Download Employer Profile');
+    this._jobTrackerService.DownloadEmployerProfile(this._jobProfileId);
   }
 }

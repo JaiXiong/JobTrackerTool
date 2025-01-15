@@ -32,6 +32,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { NotificationService } from '../../../services/notifications/notification.service';
 import { UploadModularComponent } from "../../modular/upload-modular/upload-modular.component";
 import { DownloadModularComponent } from '../../modular/download-modular/download-modular.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-jobprofile',
@@ -55,7 +56,8 @@ import { DownloadModularComponent } from '../../modular/download-modular/downloa
     MatSnackBarModule,
     MatSortModule,
     UploadModularComponent,
-    DownloadModularComponent
+    DownloadModularComponent,
+    MatMenuModule,
 ],
   providers: [
     DatePipe,
