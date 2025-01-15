@@ -31,7 +31,7 @@ public class LoginServicesTests
         _mockDbContext = new Mock<IJobProfileContext>();
         _mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();
-        _mockLoginBusiness = new Mock<LoginBusiness>();
+        _mockLoginBusiness = new Mock<LoginBusiness>(_mockConfiguration.Object);
 
         _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object, _mockEncryption.Object, _mockLoginBusiness.Object);
     }
@@ -39,9 +39,10 @@ public class LoginServicesTests
     [Fact]
     public async Task LoginAuth_ShouldReturnUserId_WhenUserExists()
     {
-        var username = "testuser";
-        var password = "testpassword";
-        var hashedPassword = "hashedpassword";
+        var username = "admin";
+        var password = "pw";
+        var email = "admin@example.com";
+        var hashedPassword = "pw";
         var userId = Guid.NewGuid().ToString();
 
         var userProfile = new UserProfile
@@ -49,33 +50,43 @@ public class LoginServicesTests
             Id = Guid.NewGuid(),
             Name = username,
             Password = hashedPassword,
-            Email = "test@example.com"
+            Email = email
         };
 
-        var userProfiles = new List<UserProfile> { userProfile }.AsQueryable();
-        var mockDbSet = new Mock<DbSet<UserProfile>>();
-        mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.Provider).Returns(userProfiles.Provider);
-        mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.Expression).Returns(userProfiles.Expression);
-        mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.ElementType).Returns(userProfiles.ElementType);
-        mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.GetEnumerator()).Returns(userProfiles.GetEnumerator());
+        //var userProfiles = new List<UserProfile> { userProfile }.AsQueryable();
+        //var mockDbSet = new Mock<DbSet<UserProfile>>();
+        //mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.Provider).Returns(userProfiles.Provider);
+        //mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.Expression).Returns(userProfiles.Expression);
+        //mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.ElementType).Returns(userProfiles.ElementType);
+        //mockDbSet.As<IQueryable<UserProfile>>().Setup(m => m.GetEnumerator()).Returns(userProfiles.GetEnumerator());
 
-        _mockDbContext.Setup(db => db.UserProfiles).Returns(mockDbSet.Object);
-        _mockDbContext.Setup(db => db.GetUserProfileAsync(It.IsAny<Expression<Func<UserProfile, bool>>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userProfile);
+        //_mockDbContext.Setup(db => db.UserProfiles).Returns(mockDbSet.Object);
+        //_mockDbContext.Setup(db => db.GetUserProfileAsync(It.IsAny<Expression<Func<UserProfile, bool>>>(), It.IsAny<CancellationToken>()))
+        //    .ReturnsAsync(userProfile);
+
+        //_mockEncryption.Setup(e => e.VerifyPassword(password, hashedPassword)).Returns(true);
+
+        var userProfiles = new List<UserProfile> { userProfile }.AsQueryable();
+
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(userProfiles);
+        _mockEncryption.Setup(e => e.HashPassword(It.IsAny<string>())).Returns((string pw) => hashedPassword);
 
         _mockEncryption.Setup(e => e.VerifyPassword(password, hashedPassword)).Returns(true);
 
-        var result = await _loginServices.LoginAuth(username, password);
+        var result = await _loginServices.LoginAuth(userProfile.Email, userProfile.Password);
+
+        //var result = await _loginServices.LoginAuth(userProfile.Email, userProfile.Password);
 
         Assert.NotNull(result);
-        Assert.Equal(userProfile.Id.ToString(), result);
+        Assert.Equal(userProfile.Id.ToString(), result.ToString());
     }
 
     [Fact]
     public void GenerateToken_ShouldReturnToken_WhenCalled()
     {
-        var username = "testuser";
-        //var password = "testpassword";
+        var username = "admin";
+        var password = "pw";
+        _mockEncryption.Setup(e => e.HashPassword(password)).Returns("hashedPassword");
 
         var token = _loginServices.GenerateToken(username);
 

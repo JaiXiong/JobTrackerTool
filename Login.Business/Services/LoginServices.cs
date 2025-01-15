@@ -15,7 +15,7 @@ namespace Login.Business.Services
         private readonly ResourceManager _resourceManager;
         private readonly IJobProfileContext _dbContext;
         private readonly IConfiguration _configuration;
-        private readonly Encryption _encyption;
+        private readonly Encryption _encryption;
         private readonly LoginBusiness _loginBusiness;
 
         public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness)
@@ -23,7 +23,7 @@ namespace Login.Business.Services
             _resourceManager = resourceManager;
             _dbContext = context;
             _configuration = configuration;
-            _encyption = encryption;
+            _encryption = encryption;
             _loginBusiness = loginBusiness;
         }
         public async Task<string> LoginAuth(string email, string pw)
@@ -39,11 +39,13 @@ namespace Login.Business.Services
             }
             var delimiter = new char[] { '@' };
             var username = email.Split(delimiter)[0];
+            var hashedPassword = _encryption.HashPassword(pw);
             var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == username);
+            //var pass = await _dbContext.UserProfiles.FirstOrDefaultAsync(p => p.Password == _encyption.HashPassword(pw));
 
-            if (user == null)
+            if (user == null || !_encryption.VerifyPassword(pw, hashedPassword))
             {
-                throw new ArgumentException(_resourceManager.GetString("UserNotExist"));
+                throw new ArgumentException(_resourceManager.GetString("Login Creditials Failed"));
             }
 
             return user.Id.ToString();
@@ -158,19 +160,28 @@ namespace Login.Business.Services
             }
 
             var delimiter = new char[] { '@' };
-
-            var user = new UserProfile
+            try
             {
-                Id = Guid.NewGuid(),
-                Date = DateTime.Now,
-                LatestUpdate = DateTime.Now,
-                Name = email.Substring(0, email.IndexOf('@')),
-                Email = email,
-                Password = _encyption.HashPassword(pw)
-            };
+                var username = email.Substring(0, email.IndexOf('@'));
 
-            await _dbContext.UserProfiles.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+                var user = new UserProfile
+                {
+                    Id = Guid.NewGuid(),
+                    Date = DateTime.Now,
+                    LatestUpdate = DateTime.Now,
+                    Name = email.Substring(0, email.IndexOf('@')),
+                    Email = email,
+                    Password = _encryption.HashPassword(pw)
+                };
+
+                await _dbContext.UserProfiles.AddAsync(user);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            
         }
 
         //public string LoginEncrypt(string item)

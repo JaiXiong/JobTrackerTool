@@ -132,13 +132,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.UpdateJobProfile(expectedJobProfile))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.UpdateJobProfile(expectedJobProfile);
+            var result = await _controller.UpdateJobProfile(expectedJobProfile) as NoContentResult;
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
-            var createdAtActionResult = result as CreatedAtActionResult;
-            Assert.AreEqual(nameof(_controller.UpdateJobProfile), createdAtActionResult.ActionName);
-            Assert.AreEqual(expectedJobProfile.Id, ((JobProfile)createdAtActionResult.Value).Id);
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, result.StatusCode);
         }
 
         [TestMethod()]
@@ -175,7 +173,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             var result = await _controller.DeleteJobProfile(jobProfileId);
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
         }
 
         [TestMethod()]
@@ -374,13 +372,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.UpdateEmployerProfile(expectedEmployerProfile))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.UpdateEmployerProfile(expectedEmployerProfile);
+            var result = await _controller.UpdateEmployerProfile(expectedEmployerProfile) as NoContentResult;
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
-            var createdAtActionResult = result as CreatedAtActionResult;
-            Assert.AreEqual(nameof(_controller.UpdateEmployerProfile), createdAtActionResult.ActionName);
-            Assert.AreEqual(expectedEmployerProfile.Id, ((EmployerProfile)createdAtActionResult.Value).Id);
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, result.StatusCode);
         }
 
         [TestMethod()]
@@ -525,10 +521,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.DeleteEmployerProfile(employerProfileId))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.DeleteEmployerProfile(employerProfileId);
+            var result = await _controller.DeleteEmployerProfile(employerProfileId) as NoContentResult;
 
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(NoContentResult));
+            Assert.AreEqual(204, result.StatusCode);
         }
 
         [TestMethod()]
