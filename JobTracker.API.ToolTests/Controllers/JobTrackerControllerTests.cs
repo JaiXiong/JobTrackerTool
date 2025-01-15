@@ -6,6 +6,7 @@ using JobTracker.API.Tool.DbData;
 using System.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Utils.Encryption;
+using JobData.Dtos;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -47,12 +48,17 @@ namespace JobTracker.API.tool.Controllers.Tests
                 .ReturnsAsync(expectedJobProfile);
 
             //Act
-            var result = await _controller.GetJobProfile(expectedJobProfile.Id);
+            var result = await _controller.GetJobProfile(expectedJobProfile.Id) as OkObjectResult;
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(expectedJobProfile.Id, result.Id);
-            Assert.AreEqual(expectedJobProfile.ProfileName, result.ProfileName);
+            //Assert.AreEqual(expectedJobProfile.Id, result.Id);
+            //Assert.AreEqual(expectedJobProfile.ProfileName, result.ProfileName);
+            Assert.AreEqual(200, result.StatusCode);
+            var jobProfile = result.Value as JobProfile;
+            Assert.IsNotNull(jobProfile);
+            Assert.AreEqual(expectedJobProfile.Id, jobProfile.Id);
+            Assert.AreEqual(expectedJobProfile.ProfileName, jobProfile.ProfileName);
         }
 
         [TestMethod()]
@@ -209,11 +215,14 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id))
                 .ReturnsAsync(expectedEmployerProfile);
 
-            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id);
+            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id) as OkObjectResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(result, expectedEmployerProfile);
-            Assert.AreEqual(result.Id, expectedEmployerProfile.Id);
+            Assert.AreEqual(200, result.StatusCode);
+            var employerProfile = result.Value as EmployerProfile;
+            Assert.IsNotNull(employerProfile);
+            Assert.AreEqual(expectedEmployerProfile.Id, employerProfile.Id);
+            Assert.AreEqual(expectedEmployerProfile.Name, employerProfile.Name);
         }
 
         [TestMethod()]
@@ -286,11 +295,13 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId))
                 .ReturnsAsync(expectedEmployerProfiles);
 
-            var result = await _controller.GetEmployerProfiles(jobProfileId);
+            var result = await _controller.GetEmployerProfiles(jobProfileId) as OkObjectResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(expectedEmployerProfiles.Count, result.Count());
-            CollectionAssert.AreEqual(expectedEmployerProfiles, result.ToList());
+            var employerProfile = result.Value as IEnumerable<EmployerProfile>;
+            Assert.IsNotNull(employerProfile);
+            Assert.AreEqual(expectedEmployerProfiles.Count(), employerProfile.Count());
+            CollectionAssert.AreEqual(expectedEmployerProfiles, employerProfile.ToList());
         }
 
         [TestMethod]
@@ -448,11 +459,13 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerPagingData(jobProfileId, pageIndex, pageSize))
                 .ReturnsAsync(expectedEmployerProfiles);
 
-            var result = await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
+            var result = await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize) as OkObjectResult;
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(expectedEmployerProfiles.Count, result.Count());
-            CollectionAssert.AreEqual(expectedEmployerProfiles, result.ToList());
+            var employerPagingData = result.Value as PagingResponse<EmployerProfile>;
+            Assert.IsNotNull(employerPagingData);
+            Assert.AreEqual(expectedEmployerProfiles.Count, employerPagingData.Data.Count());
+            CollectionAssert.AreEqual(expectedEmployerProfiles, employerPagingData.Data.ToList());
         }
 
         [TestMethod]
