@@ -13,7 +13,7 @@ import { JobTrackerService } from '../../../services/jobtracker/jobtracker.servi
   styleUrl: './download-modular.component.scss'
 })
 export class DownloadModularComponent {
-  @Input() _jobProfileId: string = '';
+  @Input() _jobProfileId: string | null = '';
 
   constructor(private _jobTrackerService: JobTrackerService) { }
 

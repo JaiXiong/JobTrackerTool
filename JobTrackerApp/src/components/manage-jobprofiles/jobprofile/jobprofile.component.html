@@ -40,7 +40,7 @@
       <button mat-menu-item (click)="onDeleteEmployerProfile()">Delete employer profile</button>
     </mat-menu> -->
     <app-upload-modular *ngIf="showEmployerOptions" ></app-upload-modular>
-    <app-download-modular *ngIf="showEmployerOptions" ></app-download-modular>
+    <app-download-modular *ngIf="showEmployerOptions" [_jobProfileId]="jobProfileSelected?.id || null"></app-download-modular>
     <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add"
       *ngIf="showEmployerOptions" (click)="onCreateEmployerProfile()"></mat-icon>
     <mat-icon class="employerprofile-icons" matTooltip="Update employer profile" fontIcon="edit"

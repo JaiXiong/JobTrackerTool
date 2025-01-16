@@ -9,6 +9,7 @@ using System.Text;
 using Utils.Encryption;
 using AutoMapper;
 using Utils.AutoMapper;
+using JobTracker.Business.Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,7 @@ builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBus
 
 // Register JobTrackerToolService and Encryption
 builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
+builder.Services.AddScoped<IJobTrackerToolBusiness, JobTrackerToolBusiness>();
 builder.Services.AddScoped<Encryption>();
 
 // Register the DbContext with a connection string in the appsettings

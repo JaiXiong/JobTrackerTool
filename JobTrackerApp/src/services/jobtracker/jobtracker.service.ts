@@ -111,7 +111,7 @@ export class JobTrackerService {
 
   public DownloadEmployerProfile(jobProfileId: any): void {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    this.http.get(`${this.jobTrackerUrl}/api/JobTracker/DownloadEmployerProfile` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
+    this.http.get(`${this.jobTrackerUrl}/api/JobTracker/Download` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
       const blob = new Blob([data as BlobPart], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       window.open(url);

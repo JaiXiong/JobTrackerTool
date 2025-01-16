@@ -1,10 +1,13 @@
+using AutoMapper;
 using JobData.Dtos;
 using JobData.Entities;
+using JobTracker.Business.Business;
 using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Text;
 using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers
@@ -17,13 +20,17 @@ namespace JobTracker.API.tool.Controllers
         private readonly ILogger<JobTrackerController> _logger;
         private readonly IJobTrackerToolService _jobTrackerToolService;
         private readonly Encryption _encyption;
+        private readonly IJobTrackerToolBusiness _jobTrackerToolBusiness;
+        private readonly IMapper _mapper;
         //private readonly JobTrackerToolService _jobTrackerDBcontext;
 
-        public JobTrackerController(ILogger<JobTrackerController> logger, IJobTrackerToolService jobTrackerToolService, Encryption encyption)
+        public JobTrackerController(ILogger<JobTrackerController> logger, IJobTrackerToolService jobTrackerToolService, Encryption encyption, IJobTrackerToolBusiness jobTrackerToolBusiness, IMapper mapper)
         {
             _logger = logger;
             _jobTrackerToolService = jobTrackerToolService;
             _encyption = encyption;
+            _jobTrackerToolBusiness = jobTrackerToolBusiness;
+            _mapper = mapper;
             //_jobTrackerDBcontext = jobTrackerDBcontext;
         }
 
@@ -372,14 +379,53 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpGet("download/{jobProfileId}", Name ="Download")]
-        public async Task<IActionResult>Download(Guid jobProfileId)
+        [HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
+        public async Task<IActionResult>DownloadCsv(Guid jobProfileId)
         {
             try
             {
-                var toBeDownloaded = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
 
-                return Ok(toBeDownloaded);
+                //var EmployerTableViewDto = _mapper.Map<EmployerTableViewDto>(employerProfiles);
+                var csv = _jobTrackerToolBusiness.CsvCreate(jobProfileId, employerProfiles);
+
+                var bytes = Encoding.UTF8.GetBytes(csv.ToString());
+                var date = DateTime.Now;
+                var result = new FileContentResult(bytes, "text/csv")
+                {
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+                };
+
+                //return Ok(result);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+                throw new ArgumentException("An error occurred while downloading the employer profile.");
+            }
+        }
+
+        [HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
+        public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
+        {
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+
+                //var EmployerTableViewDto = _mapper.Map<EmployerTableViewDto>(employerProfiles);
+                //var csv = _jobTrackerToolBusiness.CsvCreate(jobProfileId, employerProfiles);
+                var pdf = _jobTrackerToolBusiness.PdfCreate(jobProfileId, employerProfiles);
+
+                //var bytes = Encoding.UTF8.GetBytes(pdf.ToString());
+                var date = DateTime.Now;
+                var result = new FileContentResult(pdf, "application/pdf")
+                {
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+                };
+
+                //return Ok(result);
+                return result;
             }
             catch (Exception ex)
             {
