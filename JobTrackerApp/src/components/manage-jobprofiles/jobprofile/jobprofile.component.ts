@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -62,6 +63,11 @@ import { MatMenuModule } from '@angular/material/menu';
   providers: [
     DatePipe,
   ],
+  //TODO
+  //Eventually to use this for performance optimization we need to try to create components that are pure
+  //This means that the component will only update when the input changes
+  //But right now this falls under the umbrella of lost time, we've already implemented the way it works and going back to change it would take time to refractor
+  //changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './jobprofile.component.html',
   styleUrl: './jobprofile.component.scss',
 })
@@ -75,10 +81,9 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   userNameId: string = '';
   userName: string = '';
   jobProfiles: JobProfile[] = [];
-  jobProfile!: JobProfile;
+  //jobProfile!: JobProfile;
   jobProfileSelected!: JobProfile | null;
   employerProfileSelected: string = '';
-  //employerProfiles: EmployerProfile[] = [];
   displayedColumns: string[] = [
     'date',
     'name',
@@ -89,7 +94,6 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     'website',
     'latestupdate',
   ];
-  //dataSource: EmployerProfile[] = [];
   dataSource = new MatTableDataSource<EmployerProfile>();
   isSelected: boolean = false;
   showJobOptions: boolean = true;
@@ -106,6 +110,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
 
     if (localStorage.getItem('jobProfileId')) {
       this.isSelected = true;
+      this.showEmployerOptions = true;
       this.jobProfileSelected = this.jobProfiles.find(
         (profile) => profile.id === localStorage.getItem('jobProfileId')
       ) as JobProfile;
@@ -147,22 +152,22 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService
   ) {}
 
-  public getJobProfile(): void {
-    if (this.jobProfileSelected) {
-      console.error('No job profile selected');
-      this.jobTrackerService
-        .GetJobProfile(this.jobProfileSelected.id)
-        .subscribe({
-          next: (response: JobProfile) => {
-            console.log(response);
-            this.jobProfile = response;
-          },
-          error: (error) => {
-            console.error('Failed to get job profile', error);
-          },
-        });
-    }
-  }
+  // public getJobProfile(): void {
+  //   if (this.jobProfileSelected) {
+  //     console.error('No job profile selected');
+  //     this.jobTrackerService
+  //       .GetJobProfile(this.jobProfileSelected.id)
+  //       .subscribe({
+  //         next: (response: JobProfile) => {
+  //           console.log(response);
+  //           this.jobProfile = response;
+  //         },
+  //         error: (error) => {
+  //           console.error('Failed to get job profile', error);
+  //         },
+  //       });
+  //   }
+  // }
 
   public getJobProfiles(): Observable<JobProfile[]> {
     if (!this.userNameId) {
