@@ -1,0 +1,12 @@
+<h1 class="download-header">Download</h1>
+<div mat-dialog-content>
+  <span class="download-content">
+    Download File:
+    <mat-checkbox [(ngModel)]="selectAll" matTooltip="Check if you want Results and Details">Include All Data</mat-checkbox>
+  </span>
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Ok</button>
+  <button class="cancel-dialog" mat-button mat-dialog-close>Cancel</button>
+</div>

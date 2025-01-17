@@ -9,7 +9,8 @@ namespace JobTracker.Business.Business
 {
     public interface IJobTrackerToolBusiness
     {
-        StringBuilder CsvCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
+        StringBuilder CsvCreateAll(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
+        StringBuilder CsvCreateSelected(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
         byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
 
         StringBuilder ExcelParse();

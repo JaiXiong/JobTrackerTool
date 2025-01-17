@@ -7,7 +7,7 @@ namespace JobTracker.Business.Business
 {
     public class JobTrackerToolBusiness : IJobTrackerToolBusiness
     {
-        public StringBuilder CsvCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
+        public StringBuilder CsvCreateAll(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
         {
             if (!employerProfiles.Any())
             {
@@ -15,11 +15,34 @@ namespace JobTracker.Business.Business
             }
 
             var csv = new StringBuilder();
+            csv.AppendLine("Job Profile " + jobProfileId);
+            csv.AppendLine("Id,Name,Title,Address,City,State,Zip,Phone,Email,Website, Action, ActionResult, ResultDate, ResultLatestUpdate, DetailUpdate, DetailDate, DetailLatestUpdate");
+
+            foreach (var profile in employerProfiles)
+            {
+                csv.AppendLine($"{profile.Id},{profile.Name},{profile.Title},{profile.Address},{profile.City}, {profile.State},{profile.Zip}," +
+                    $"{profile.Phone},{profile.Email},{profile.Website}, {profile.Result.Action}, {profile.Result.ActionResult}, {profile.Result.Date}, " +
+                    $"{profile.Result.LatestUpdate},{profile.Detail.Updates}, {profile.Detail.Date}, {profile.Detail.LatestUpdate}");
+            }
+
+            return csv;
+        }
+
+        public StringBuilder CsvCreateSelected(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
+        {
+            if (!employerProfiles.Any())
+            {
+                throw new ArgumentException("No employers found in csv creation.");
+            }
+
+            var csv = new StringBuilder();
+            csv.AppendLine("Job Profile " + jobProfileId);
             csv.AppendLine("Id,Name,Title,Address,City,State,Zip,Phone,Email,Website");
 
             foreach (var profile in employerProfiles)
             {
-                csv.AppendLine($"{profile.Id},{profile.Name},{profile.Title},{profile.Address},{profile.City},{profile.State},{profile.Zip},{profile.Phone},{profile.Email},{profile.Website}");
+                csv.AppendLine($"{profile.Id},{profile.Name},{profile.Title},{profile.Address},{profile.City}, {profile.State},{profile.Zip}," +
+                    $"{profile.Phone},{profile.Email},{profile.Website}");
             }
 
             return csv;

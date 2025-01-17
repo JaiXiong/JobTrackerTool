@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
 using System.Text;
 using Utils.Encryption;
 
@@ -380,23 +381,29 @@ namespace JobTracker.API.tool.Controllers
         }
 
         [HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
-        public async Task<IActionResult>DownloadCsv(Guid jobProfileId)
+        public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
         {
+            var csv = new StringBuilder();
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
 
-                //var EmployerTableViewDto = _mapper.Map<EmployerTableViewDto>(employerProfiles);
-                var csv = _jobTrackerToolBusiness.CsvCreate(jobProfileId, employerProfiles);
+                if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
+                {
+                    csv = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
+                }
+                else
+                {
+                    csv = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
+                }
 
                 var bytes = Encoding.UTF8.GetBytes(csv.ToString());
                 var date = DateTime.Now;
                 var result = new FileContentResult(bytes, "text/csv")
                 {
-                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
                 };
 
-                //return Ok(result);
                 return result;
             }
             catch (Exception ex)
@@ -413,18 +420,14 @@ namespace JobTracker.API.tool.Controllers
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
 
-                //var EmployerTableViewDto = _mapper.Map<EmployerTableViewDto>(employerProfiles);
-                //var csv = _jobTrackerToolBusiness.CsvCreate(jobProfileId, employerProfiles);
                 var pdf = _jobTrackerToolBusiness.PdfCreate(jobProfileId, employerProfiles);
 
-                //var bytes = Encoding.UTF8.GetBytes(pdf.ToString());
                 var date = DateTime.Now;
                 var result = new FileContentResult(pdf, "application/pdf")
                 {
                     FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
                 };
 
-                //return Ok(result);
                 return result;
             }
             catch (Exception ex)

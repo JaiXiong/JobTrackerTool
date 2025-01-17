@@ -109,13 +109,15 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetEmployerTotalCount')));
   }
 
-  public DownloadEmployerProfile(jobProfileId: any): void {
+  public DownloadCsvEmployerProfile(jobProfileId: any, sendAll: boolean): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    this.http.get(`${this.jobTrackerUrl}/api/JobTracker/Download` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
-      const blob = new Blob([data as BlobPart], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      window.open(url);
-    });
+    // this.http.get(`${this.jobTrackerUrl}/api/JobTracker/Download` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
+    //   const blob = new Blob([data as BlobPart], { type: 'application/pdf' });
+    //   const url = window.URL.createObjectURL(blob);
+    //   window.open(url);
+    // });
+    return this.http.get(`http://localhost:5001/api/JobTracker/downloadcsv/${jobProfileId}?include=${sendAll}`, { headers, responseType: 'blob' }).pipe(
+      catchError(this.handleError<any>('DownloadEmployerProfile')));
   }
 
   public UpLoad(formData: any): Observable<any> {
