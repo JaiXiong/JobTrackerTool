@@ -380,6 +380,43 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        [HttpGet("download/{jobProfileId}", Name = "Download")]
+        public async Task<IActionResult> Download(Guid jobProfileId)
+        {
+            var fileTobeDownloaded = new StringBuilder();
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+                var include = Request.Query["include"].ToString();
+                var pdf = Request.Query["pdf"].ToString();
+                var csv = Request.Query["csv"].ToString();
+
+                //if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
+                if (include == "true" && csv == "true")
+                {
+                    fileTobeDownloaded = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
+                }
+                else
+                {
+                    fileTobeDownloaded = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
+                }
+
+                var bytes = Encoding.UTF8.GetBytes(csv.ToString());
+                var date = DateTime.Now;
+                var result = new FileContentResult(bytes, "text/csv")
+                {
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+                throw new ArgumentException("An error occurred while downloading the employer profile.");
+            }
+        }
+
         [HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
         public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
         {

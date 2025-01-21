@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, Observable, of, pipe } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -109,14 +109,14 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetEmployerTotalCount')));
   }
 
-  public DownloadCsvEmployerProfile(jobProfileId: any, sendAll: boolean): Observable<any> {
+  public DownloadEmployerProfile(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    // this.http.get(`${this.jobTrackerUrl}/api/JobTracker/Download` + '/' + jobProfileId, { headers, responseType: 'blob' as 'json' }).subscribe((data) => {
-    //   const blob = new Blob([data as BlobPart], { type: 'application/pdf' });
-    //   const url = window.URL.createObjectURL(blob);
-    //   window.open(url);
-    // });
-    return this.http.get(`http://localhost:5001/api/JobTracker/downloadcsv/${jobProfileId}?include=${sendAll}`, { headers, responseType: 'blob' }).pipe(
+    const params = new HttpParams()
+      .set('pdf', sendPdf)
+      .set('csv', sendCsv)
+      .set('include', sendAll);
+
+    return this.http.get(`http://localhost:5001/api/JobTracker/download/${jobProfileId}`, { headers, params, responseType: 'blob' }).pipe(
       catchError(this.handleError<any>('DownloadEmployerProfile')));
   }
 

@@ -20,13 +20,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   templateUrl: './dialog-modular.component.html',
   styleUrl: './dialog-modular.component.scss',
 })
-export class DialogModularComponent {
-  selectAll: boolean = false;
+export class DialogDownloadModularComponent {
+
+  selections: any = {
+    all: false,
+    pdf: false,
+    csv: false
+  }
+  // selectAll: boolean = false;
+  // selectPdf: boolean = false;
+  // selectCsv: boolean = false;
 
   constructor() {}
 
-  sendAllisChecked() {
-
-    return this.selectAll = true;
+  onOk(): void {
+    // this.dialogRef.close(this.selections);
   }
 }
