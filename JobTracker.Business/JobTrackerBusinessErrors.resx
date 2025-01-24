@@ -156,4 +156,7 @@
   <data name="UserNotExist" xml:space="preserve">
     <value>User doesn't exist</value>
   </data>
+  <data name="JobActionNotExist" xml:space="preserve">
+    <value>Job Action doesn't exist.</value>
+  </data>
 </root>

@@ -28,36 +28,21 @@ namespace JobTracker.Business.Services
         }
         public async Task<OperationResult> AddJobProfile(JobProfile jobProfile)
         {
-            try
+            var jobProfileExist = await _dbContext.JobProfiles.AnyAsync(c => c.ProfileName == jobProfile.ProfileName);
+
+            if (jobProfileExist)
             {
-                var user = await _dbContext.UserProfiles.AnyAsync(c => c.Id == jobProfile.UserProfileId);
-
-                if (!user)
-                {
-                    return OperationResult.CreateFailure(string.Format(_resourceManager.GetString("AddProfileError")));
-                }
-
-                var jobProfileExist = await _dbContext.JobProfiles.AnyAsync(c => c.ProfileName == jobProfile.ProfileName);
-
-                if (jobProfileExist)
-                {
-                    return OperationResult.CreateSuccess(string.Format(_resourceManager.GetString("JobProfileExist"), jobProfile.ProfileName));
-                }
-
-                jobProfile.Id = Guid.NewGuid();
-                jobProfile.Date = DateTime.Now;
-                jobProfile.LatestUpdate = DateTime.Now;
-
-                _dbContext.JobProfiles.Add(jobProfile);
-                await _dbContext.SaveChangesAsync();
-
-                return OperationResult.CreateSuccess("Adding job profile successfully."); //{ Success = true, Message = "Adding job profile successfully." };
+                return OperationResult.CreateFailure(_resx.Create("JobProfileExist"));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occured while adding job profile");
-                return OperationResult.CreateFailure("An error occured while adding job profile"); //{ Success = false, Message = "An error occured while adding job profile" };
-            }
+
+            jobProfile.Id = Guid.NewGuid();
+            jobProfile.Date = DateTime.Now;
+            jobProfile.LatestUpdate = DateTime.Now;
+
+            _dbContext.JobProfiles.Add(jobProfile);
+            await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Adding job profile successfully.");
         }
         public async Task<OperationResult> AddWorkAction(JobAction workAction)
         {
@@ -86,7 +71,7 @@ namespace JobTracker.Business.Services
 
                 if (exist)
                 {
-                    return OperationResult.CreateFailure((string.Format(_resourceManager.GetString("UserExist"), userProfile.Name)));
+                    return OperationResult.CreateFailure(_resx.Create("UserExist"));
                 }
 
                 userProfile.Id = Guid.NewGuid();
@@ -147,7 +132,7 @@ namespace JobTracker.Business.Services
 
                 if (exist)
                 {
-                    return OperationResult.CreateFailure(string.Format(_resourceManager.GetString("EmployerProfileExist"), employerProfile.Name));
+                    return OperationResult.CreateFailure(_resx.Create("EmployerProfileExist"));
                 }
 
                 employerProfile.Id = Guid.NewGuid();
@@ -165,101 +150,75 @@ namespace JobTracker.Business.Services
         }
         public async Task<OperationResult> AddEmployerProfile(EmployerProfile employerProfile)
         {
-            try
+            var exist = await _dbContext.JobProfiles.AnyAsync(c => c.Id == employerProfile.Id);
+
+            if (exist)
             {
-                var jobProfile = await _dbContext.JobProfiles.AnyAsync(c => c.Id == employerProfile.JobProfileId);
-
-                if (!jobProfile)
-                {
-                    return OperationResult.CreateFailure(string.Format(_resourceManager.GetString("JobProfileNotExist"), employerProfile.Name));
-                }
-
-                employerProfile.Id = Guid.NewGuid();
-                employerProfile.Date = DateTime.Now;
-                employerProfile.LatestUpdate = DateTime.Now;
-
-                if (employerProfile.Result != null)
-                {
-                    employerProfile.Result.Id = Guid.NewGuid();
-                    employerProfile.Result.EmployerProfileId = employerProfile.Id;
-                    employerProfile.Result.Date = DateTime.Now;
-                    employerProfile.Result.LatestUpdate = DateTime.Now;
-                }
-
-                if (employerProfile.Detail != null)
-                {
-                    employerProfile.Detail.Id = Guid.NewGuid();
-                    employerProfile.Detail.EmployerProfileId = employerProfile.Id;
-                    employerProfile.Detail.Date = DateTime.Now;
-                    employerProfile.Detail.LatestUpdate = DateTime.Now;
-                }
-
-                _dbContext.Employers.Add(employerProfile);
-                await _dbContext.SaveChangesAsync();
-
-                return OperationResult.CreateSuccess("Added employer profile successfully.");
+                return OperationResult.CreateFailure(_resx.Create("EmployerProfileExist"));
             }
-            catch (Exception ex)
+            employerProfile.Id = Guid.NewGuid();
+            employerProfile.Date = DateTime.Now;
+            employerProfile.LatestUpdate = DateTime.Now;
+
+            if (employerProfile.Result != null)
             {
-                _logger.LogError(ex, "An error occurred adding employer profile");
-                return OperationResult.CreateFailure("An error occurred adding employer profile");
+                employerProfile.Result.Id = Guid.NewGuid();
+                employerProfile.Result.EmployerProfileId = employerProfile.Id;
+                employerProfile.Result.Date = DateTime.Now;
+                employerProfile.Result.LatestUpdate = DateTime.Now;
             }
 
+            if (employerProfile.Detail != null)
+            {
+                employerProfile.Detail.Id = Guid.NewGuid();
+                employerProfile.Detail.EmployerProfileId = employerProfile.Id;
+                employerProfile.Detail.Date = DateTime.Now;
+                employerProfile.Detail.LatestUpdate = DateTime.Now;
+            }
+
+            _dbContext.Employers.Add(employerProfile);
+            await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Added employer profile successfully.");
         }
 
         public async Task<OperationResult> AddJobAction(Guid employerProfileId, JobAction jobAction)
         {
-            try
+            var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == jobAction.EmployerProfileId);
+
+            if (employerProfile == null)
             {
-                var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == jobAction.EmployerProfileId);
-
-                if (employerProfile == null)
-                {
-                    return OperationResult.CreateFailure(string.Format(_resourceManager.GetString("EmployerProfileNotExist"), employerProfileId));
-                }
-
-                jobAction.Id = Guid.NewGuid();
-                _dbContext.JobActions.Add(jobAction);
-                employerProfile.Result = jobAction;
-                _dbContext.Employers.Update(employerProfile);
-
-                await _dbContext.SaveChangesAsync();
-
-                return OperationResult.CreateSuccess("Added employer action successfully.");
+                return OperationResult.CreateFailure(_resx.Create("EmployerProfileNotExist"));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred adding employer action.");
-                return OperationResult.CreateFailure("An error occurred adding job action.");
-            }
+
+            jobAction.Id = Guid.NewGuid();
+            _dbContext.JobActions.Add(jobAction);
+            employerProfile.Result = jobAction;
+            _dbContext.Employers.Update(employerProfile);
+
+            await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Added employer action successfully.");
         }
 
         public async Task<OperationResult> AddDetail(Guid employerProfileId, Detail detail)
         {
-            try
+            var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == detail.EmployerProfileId);
+
+            if (employerProfile == null)
             {
-                var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == detail.EmployerProfileId);
-
-                if (employerProfile == null)
-                {
-                    return OperationResult.CreateFailure(string.Format(_resourceManager.GetString("EmployerProfileNotExist"), employerProfileId));
-                }
-
-                detail.Id = Guid.NewGuid();
-
-                _dbContext.Details.Add(detail);
-                employerProfile.Detail = detail;
-                _dbContext.Employers.Update(employerProfile);
-
-                await _dbContext.SaveChangesAsync();
-
-                return OperationResult.CreateSuccess("Added employer detail successfully.");
+                return OperationResult.CreateFailure(_resx.Create("EmployerProfileNotExist"));
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred adding employer detail.");
-                return OperationResult.CreateFailure("An error occurred adding employer detail.");
-            }
+
+            detail.Id = Guid.NewGuid();
+
+            _dbContext.Details.Add(detail);
+            employerProfile.Detail = detail;
+            _dbContext.Employers.Update(employerProfile);
+
+            await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Added employer detail successfully.");
         }
 
         public async Task<JobProfile> GetJobProfile(Guid jobProfileId)
@@ -413,12 +372,13 @@ namespace JobTracker.Business.Services
             return details;
         }
 
-        public async Task UpdateEmployerProfile(EmployerProfile updatedProfile)
+        public async Task<OperationResult> UpdateEmployerProfile(EmployerProfile updatedProfile)
         {
             var existingProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+
             if (existingProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
+                return OperationResult.CreateFailure(_resx.Create("EmployerProfileNotExist"));
             }
 
             existingProfile.Name = updatedProfile.Name;
@@ -446,70 +406,92 @@ namespace JobTracker.Business.Services
 
             _dbContext.Employers.Update(existingProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Employer profile updated successfully");
         }
 
-        public async Task UpdateJobProfile(JobProfile updatedProfile)
+        public async Task<OperationResult> UpdateJobProfile(JobProfile updatedProfile)
         {
             var existingProfile = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+
             if (existingProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("JobProfileNull"));
+                return OperationResult.CreateFailure(_resx.Create("JobProfileNotExist"));
             }
+
             existingProfile.ProfileName = updatedProfile.ProfileName;
             existingProfile.LatestUpdate = DateTime.Now;
             _dbContext.JobProfiles.Update(existingProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Job profile updated successfully");
         }
 
-        public async Task UpdateJobAction(JobAction updatedProfile)
+        public async Task<OperationResult> UpdateJobAction(JobAction updatedProfile)
         {
             var existingProfile = await _dbContext.JobActions.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+
             if (existingProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("JobActionNull"));
+                return OperationResult.CreateFailure(_resx.Create("JobActionNotExist"));
             }
             existingProfile.Action = updatedProfile.Action;
             existingProfile.Method = updatedProfile.Method;
             existingProfile.ActionResult = updatedProfile.ActionResult;
             existingProfile.LatestUpdate = DateTime.Now;
+
             _dbContext.JobActions.Update(existingProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Updated job action successfully.");
         }
 
-        public async Task UpdateDetail(Detail updatedProfile)
+        public async Task<OperationResult> UpdateDetail(Detail updatedProfile)
         {
             var existingProfile = await _dbContext.Details.FirstOrDefaultAsync(c => c.Id == updatedProfile.Id);
+
             if (existingProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("DetailNull"));
+                return OperationResult.CreateFailure(_resx.Create("EmployerDetailsNotExist"));
             }
             existingProfile.Comments = updatedProfile.Comments;
             existingProfile.Updates = updatedProfile.Updates;
             existingProfile.LatestUpdate = DateTime.Now;
+
             _dbContext.Details.Update(existingProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Updated employer details successfully.");
         }
 
-        public async Task DeleteJobProfile(Guid jobProfileId)
+        public async Task<OperationResult> DeleteJobProfile(Guid jobProfileId)
         {
             var jobProfile = await _dbContext.JobProfiles.FirstOrDefaultAsync(c => c.Id == jobProfileId);
+
             if (jobProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("JobProfileNull"));
+                return OperationResult.CreateFailure(_resx.Create("JobProfileNotExist"));
             }
+
             _dbContext.JobProfiles.Remove(jobProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Deleted job profile successfully");
         }
 
-        public async Task DeleteEmployerProfile(Guid employerProfileId)
+        public async Task<OperationResult> DeleteEmployerProfile(Guid employerProfileId)
         {
             var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
+
             if (employerProfile == null)
             {
-                throw new ArgumentNullException(_resourceManager.GetString("EmployerProfileNull"));
+                return OperationResult.CreateFailure(_resx.Create("EmployerProfileNotExist"));
             }
+
             _dbContext.Employers.Remove(employerProfile);
             await _dbContext.SaveChangesAsync();
+
+            return OperationResult.CreateSuccess("Deleted employer profile successfully.");
         }
     }
 }

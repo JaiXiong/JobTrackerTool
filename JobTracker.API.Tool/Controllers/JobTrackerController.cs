@@ -289,16 +289,6 @@ namespace JobTracker.API.tool.Controllers
                 {
                     return BadRequest(new { result.Message, result.Errors });
                 }
-                //_jobTrackerToolService.ValidateNewUser(userProfile);
-
-                //await _jobTrackerToolService.AddUserProfile(userProfile);
-
-                //return CreatedAtAction(nameof(CreateUserProfile), new { id = userProfile.Id }, userProfile);
-            }
-            catch (BusinessException ex)
-            {
-                _logger.LogError(ex, "Business rule violation occurred while creating user profile.");
-                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
@@ -312,9 +302,16 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                await _jobTrackerToolService.AddJobProfile(jobProfile);
+                var result = await _jobTrackerToolService.AddJobProfile(jobProfile);
 
-                return CreatedAtAction(nameof(CreateJobProfile), new { id = jobProfile.Id }, jobProfile);
+                if (result.Success)
+                {
+                    return CreatedAtAction(nameof(CreateJobProfile), new { id = jobProfile.Id }, jobProfile);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -327,16 +324,18 @@ namespace JobTracker.API.tool.Controllers
         [HttpPost("employerprofile", Name = "CreateEmployerProfile")]
         public async Task<IActionResult> CreateEmployerProfile([FromBody] EmployerProfile employerProfile)
         {
-            if (employerProfile == null)
-            {
-                return BadRequest("EmployerProfile is null.");
-            }
-
             try
             {
-                await _jobTrackerToolService.AddEmployerProfile(employerProfile);
-
-                return CreatedAtAction(nameof(CreateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
+                var result = await _jobTrackerToolService.AddEmployerProfile(employerProfile);
+                
+                if (result.Success)
+                {
+                    return CreatedAtAction(nameof(CreateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -348,11 +347,20 @@ namespace JobTracker.API.tool.Controllers
         [HttpPost("jobaction/{employerProfileId}", Name = "AddJobAction")]
         public async Task<IActionResult> AddJobAction(Guid employerProfileId, [FromBody] JobAction jobAction)
         {
+            //TODO:
+            //eventually we need to rename this to make more sense
             try
             {
-                await _jobTrackerToolService.AddJobAction(employerProfileId, jobAction);
+                var result = await _jobTrackerToolService.AddJobAction(employerProfileId, jobAction);
 
-                return CreatedAtAction(nameof(AddJobAction), new { id = jobAction.Id }, jobAction);
+                if (result.Success)
+                {
+                    return CreatedAtAction(nameof(AddJobAction), new { id = jobAction.Id }, jobAction);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -366,9 +374,16 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                await _jobTrackerToolService.AddDetail(employerProfileId, detail);
+                var result = await _jobTrackerToolService.AddDetail(employerProfileId, detail);
 
-                return CreatedAtAction(nameof(CreateDetail), new { id = detail.Id }, detail);
+                if (result.Success)
+                {
+                    return CreatedAtAction(nameof(CreateDetail), new { id = detail.Id }, detail);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -380,16 +395,18 @@ namespace JobTracker.API.tool.Controllers
         [HttpPut("employerprofile", Name = "UpdateEmployerProfile")]
         public async Task<IActionResult> UpdateEmployerProfile([FromBody] EmployerProfile employerProfile)
         {
-            if (employerProfile == null)
-            {
-                return BadRequest("EmployerProfile is null.");
-            }
-
             try
             {
-                await _jobTrackerToolService.UpdateEmployerProfile(employerProfile);
-                //return CreatedAtAction(nameof(UpdateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
-                return NoContent();
+                var result = await _jobTrackerToolService.UpdateEmployerProfile(employerProfile);
+
+                if (result.Success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -401,15 +418,18 @@ namespace JobTracker.API.tool.Controllers
         [HttpPut("jobprofile", Name = "UpdateJobProfile")]
         public async Task<IActionResult> UpdateJobProfile([FromBody] JobProfile jobProfile)
         {
-            if (jobProfile == null)
-            {
-                return BadRequest("JobProfile is null.");
-            }
             try
             {
-                await _jobTrackerToolService.UpdateJobProfile(jobProfile);
-                //return CreatedAtAction(nameof(UpdateJobProfile), new { id = jobProfile.Id }, jobProfile);
-                return NoContent();
+                var result = await _jobTrackerToolService.UpdateJobProfile(jobProfile);
+
+                if (result.Success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -423,13 +443,16 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                await _jobTrackerToolService.DeleteJobProfile(jobProfileId);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the job profile.");
-                throw new ArgumentException("An error occurred while deleting the job profile.");
+                var result = await _jobTrackerToolService.DeleteJobProfile(jobProfileId);
+
+                if (result.Success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -443,13 +466,16 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                await _jobTrackerToolService.DeleteEmployerProfile(employerProfileId);
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogError(ex, "An error occurred while deleting the employer profile.");
-                throw new ArgumentException("An error occurred while deleting the employer profile.");
+                var result = await _jobTrackerToolService.DeleteEmployerProfile(employerProfileId);
+
+                if (result.Success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
@@ -488,38 +514,10 @@ namespace JobTracker.API.tool.Controllers
 
                 return result;
             }
-            catch (Exception ex)
+            catch (BusinessException ex)
             {
-                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
-                throw new ArgumentException("An error occurred while downloading the employer profile.");
-            }
-        }
-
-        [HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
-        public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
-        {
-            var csv = new StringBuilder();
-            try
-            {
-                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
-
-                if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
-                {
-                    csv = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
-                }
-                else
-                {
-                    csv = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
-                }
-
-                var bytes = Encoding.UTF8.GetBytes(csv.ToString());
-                var date = DateTime.Now;
-                var result = new FileContentResult(bytes, "text/csv")
-                {
-                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
-                };
-
-                return result;
+                _logger.LogError(ex, "Business rule violation occurred while downloading employer zip");
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
@@ -528,29 +526,62 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
-        public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
-        {
-            try
-            {
-                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+        //[HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
+        //public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
+        //{
+        //    var csv = new StringBuilder();
+        //    try
+        //    {
+        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
 
-                var pdf = _jobTrackerToolBusiness.PdfCreate(jobProfileId, employerProfiles);
+        //        if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
+        //        {
+        //            csv = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
+        //        }
+        //        else
+        //        {
+        //            csv = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
+        //        }
 
-                var date = DateTime.Now;
-                var result = new FileContentResult(pdf, "application/pdf")
-                {
-                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
-                };
+        //        var bytes = Encoding.UTF8.GetBytes(csv.ToString());
+        //        var date = DateTime.Now;
+        //        var result = new FileContentResult(bytes, "text/csv")
+        //        {
+        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
+        //        };
 
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
-                throw new ArgumentException("An error occurred while downloading the employer profile.");
-            }
-        }
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
+        //    }
+        //}
+
+        //[HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
+        //public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
+        //{
+        //    try
+        //    {
+        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+
+        //        var pdf = _jobTrackerToolBusiness.PdfCreate(jobProfileId, employerProfiles);
+
+        //        var date = DateTime.Now;
+        //        var result = new FileContentResult(pdf, "application/pdf")
+        //        {
+        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+        //        };
+
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
+        //    }
+        //}
 
         [HttpPost("upload", Name ="Upload")]
         public async Task<IActionResult> Upload(IFormFile uploadFile)

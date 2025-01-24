@@ -31,17 +31,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="JobTackerBusinessErrors.Designer.cs">
+    <Compile Update="JobTrackerBusinessErrors.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>JobTackerBusinessErrors.resx</DependentUpon>
+      <DependentUpon>JobTrackerBusinessErrors.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="JobTackerBusinessErrors.resx">
+    <EmbeddedResource Update="JobTrackerBusinessErrors.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>JobTackerBusinessErrors.Designer.cs</LastGenOutput>
+      <LastGenOutput>JobTrackerBusinessErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

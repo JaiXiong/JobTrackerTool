@@ -22,14 +22,14 @@ namespace JobTracker.Business {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class JobTackerBusinessErrors {
+    internal class JobTrackerBusinessErrors {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal JobTackerBusinessErrors() {
+        internal JobTrackerBusinessErrors() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace JobTracker.Business {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(JobTackerBusinessErrors).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JobTracker.Business.JobTrackerBusinessErrors", typeof(JobTrackerBusinessErrors).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -120,6 +120,15 @@ namespace JobTracker.Business {
         internal static string EmployerProfilesNotExist {
             get {
                 return ResourceManager.GetString("EmployerProfilesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job Action doesn&apos;t exist..
+        /// </summary>
+        internal static string JobActionNotExist {
+            get {
+                return ResourceManager.GetString("JobActionNotExist", resourceCulture);
             }
         }
         

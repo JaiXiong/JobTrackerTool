@@ -22,10 +22,10 @@ public interface IJobTrackerToolService
     Task<IEnumerable<JobAction>> GetAllJobActions();
     Task<Detail> GetDetail(Guid employerProfileId);
     Task<IEnumerable<Detail>> GetAllDetails();
-    Task UpdateEmployerProfile(EmployerProfile updatedProfile);
-    Task UpdateJobProfile(JobProfile updatedProfile);
-    Task UpdateJobAction(JobAction updatedProfile);
-    Task UpdateDetail(Detail updatedProfile);
-    Task DeleteJobProfile(Guid jobProfileId);
-    Task DeleteEmployerProfile(Guid employerProfileId);
+    Task<OperationResult> UpdateEmployerProfile(EmployerProfile updatedProfile);
+    Task<OperationResult> UpdateJobProfile(JobProfile updatedProfile);
+    Task<OperationResult> UpdateJobAction(JobAction updatedProfile);
+    Task<OperationResult> UpdateDetail(Detail updatedProfile);
+    Task<OperationResult> DeleteJobProfile(Guid jobProfileId);
+    Task<OperationResult> DeleteEmployerProfile(Guid employerProfileId);
 }
