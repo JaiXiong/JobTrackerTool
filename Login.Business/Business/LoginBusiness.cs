@@ -4,18 +4,21 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Resources;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Login.Business.Services
+namespace Login.Business.Business
 {
-    public class LoginBusiness
+    public class LoginBusiness: ILoginBusiness
     {
         private readonly IConfiguration _configuration;
-        public LoginBusiness(IConfiguration configuration)
+        private readonly ResourceManager _resourceManager;
+        public LoginBusiness(IConfiguration configuration, ResourceManager resourceManager)
         {
             _configuration = configuration;
+            _resourceManager = resourceManager;
         }
 
         public ClaimsPrincipal GetTokenInfo(string token)
@@ -39,7 +42,7 @@ namespace Login.Business.Services
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("Invalid token");
+                throw new ArgumentException(string.Format(_resourceManager.GetString("JWTInvalid")));
             }
         }
     }

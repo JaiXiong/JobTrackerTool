@@ -7,6 +7,8 @@ using System.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Utils.Encryption;
 using JobData.Dtos;
+using AutoMapper;
+using JobTracker.Business.Business;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -18,6 +20,8 @@ namespace JobTracker.API.tool.Controllers.Tests
         private readonly Mock<ResourceManager> _mockResourceManager;
         private readonly Mock<Encryption> _mockEncryption;
         private readonly Mock<IJobTrackerToolService> _mockServices;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IJobTrackerToolBusiness> _mockJobTrackerToolBusiness;
         private readonly JobTrackerController _controller;
 
         public JobTrackerControllerTests()
@@ -27,7 +31,9 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockResourceManager = new Mock<ResourceManager>();
             _mockEncryption = new Mock<Encryption>();
             _mockServices = new Mock<IJobTrackerToolService>();
-            _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object, _mockEncryption.Object);
+            _mockMapper = new Mock<IMapper>();
+            _mockJobTrackerToolBusiness = new Mock<IJobTrackerToolBusiness>();
+            _controller = new JobTrackerController(_mockLogger.Object, _mockServices.Object, _mockEncryption.Object, _mockJobTrackerToolBusiness.Object, _mockMapper.Object);
         }
 
         #region Job Profile Tests

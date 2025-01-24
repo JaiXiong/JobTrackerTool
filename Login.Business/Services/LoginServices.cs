@@ -1,5 +1,6 @@
 ﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
+using Login.Business.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +21,7 @@ namespace Login.Business.Services
 
         public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness)
         {
-            _resourceManager = resourceManager;
+            _resourceManager = new ResourceManager("Login.Business.LoginBusinessErrors", typeof(LoginServices).Assembly);
             _dbContext = context;
             _configuration = configuration;
             _encryption = encryption;
@@ -28,15 +29,11 @@ namespace Login.Business.Services
         }
         public async Task<string> LoginAuth(string email, string pw)
         {
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pw))
             {
-                throw new ArgumentException(_resourceManager.GetString("UserEmailError"));
+                throw new ArgumentException(string.Format(_resourceManager.GetString("LoginAttemptError")));
             }
 
-            if (string.IsNullOrEmpty(pw))
-            {
-                throw new ArgumentException(_resourceManager.GetString("PasswordError"));
-            }
             var delimiter = new char[] { '@' };
             var username = email.Split(delimiter)[0];
             var hashedPassword = _encryption.HashPassword(pw);
@@ -45,7 +42,7 @@ namespace Login.Business.Services
 
             if (user == null || !_encryption.VerifyPassword(pw, hashedPassword))
             {
-                throw new ArgumentException(_resourceManager.GetString("Login Creditials Failed"));
+                throw new ArgumentException(string.Format(_resourceManager.GetString("LoginAttemptError")));
             }
 
             return user.Id.ToString();
@@ -56,7 +53,7 @@ namespace Login.Business.Services
             var secretKey = _configuration["JWT_SECRET_KEY"];
             if (string.IsNullOrEmpty(secretKey))
             {
-                throw new ArgumentException("JWT_SECRET_KEY is not configured.");
+                throw new ArgumentException(string.Format(_resourceManager.GetString("JWTInvalid")));
             }
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
@@ -86,7 +83,7 @@ namespace Login.Business.Services
             var secretKey = _configuration["JWT_SECRET_KEY"];
             if (string.IsNullOrEmpty(secretKey))
             {
-                throw new ArgumentException("JWT_SECRET_KEY is not configured.");
+                throw new ArgumentException(_resourceManager.GetString("JWTInvalid"));
             }
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
@@ -114,25 +111,32 @@ namespace Login.Business.Services
         public async Task<string> RefreshToken(string token)
         {
             var tokenInfo = _loginBusiness.GetTokenInfo(token);
+
             if (tokenInfo == null)
             {
-                throw new ArgumentException("Invalid token");
+                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
+            }
+            var expClaim = tokenInfo.Claims.FirstOrDefault(c => c.Type == "exp");
+            var userClaim = tokenInfo.Claims.FirstOrDefault(c => c.Type == "sub") ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var emailClaim = tokenInfo.Claims.FirstOrDefault(c => c.Type == "email") ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+
+            if (expClaim == null || userClaim == null || emailClaim == null)
+            {
+                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
             }
 
-            var exp = tokenInfo.Claims.FirstOrDefault(c => c.Type == "exp").Value;
-            var user = tokenInfo.Claims.FirstOrDefault(c => c.Type == "sub").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var email = tokenInfo.Claims.FirstOrDefault(c => c.Type == "email").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            var exp = expClaim.Value;
+            var user = userClaim.Value;
+            var email = emailClaim.Value;
+            //var exp = tokenInfo.Claims.FirstOrDefault(c => c.Type == "exp").Value;
+            //var user = tokenInfo.Claims.FirstOrDefault(c => c.Type == "sub").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            //var email = tokenInfo.Claims.FirstOrDefault(c => c.Type == "email").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
             var userExist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == user && u.Email == email);
 
-            if (userExist == null) 
+            if (userExist == null || exp == null) 
             {
-                throw new ArgumentException("Invalid token");
-            }
-
-            if (exp == null)
-            {
-                throw new ArgumentException("Invalid token");
+                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
             }
 
             return GenerateRefreshToken(user);
@@ -144,7 +148,7 @@ namespace Login.Business.Services
 
             if (user == null)
             {
-                throw new ArgumentException(_resourceManager.GetString("UserNotExist"));
+                throw new ArgumentException(string.Format(_resourceManager.GetString("UserNotExist")));
             }
 
             return user;
@@ -156,7 +160,7 @@ namespace Login.Business.Services
 
             if (exist != null)
             {
-                throw new ArgumentException(_resourceManager.GetString("UserExist"));
+                throw new ArgumentException(string.Format(_resourceManager.GetString("UserExist"), email), nameof(email));
             }
 
             var delimiter = new char[] { '@' };
@@ -181,22 +185,6 @@ namespace Login.Business.Services
             {
                 throw new ArgumentException(ex.Message);
             }
-            
         }
-
-        //public string LoginEncrypt(string item)
-        //{
-        //    //TODO
-        //    var encryptedItem = item;
-        //    return encryptedItem;
-        //}
-
-        //public string LoginDecrpyt(string item)
-        //{
-        //    //TODO
-        //    var decryptedItem = item;
-
-        //    return decryptedItem;
-        //}
     }
 }

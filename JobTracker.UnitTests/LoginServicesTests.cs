@@ -1,5 +1,6 @@
 ﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
+using Login.Business.Business;
 using Login.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

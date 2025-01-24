@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -32,16 +32,39 @@ import { tap } from 'rxjs';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  _username: string = '';
-  _password: string = '';
+  // _username: string = '';
+  // _password: string = '';
+  loginForm!: FormGroup;
   _usernameid: string = '';
   _isRegister: boolean = false;
   _currenUser: any;
 
-  constructor(private router: Router, private loginService: LoginService, private dialog: MatDialog, private authService: AuthService) { }
 
+  constructor(private router: Router, private loginService: LoginService, private dialog: MatDialog, private authService: AuthService, private formBuilder: FormBuilder) { }
+
+  ngOnInit(): void {
+    this.loginForm = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(2)]]
+    });
+  }
+
+  get username() {
+    return this.loginForm.get('username');
+  }
+
+  get password() {
+    return this.loginForm.get('password');
+  }
+
+  onSubmit() {
+    if (this.loginForm.invalid) {
+      this.login();
+    }
+  }
+  
   public login(): void {
     // this.loginService.Login(this._username, this._password).subscribe({
     //   next: (response) => {
@@ -52,11 +75,11 @@ export class LoginComponent {
     //   },
     // });
 
-    this.loginService.Login(this._username, this._password).pipe(
+    this.loginService.Login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).pipe(
       tap({
         next: (tokens) => {
           console.log('Response received:', tokens);
-          this.authService.doLoginUser(this._username, tokens.access_token, tokens.refresh_token);
+          this.authService.doLoginUser(this.loginForm.get('username')?.value, tokens.access_token, tokens.refresh_token);
           this.router.navigate(['/jobprofile'], { queryParams: { usernameid: tokens.id, name: tokens.name } });
         },
         complete: () => {

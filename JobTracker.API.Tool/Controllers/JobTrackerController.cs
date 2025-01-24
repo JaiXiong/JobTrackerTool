@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using System.Text;
+using Utils.CustomExceptions;
 using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers
@@ -35,33 +36,45 @@ namespace JobTracker.API.tool.Controllers
             //_jobTrackerDBcontext = jobTrackerDBcontext;
         }
 
-        [HttpGet("employerprofile/{jobprofileid}/{employerprofileid}", Name = "GetEmployerName")]
-        public async Task<IActionResult> GetEmployerProfile(Guid jobProfileId, Guid employerProfileId)
+        [HttpGet("employerprofile/{employerprofileid}", Name = "GetEmployer")]
+        public async Task<IActionResult> GetEmployerProfile(Guid employerProfileId)
         {
             try
             {
-                var employerProfile = await _jobTrackerToolService.GetEmployerProfile(jobProfileId, employerProfileId);
+                var employerProfile = await _jobTrackerToolService.GetEmployerProfile(employerProfileId);
+
                 return Ok(employerProfile);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while creating the employer profile.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting the employer profile.");
-                throw new ArgumentException("An error occurred while getting the employer profile.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
-        [HttpGet("employerprofiles/{jobprofileid}", Name = "GetEmployerNames")]
+        [HttpGet("employerprofiles/{jobprofileid}", Name = "GetEmployers")]
         public async Task<IActionResult> GetEmployerProfiles(Guid jobProfileId)
         {
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+
                 return Ok(employerProfiles);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting the employer profiles.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting the employer profiles.");
-                throw new ArgumentException("An error occurred while getting the employer profiles.");
+                return StatusCode(500, "Internal server error");
             }
 
         }
@@ -72,12 +85,18 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetAllEmployerProfiles();
+
                 return Ok(employerProfiles);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting all the employer profiles.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting the employer profiles.");
-                throw new ArgumentException("An error occurred while getting the employer profiles.");
+                return StatusCode(500, "Internal server error");
             }
 
         }
@@ -87,12 +106,19 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                return Ok(await _jobTrackerToolService.GetJobProfile(jobprofileid));
+                var jobProfile = await _jobTrackerToolService.GetJobProfile(jobprofileid);
+
+                return Ok(jobProfile);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting the job profile.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while getting the job profile.");
-                throw new ArgumentException("An error occurred while getting the job profile.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -102,12 +128,18 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var jobProfiles = await _jobTrackerToolService.GetJobProfiles(userProfileId);
+
                 return Ok(jobProfiles);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting the job profiles.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the employer profile.");
-                throw new ArgumentException("An error occurred while getting the employer profile.");
+                _logger.LogError(ex, "An error occurred while getting the job profiles.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -117,12 +149,18 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var jobProfiles = await _jobTrackerToolService.GetAllJobProfiles();
+
                 return Ok(jobProfiles);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting all the job profiles.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the employer profile.");
-                throw new ArgumentException("An error occurred while getting the employer profile.");
+                _logger.LogError(ex, "An error occurred while getting all the job profiles.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -137,12 +175,16 @@ namespace JobTracker.API.tool.Controllers
                 var response = new PagingResponse<EmployerProfile>(employerProfiles, totalCount);
 
                 return Ok(response);
-                //return employerProfiles;
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting employer paging data.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the employer profiles paging.");
-                throw new ArgumentException("An error occurred while paging the employer profiles.");
+                _logger.LogError(ex, "An error occurred while getting the employer paging.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -152,12 +194,18 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var jobActions = await _jobTrackerToolService.GetAllJobActions();
+
                 return Ok(jobActions);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting all the employer actions.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the job action.");
-                throw new ArgumentException("An error occurred while getting the job action.");
+                _logger.LogError(ex, "An error occurred while getting all the employer actions.");
+                throw new ArgumentException("An error occurred while getting all the employer actions.");
             }
         }
 
@@ -167,11 +215,17 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var jobAction = await _jobTrackerToolService.GetJobAction(employerProfileId);
+
                 return Ok(jobAction);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting the employer actions.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the action result.");
+                _logger.LogError(ex, "An error occurred while getting the employer actions.");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -182,12 +236,18 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var details = await _jobTrackerToolService.GetAllDetails();
+
                 return Ok(details);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting all the employer details.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while getting the detail.");
-                throw new ArgumentException("An error occurred while getting the detail.");
+                _logger.LogError(ex, "An error occurred while getting all the detail.");
+                return StatusCode(500, "Internal server error");
             }
         }
 
@@ -197,7 +257,13 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var detail = await _jobTrackerToolService.GetDetail(employerProfileId);
+
                 return Ok(detail);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting the employer details.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
@@ -209,13 +275,30 @@ namespace JobTracker.API.tool.Controllers
         [HttpPost("userprofile", Name = "CreateUserProfile")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserProfile userProfile)
         {
-            _jobTrackerToolService.ValidateNewUser(userProfile);
+            
 
             try
             {
-                await _jobTrackerToolService.AddUserProfile(userProfile);
+                var result = await _jobTrackerToolService.AddUserProfile(userProfile);
 
-                return CreatedAtAction(nameof(CreateUserProfile), new { id = userProfile.Id }, userProfile);
+                if (result.Success)
+                {
+                    return CreatedAtAction(nameof(CreateUserProfile), new { id = userProfile.Id }, userProfile);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
+                //_jobTrackerToolService.ValidateNewUser(userProfile);
+
+                //await _jobTrackerToolService.AddUserProfile(userProfile);
+
+                //return CreatedAtAction(nameof(CreateUserProfile), new { id = userProfile.Id }, userProfile);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while creating user profile.");
+                return BadRequest(new { ex.Message });
             }
             catch (Exception ex)
             {
@@ -227,11 +310,6 @@ namespace JobTracker.API.tool.Controllers
         [HttpPost("jobprofile", Name = "CreateJobProfile")]
         public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
         {
-            //if (jobProfile == null)
-            //{
-            //    return BadRequest("JobProfile is null.");
-            //}
-
             try
             {
                 await _jobTrackerToolService.AddJobProfile(jobProfile);

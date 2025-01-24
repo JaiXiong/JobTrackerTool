@@ -117,7 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddProfileError" xml:space="preserve">
+    <value>Adding profile invalid.</value>
+  </data>
+  <data name="EmployerDetailsNotExist" xml:space="preserve">
+    <value>Employer detail doesn't exist.</value>
+  </data>
+  <data name="EmployerPagingError" xml:space="preserve">
+    <value>Paging data invalid.</value>
+  </data>
+  <data name="EmployerProfileExist" xml:space="preserve">
+    <value>Employer profile already exist.</value>
+  </data>
+  <data name="EmployerProfileNotExist" xml:space="preserve">
+    <value>Employer profile doesn't exist.</value>
+  </data>
+  <data name="EmployerProfilesNotExist" xml:space="preserve">
+    <value>Employer profiles doesn't exist.</value>
+  </data>
+  <data name="EmployerActionsNotExist" xml:space="preserve">
+    <value>Job action doesn't exist.</value>
+  </data>
+  <data name="JobProfileExist" xml:space="preserve">
+    <value>Job profile already exist.</value>
+  </data>
+  <data name="JobProfileNotExist" xml:space="preserve">
+    <value>Job profile doesn't exist.</value>
+  </data>
+  <data name="JobProfilesNotExist" xml:space="preserve">
+    <value>Job profiles doesn't exist.</value>
+  </data>
+  <data name="UserExist" xml:space="preserve">
+    <value>User already exist.</value>
+  </data>
   <data name="UsernameError" xml:space="preserve">
-    <value>Username {0} was invalid.</value>
+    <value>Username was invalid.</value>
+  </data>
+  <data name="UserNotExist" xml:space="preserve">
+    <value>User doesn't exist</value>
   </data>
 </root>

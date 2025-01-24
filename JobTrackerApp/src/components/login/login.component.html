@@ -1,19 +1,37 @@
 <div class="background-container">
   <div class="login-container">
-    <form>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="login-form">
-            <div *ngIf="!_isRegister">
+          <mat-form-field>
+            <mat-label class="login-form-custom">Username</mat-label>
+            <input matInput placeholder="Enter your email" required formControlName="username" name="username">
+            <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+              <span *ngIf="username?.errors?.['required']">Email is required.</span>
+              <span *ngIf="username?.errors?.['email']">Invalid email address.</span>
+            </mat-error>
+            
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label class="login-form-custom">Password</mat-label>
+            <input matInput type="password" placeholder="Enter your password" required formControlName="password" name="password" style="margin-left: 3px;">
+            <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+              <span *ngIf="password?.errors?.['required']">Password is required.</span>
+              <span *ngIf="password?.errors?.['email']">Invalid email address.</span>
+            </mat-error>
+          </mat-form-field>
+          <button mat-raised-button type="submit" [disabled]="loginForm.invalid">Login</button>
+            <!-- <div *ngIf="!_isRegister">
                 <mat-label class="login-label-custom">Username</mat-label>
-                <input matInput placeholder="Enter your username" required [(ngModel)]="_username" name="username">
-              </div>
+                <input matInput placeholder="Enter your email" required [(ngModel)]="_username" name="username">
+              </div> -->
           
-              <div *ngIf="!_isRegister">
+              <!-- <div *ngIf="!_isRegister">
                 <mat-label class="login-label-custom">Password</mat-label>
                 <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password" style="margin-left: 3px;">
               </div>
               <div class="login-button" *ngIf="!_isRegister">
                 <button  mat-raised-button color="primary" (click)="login()">Login</button>
-              </div>
+              </div> -->
 
               <span class="login-label-custom" style="align-items: center;" *ngIf="!_isRegister"><a  href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a></span>
               <app-registeruser 

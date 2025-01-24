@@ -61,11 +61,119 @@ namespace JobTracker.Business {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Username {0} was invalid..
+        ///   Looks up a localized string similar to Adding profile invalid..
+        /// </summary>
+        internal static string AddProfileError {
+            get {
+                return ResourceManager.GetString("AddProfileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job action doesn&apos;t exist..
+        /// </summary>
+        internal static string EmployerActionsNotExist {
+            get {
+                return ResourceManager.GetString("EmployerActionsNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer detail doesn&apos;t exist..
+        /// </summary>
+        internal static string EmployerDetailsNotExist {
+            get {
+                return ResourceManager.GetString("EmployerDetailsNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paging data invalid..
+        /// </summary>
+        internal static string EmployerPagingError {
+            get {
+                return ResourceManager.GetString("EmployerPagingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer profile already exist..
+        /// </summary>
+        internal static string EmployerProfileExist {
+            get {
+                return ResourceManager.GetString("EmployerProfileExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer profile doesn&apos;t exist..
+        /// </summary>
+        internal static string EmployerProfileNotExist {
+            get {
+                return ResourceManager.GetString("EmployerProfileNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer profiles doesn&apos;t exist..
+        /// </summary>
+        internal static string EmployerProfilesNotExist {
+            get {
+                return ResourceManager.GetString("EmployerProfilesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job profile already exist..
+        /// </summary>
+        internal static string JobProfileExist {
+            get {
+                return ResourceManager.GetString("JobProfileExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job profile doesn&apos;t exist..
+        /// </summary>
+        internal static string JobProfileNotExist {
+            get {
+                return ResourceManager.GetString("JobProfileNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job profiles doesn&apos;t exist..
+        /// </summary>
+        internal static string JobProfilesNotExist {
+            get {
+                return ResourceManager.GetString("JobProfilesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User already exist..
+        /// </summary>
+        internal static string UserExist {
+            get {
+                return ResourceManager.GetString("UserExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username was invalid..
         /// </summary>
         internal static string UsernameError {
             get {
                 return ResourceManager.GetString("UsernameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User doesn&apos;t exist.
+        /// </summary>
+        internal static string UserNotExist {
+            get {
+                return ResourceManager.GetString("UserNotExist", resourceCulture);
             }
         }
     }

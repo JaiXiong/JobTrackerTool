@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="UsernameError" xml:space="preserve">
-    <value>Login username was {0}, and is invalid.</value>
-  </data>
   <data name="RequiredError" xml:space="preserve">
     <value>The field {0} is required.</value>
   </data>
@@ -131,5 +128,14 @@
   </data>
   <data name="UserNotExist" xml:space="preserve">
     <value>No user found.</value>
+  </data>
+  <data name="TokenInvalid" xml:space="preserve">
+    <value>Token was invalid.</value>
+  </data>
+  <data name="JWTInvalid" xml:space="preserve">
+    <value>JWT was invalid.</value>
+  </data>
+  <data name="LoginAttemptError" xml:space="preserve">
+    <value>Invalid login attempt.</value>
   </data>
 </root>

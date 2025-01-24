@@ -65,6 +65,18 @@ mat-dialog-content form mat-form-field:first-of-type {
   font-weight: 500;
 }
 
+login-form-custom {
+  //display: flex;
+  //flex-direction: column;
+  background-color: #f0f0f0;
+  //border-radius: 4px;
+  //padding-top: 10%;
+  //padding-bottom: 5%;
+  //padding-right: 10px;
+  //max-width: 400px;
+  //margin: auto;
+}
+
 .login-button {
   display: flex;
   justify-content: flex-end; // Align the button to the right

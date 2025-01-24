@@ -26,4 +26,8 @@
     <ProjectReference Include="..\JobData\JobData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="JMeterFiles\" />
+  </ItemGroup>
+
 </Project>
