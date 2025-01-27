@@ -25,30 +25,40 @@ import { tap } from 'rxjs';
     ReactiveFormsModule,
     MatIconModule,
     FormsModule,
-    RegisteruserComponent
-],
-  providers:
-    [],
+    RegisteruserComponent,
+  ],
+  providers: [],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
-
-  // _username: string = '';
-  // _password: string = '';
   loginForm!: FormGroup;
-  _usernameid: string = '';
   _isRegister: boolean = false;
   _currenUser: any;
+  //private isUpdatingValidity = false;
 
-
-  constructor(private router: Router, private loginService: LoginService, private dialog: MatDialog, private authService: AuthService, private formBuilder: FormBuilder) { }
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(2)]]
+      password: ['', [Validators.required, Validators.minLength(2)]],
     });
+
+    //this.checkFormValidity();
+  }
+
+  ngAfterViewInit() {
+    if (this.username?.value && this.password?.value) {
+      this.loginForm.updateValueAndValidity();
+      this.loginForm.markAsTouched();
+    }
   }
 
   get username() {
@@ -59,12 +69,19 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.login();
-    }
-  }
-  
+  // checkFormValidity() {
+  //   if (this.isUpdatingValidity) {
+  //     return;
+  //   }
+
+  //   this.isUpdatingValidity = true;
+    
+  //   if (this.username?.value && this.password?.value) {
+  //     this.loginForm.updateValueAndValidity();
+  //   }
+  //   this.isUpdatingValidity = false;
+  // }
+
   public login(): void {
     // this.loginService.Login(this._username, this._password).subscribe({
     //   next: (response) => {
@@ -75,21 +92,33 @@ export class LoginComponent implements OnInit {
     //   },
     // });
 
-    this.loginService.Login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value).pipe(
-      tap({
-        next: (tokens) => {
-          console.log('Response received:', tokens);
-          this.authService.doLoginUser(this.loginForm.get('username')?.value, tokens.access_token, tokens.refresh_token);
-          this.router.navigate(['/jobprofile'], { queryParams: { usernameid: tokens.id, name: tokens.name } });
-        },
-        complete: () => {
-          console.log('Request completed');
-        },
-        error: (error) => {
-          console.log('Error received:', error);
-        }
-      })
-    ).subscribe();
+    this.loginService
+      .Login(
+        this.loginForm.get('username')?.value,
+        this.loginForm.get('password')?.value
+      )
+      .pipe(
+        tap({
+          next: (tokens) => {
+            console.log('Response received:', tokens);
+            this.authService.doLoginUser(
+              this.loginForm.get('username')?.value,
+              tokens.access_token,
+              tokens.refresh_token
+            );
+            this.router.navigate(['/jobprofile'], {
+              queryParams: { usernameid: tokens.id, name: tokens.name },
+            });
+          },
+          complete: () => {
+            console.log('Request completed');
+          },
+          error: (error) => {
+            console.log('Error received:', error);
+          },
+        })
+      )
+      .subscribe();
   }
 
   public registerPopup(event: Event): void {
@@ -97,14 +126,13 @@ export class LoginComponent implements OnInit {
     this._isRegister = !this._isRegister;
   }
 
-  
   public register(element: UserProfile): void {
     const dialogRef = this.dialog.open(DialogUserprofilesComponent, {
       width: '250px',
-      data: element
+      data: element,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
     });
   }

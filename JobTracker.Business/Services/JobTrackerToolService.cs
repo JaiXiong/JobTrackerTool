@@ -1,14 +1,9 @@
 ﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.Versioning;
 using System.Resources;
 using Utils.Operations;
-using Org.BouncyCastle.Security;
-using iTextSharp.text.log;
 using Microsoft.Extensions.Logging;
-using static iTextSharp.text.pdf.PdfSigLockDictionary;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Utils.CustomExceptions;
 
 namespace JobTracker.Business.Services
@@ -48,11 +43,24 @@ namespace JobTracker.Business.Services
         {
             try
             {
+                var employerProfile = await _dbContext.Employers
+                    .Include(c => c.Result)
+                    .FirstOrDefaultAsync(c => c.Id == workAction.EmployerProfileId);
+
+                if (employerProfile == null)
+                {
+                    return OperationResult.CreateFailure(_resx.Create("EmployerProfileNotExist"));
+                }
+
                 workAction.Id = Guid.NewGuid();
                 workAction.Action = "Action";
                 workAction.Method = "Method";
-                workAction.ActionResult = "ActionResult";
-                _dbContext.SaveChanges();
+
+                _dbContext.JobActions.Add(workAction);
+                employerProfile.Result = workAction;
+                _dbContext.Employers.Update(employerProfile);
+
+                await _dbContext.SaveChangesAsync(); 
 
                 return OperationResult.CreateSuccess("Added work action successfully.");
             }
@@ -138,7 +146,7 @@ namespace JobTracker.Business.Services
                 employerProfile.Id = Guid.NewGuid();
                 employerProfile.JobProfileId = jobProfileId;
                 _dbContext.Employers.Add(employerProfile);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync(); // Fix: Changed SaveChanges to SaveChangesAsync
 
                 return OperationResult.CreateSuccess("Added employer profile successfully");
             }
@@ -177,6 +185,7 @@ namespace JobTracker.Business.Services
             }
 
             _dbContext.Employers.Add(employerProfile);
+            _dbContext.Employers.Update(employerProfile);
             await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("Added employer profile successfully.");

@@ -1,6 +1,4 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using JobData.Entities;
+﻿using JobData.Entities;
 using System.Text;
 
 namespace JobTracker.Business.Business
@@ -53,37 +51,37 @@ namespace JobTracker.Business.Business
             throw new NotImplementedException();
         }
 
-        public byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
-        {
-            if (!employerProfiles.Any())
-            {
-                throw new ArgumentException("No employers found in pdf creation.");
-            }
+        //public byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
+        //{
+        //    if (!employerProfiles.Any())
+        //    {
+        //        throw new ArgumentException("No employers found in pdf creation.");
+        //    }
 
-            using (var memoryStream = new MemoryStream())
-            {
-                var document = new Document();
-                PdfWriter.GetInstance(document, memoryStream);
-                document.Open();
+        //    using (var memoryStream = new MemoryStream())
+        //    {
+        //        var document = new Document();
+        //        PdfWriter.GetInstance(document, memoryStream);
+        //        document.Open();
 
-                foreach (var profile in employerProfiles)
-                {
-                    document.Add(new Paragraph($"Id: {profile.Id}"));
-                    document.Add(new Paragraph($"Name: {profile.Name}"));
-                    document.Add(new Paragraph($"Title: {profile.Title}"));
-                    document.Add(new Paragraph($"Address: {profile.Address}"));
-                    document.Add(new Paragraph($"City: {profile.City}"));
-                    document.Add(new Paragraph($"State: {profile.State}"));
-                    document.Add(new Paragraph($"Zip: {profile.Zip}"));
-                    document.Add(new Paragraph($"Phone: {profile.Phone}"));
-                    document.Add(new Paragraph($"Email: {profile.Email}"));
-                    document.Add(new Paragraph($"Website: {profile.Website}"));
-                    document.Add(new Paragraph("\n"));
-                }
+        //        foreach (var profile in employerProfiles)
+        //        {
+        //            document.Add(new Paragraph($"Id: {profile.Id}"));
+        //            document.Add(new Paragraph($"Name: {profile.Name}"));
+        //            document.Add(new Paragraph($"Title: {profile.Title}"));
+        //            document.Add(new Paragraph($"Address: {profile.Address}"));
+        //            document.Add(new Paragraph($"City: {profile.City}"));
+        //            document.Add(new Paragraph($"State: {profile.State}"));
+        //            document.Add(new Paragraph($"Zip: {profile.Zip}"));
+        //            document.Add(new Paragraph($"Phone: {profile.Phone}"));
+        //            document.Add(new Paragraph($"Email: {profile.Email}"));
+        //            document.Add(new Paragraph($"Website: {profile.Website}"));
+        //            document.Add(new Paragraph("\n"));
+        //        }
 
-                document.Close();
-                return memoryStream.ToArray();
-            }
-        }
+        //        document.Close();
+        //        return memoryStream.ToArray();
+        //    }
+        //}
     }
 }

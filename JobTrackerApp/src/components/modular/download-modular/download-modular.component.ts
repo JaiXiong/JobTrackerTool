@@ -28,8 +28,8 @@ export class DownloadModularComponent {
 
   onDownloadEmployerProfile(): void {
     const dialogRef = this.dialog.open(DialogDownloadModularComponent, {
-      width: '400px',
-      height: '200px',
+      width: 'auto',
+      height: 'auto',
       disableClose: true,
     });
 

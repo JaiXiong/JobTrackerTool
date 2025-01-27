@@ -1,9 +1,10 @@
 <div class="background-container">
   <div class="login-container">
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm">
         <div class="login-form">
-          <mat-form-field>
-            <mat-label class="login-form-custom">Username</mat-label>
+
+          <mat-form-field class="login-form-custom">
+            <mat-label>Username</mat-label>
             <input matInput placeholder="Enter your email" required formControlName="username" name="username">
             <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
               <span *ngIf="username?.errors?.['required']">Email is required.</span>
@@ -11,15 +12,17 @@
             </mat-error>
             
           </mat-form-field>
-          <mat-form-field>
-            <mat-label class="login-form-custom">Password</mat-label>
+
+          <mat-form-field class="login-form-custom">
+            <mat-label>Password</mat-label>
             <input matInput type="password" placeholder="Enter your password" required formControlName="password" name="password" style="margin-left: 3px;">
             <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
               <span *ngIf="password?.errors?.['required']">Password is required.</span>
               <span *ngIf="password?.errors?.['email']">Invalid email address.</span>
             </mat-error>
           </mat-form-field>
-          <button mat-raised-button type="submit" [disabled]="loginForm.invalid">Login</button>
+
+          <button mat-raised-button type="submit" (click)="login()" [disabled]="loginForm.invalid && loginForm.touched">Login</button>
             <!-- <div *ngIf="!_isRegister">
                 <mat-label class="login-label-custom">Username</mat-label>
                 <input matInput placeholder="Enter your email" required [(ngModel)]="_username" name="username">

@@ -11,7 +11,7 @@ namespace JobTracker.Business.Business
     {
         StringBuilder CsvCreateAll(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
         StringBuilder CsvCreateSelected(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
-        byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
+        //byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
 
         StringBuilder ExcelParse();
 

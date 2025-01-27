@@ -9,6 +9,7 @@ using Utils.Encryption;
 using JobData.Dtos;
 using AutoMapper;
 using JobTracker.Business.Business;
+using Utils.Operations;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -92,12 +93,17 @@ namespace JobTracker.API.tool.Controllers.Tests
             };
 
             _mockServices.Setup(s => s.AddJobProfile(expectedJobProfile))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(OperationResult.CreateSuccess("Job profile created successfully."));
 
-            var result = await _controller.CreateJobProfile(expectedJobProfile);
+            var result = await _controller.CreateJobProfile(expectedJobProfile) as CreatedAtActionResult;
 
             Assert.IsNotNull(result);
-            _mockServices.Verify(s =>  s.AddJobProfile(expectedJobProfile), Times.Once());
+            Assert.AreEqual(201, result.StatusCode);
+            var jobProfile = result.Value as JobProfile;
+            Assert.IsNotNull(jobProfile);
+            Assert.AreEqual(expectedJobProfile.Id, jobProfile.Id);
+            Assert.AreEqual(expectedJobProfile.ProfileName, jobProfile.ProfileName);
+            _mockServices.Verify(s => s.AddJobProfile(expectedJobProfile), Times.Once());
         }
 
         [TestMethod()]
@@ -136,7 +142,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             };
 
             _mockServices.Setup(s => s.UpdateJobProfile(expectedJobProfile))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(OperationResult.CreateSuccess("Updated job profile successfully."));
 
             var result = await _controller.UpdateJobProfile(expectedJobProfile) as NoContentResult;
 
@@ -174,7 +180,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             var jobProfileId = Guid.NewGuid();
 
             _mockServices.Setup(s => s.DeleteJobProfile(jobProfileId))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(OperationResult.CreateSuccess("Deleted job profile successfully."));
 
             var result = await _controller.DeleteJobProfile(jobProfileId);
 
@@ -216,10 +222,10 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Website = "Test"
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id))
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id))
                 .ReturnsAsync(expectedEmployerProfile);
 
-            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id) as OkObjectResult;
+            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.Id) as OkObjectResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(200, result.StatusCode);
@@ -249,11 +255,11 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Website = "Test"
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id))
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id))
                 .ThrowsAsync(new ArgumentException("Failed to get Employer Profile"));
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.GetEmployerProfile(expectedEmployerProfile.JobProfileId, expectedEmployerProfile.Id));
+                async () => await _controller.GetEmployerProfile(expectedEmployerProfile.Id));
         }
 
         [TestMethod()]
@@ -376,7 +382,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             };
 
             _mockServices.Setup(s => s.UpdateEmployerProfile(expectedEmployerProfile))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(OperationResult.CreateSuccess("Updated employer profile successfully."));
 
             var result = await _controller.UpdateEmployerProfile(expectedEmployerProfile) as NoContentResult;
 
@@ -525,7 +531,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             var employerProfileId = Guid.NewGuid();
 
             _mockServices.Setup(s => s.DeleteEmployerProfile(employerProfileId))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync(OperationResult.CreateSuccess("Delete employer profile successfully."));
 
             var result = await _controller.DeleteEmployerProfile(employerProfileId) as NoContentResult;
 
