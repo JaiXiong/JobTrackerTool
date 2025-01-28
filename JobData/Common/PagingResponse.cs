@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobData.Dtos
+namespace JobData.Common
 {
     public class PagingResponse<T>(IEnumerable<T> data, int totalCount)
     {

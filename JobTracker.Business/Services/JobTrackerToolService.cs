@@ -5,6 +5,7 @@ using System.Resources;
 using Utils.Operations;
 using Microsoft.Extensions.Logging;
 using Utils.CustomExceptions;
+using JobData.Common;
 
 namespace JobTracker.Business.Services
 {
@@ -273,9 +274,21 @@ namespace JobTracker.Business.Services
             return jobProfiles;
         }
 
-        public async Task<EmployerProfile> GetEmployerProfile(Guid employerProfileId)
+        public async Task<EmployerProfile> GetEmployerProfile(Guid employerProfileId, DownloadOptions downloadOptions)
         {
-            var employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
+            EmployerProfile? employerProfile;
+
+            if (downloadOptions.Include == DownloadType.Include)
+            {
+                employerProfile = await _dbContext.Employers
+                    .Include(c => c.Result)
+                    .Include(c => c.Detail)
+                    .FirstOrDefaultAsync(c => c.Id == employerProfileId);
+            }
+            else
+            {
+                employerProfile = await _dbContext.Employers.FirstOrDefaultAsync(c => c.Id == employerProfileId);
+            }
 
             if (employerProfile == null)
             {
@@ -285,15 +298,26 @@ namespace JobTracker.Business.Services
             return employerProfile;
         }
 
-        public async Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId)
+        public async Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId, DownloadOptions downloadOptions)
         {
-            var employerProfiles = await _dbContext.Employers
-                .Include(c => c.Result)
-                .Include(c => c.Detail)
-                .Where(c => c.JobProfileId == jobProfileId)
-                .ToListAsync();
+            IEnumerable<EmployerProfile> employerProfiles;
 
-            if (employerProfiles == null)
+            if (downloadOptions.Include == DownloadType.Include)
+            {
+                employerProfiles = await _dbContext.Employers
+                    .Include(c => c.Result)
+                    .Include(c => c.Detail)
+                    .Where(c => c.JobProfileId == jobProfileId)
+                    .ToListAsync();
+            }
+            else
+            {
+                employerProfiles = await _dbContext.Employers
+                    .Where(c => c.JobProfileId == jobProfileId)
+                    .ToListAsync();
+            }
+
+            if (employerProfiles == null || !employerProfiles.Any())
             {
                 throw new BusinessException(_resx.Create("EmployerProfilesNotExist"));
             }

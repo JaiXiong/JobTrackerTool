@@ -1,13 +1,10 @@
 using AutoMapper;
+using JobData.Common;
 using JobData.Dtos;
 using JobData.Entities;
 using JobTracker.Business.Business;
-using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Net.Http.Headers;
 using System.Text;
 using Utils.CustomExceptions;
 using Utils.Encryption;
@@ -24,7 +21,6 @@ namespace JobTracker.API.tool.Controllers
         private readonly Encryption _encyption;
         private readonly IJobTrackerToolBusiness _jobTrackerToolBusiness;
         private readonly IMapper _mapper;
-        //private readonly JobTrackerToolService _jobTrackerDBcontext;
 
         public JobTrackerController(ILogger<JobTrackerController> logger, IJobTrackerToolService jobTrackerToolService, Encryption encyption, IJobTrackerToolBusiness jobTrackerToolBusiness, IMapper mapper)
         {
@@ -33,7 +29,6 @@ namespace JobTracker.API.tool.Controllers
             _encyption = encyption;
             _jobTrackerToolBusiness = jobTrackerToolBusiness;
             _mapper = mapper;
-            //_jobTrackerDBcontext = jobTrackerDBcontext;
         }
 
         [HttpGet("employerprofile/{employerprofileid}", Name = "GetEmployer")]
@@ -41,7 +36,14 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                var employerProfile = await _jobTrackerToolService.GetEmployerProfile(employerProfileId);
+                var downloadOptions = new DownloadOptions
+                {
+                    Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+                    Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
+                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                };
+
+                var employerProfile = await _jobTrackerToolService.GetEmployerProfile(employerProfileId, downloadOptions);
 
                 return Ok(employerProfile);
             }
@@ -62,7 +64,14 @@ namespace JobTracker.API.tool.Controllers
         {
             try
             {
-                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+                var downloadOptions = new DownloadOptions
+                {
+                    Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+                    Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
+                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                };
+
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
 
                 return Ok(employerProfiles);
             }
@@ -484,26 +493,62 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpGet("download/{jobProfileId}", Name = "Download")]
-        public async Task<IActionResult> Download(Guid jobProfileId)
+
+        //[HttpGet("download/{jobProfileId}", Name = "Download")]
+        //public async Task<IActionResult> DownloadAll(Guid jobProfileId)
+        //{
+        //    var fileTobeDownloaded = new StringBuilder();
+        //    try
+        //    {
+        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+
+        //        var downloadOptions = new DownloadOptions
+        //        {
+        //            Include = Request.Query["include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+        //            Pdf = Request.Query["pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None,
+        //            Csv = Request.Query["csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None
+        //        };
+                
+
+        //        fileTobeDownloaded = _jobTrackerToolBusiness.DownloadAll(jobProfileId, employerProfiles, downloadOptions);
+
+        //        var bytes = Encoding.UTF8.GetBytes(fileTobeDownloaded.ToString());
+        //        var date = DateTime.Now;
+        //        var result = new FileContentResult(bytes, "text/csv")
+        //        {
+        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
+        //        };
+
+        //        return result;
+        //    }
+        //    catch (BusinessException ex)
+        //    {
+        //        _logger.LogError(ex, "Business rule violation occurred while downloading employer zip");
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
+        //    }
+        //}
+
+        [HttpGet("downloadcsv/{jobProfileId}", Name = "DownloadCsv")]
+        public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
         {
-            var fileTobeDownloaded = new StringBuilder();
+            var csv = new StringBuilder();
             try
             {
-                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
-                var include = Request.Query["include"].ToString();
-                var pdf = Request.Query["pdf"].ToString();
-                var csv = Request.Query["csv"].ToString();
+                var downloadOptions = new DownloadOptions
+                {
+                    Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+                    Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
+                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                };
 
-                //if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
-                if (include == "true" && csv == "true")
-                {
-                    fileTobeDownloaded = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
-                }
-                else
-                {
-                    fileTobeDownloaded = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
-                }
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
+
+                csv = _jobTrackerToolBusiness.DownloadCsv(jobProfileId, employerProfiles, downloadOptions);
 
                 var bytes = Encoding.UTF8.GetBytes(csv.ToString());
                 var date = DateTime.Now;
@@ -514,11 +559,6 @@ namespace JobTracker.API.tool.Controllers
 
                 return result;
             }
-            catch (BusinessException ex)
-            {
-                _logger.LogError(ex, "Business rule violation occurred while downloading employer zip");
-                return BadRequest(ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
@@ -526,62 +566,35 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        //[HttpGet("downloadcsv/{jobProfileId}", Name ="DownloadCsv")]
-        //public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
-        //{
-        //    var csv = new StringBuilder();
-        //    try
-        //    {
-        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+        [HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
+        public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
+        {
+            try
+            {
+                var downloadOptions = new DownloadOptions
+                {
+                    Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+                    Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
+                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                };
 
-        //        if (Request.Headers.TryGetValue("include", out var includeHeader) && includeHeader == "true")
-        //        {
-        //            csv = _jobTrackerToolBusiness.CsvCreateSelected(jobProfileId, employerProfiles);
-        //        }
-        //        else
-        //        {
-        //            csv = _jobTrackerToolBusiness.CsvCreateAll(jobProfileId, employerProfiles);
-        //        }
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
+                var pdf = _jobTrackerToolBusiness.DownloadPdf(jobProfileId, employerProfiles, downloadOptions);
 
-        //        var bytes = Encoding.UTF8.GetBytes(csv.ToString());
-        //        var date = DateTime.Now;
-        //        var result = new FileContentResult(bytes, "text/csv")
-        //        {
-        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
-        //        };
+                var date = DateTime.Now;
+                var result = new FileContentResult(pdf, "application/pdf")
+                {
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+                };
 
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
-        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
-        //    }
-        //}
-
-        //[HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
-        //public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
-        //{
-        //    try
-        //    {
-        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
-
-        //        var pdf = _jobTrackerToolBusiness.PdfCreate(jobProfileId, employerProfiles);
-
-        //        var date = DateTime.Now;
-        //        var result = new FileContentResult(pdf, "application/pdf")
-        //        {
-        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
-        //        };
-
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
-        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
-        //    }
-        //}
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+                throw new ArgumentException("An error occurred while downloading the employer profile.");
+            }
+        }
 
         [HttpPost("upload", Name ="Upload")]
         public async Task<IActionResult> Upload(IFormFile uploadFile)

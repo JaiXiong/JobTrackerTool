@@ -1,4 +1,5 @@
-﻿using JobData.Entities;
+﻿using JobData.Common;
+using JobData.Entities;
 using Utils.Operations;
 
 public interface IJobTrackerToolService
@@ -13,8 +14,8 @@ public interface IJobTrackerToolService
     Task<JobProfile> GetJobProfile(Guid jobProfileId);
     Task<IEnumerable<JobProfile>> GetJobProfiles(Guid userProfileId);
     Task<IEnumerable<JobProfile>> GetAllJobProfiles();
-    Task<EmployerProfile> GetEmployerProfile(Guid employerProfileId);
-    Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId);
+    Task<EmployerProfile> GetEmployerProfile(Guid employerProfileId, DownloadOptions downloadOptions);
+    Task<IEnumerable<EmployerProfile>> GetEmployerProfiles(Guid jobProfileId, DownloadOptions downloadOptions);
     Task<IEnumerable<EmployerProfile>> GetAllEmployerProfiles();
     Task<int> GetTotalEmployerCount(Guid jobProfileId);
     Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize);

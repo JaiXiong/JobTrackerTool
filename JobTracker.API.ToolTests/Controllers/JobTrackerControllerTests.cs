@@ -6,10 +6,10 @@ using JobTracker.API.Tool.DbData;
 using System.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Utils.Encryption;
-using JobData.Dtos;
 using AutoMapper;
 using JobTracker.Business.Business;
 using Utils.Operations;
+using JobData.Common;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {

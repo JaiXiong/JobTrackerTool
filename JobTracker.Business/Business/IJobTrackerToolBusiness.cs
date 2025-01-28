@@ -1,17 +1,14 @@
-﻿using JobData.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
+using JobData.Common;
+using JobData.Entities;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace JobTracker.Business.Business
 {
     public interface IJobTrackerToolBusiness
     {
-        StringBuilder CsvCreateAll(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
-        StringBuilder CsvCreateSelected(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
-        //byte[] PdfCreate(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles);
+        StringBuilder DownloadCsv(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles, DownloadOptions downloadOptions);
+        byte[] DownloadPdf(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles, DownloadOptions downloadOptions);
 
         StringBuilder ExcelParse();
 
