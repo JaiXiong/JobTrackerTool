@@ -1,9 +1,11 @@
 import { Component, Input, Output } from '@angular/core';
+import JSZip from 'jszip';
 import { MatIcon } from '@angular/material/icon';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
-import { Subject, takeUntil, map, tap, switchMap, take, EMPTY } from 'rxjs';
+import { Subject, takeUntil, map, tap, switchMap, take, EMPTY, forkJoin } from 'rxjs';
 import { DialogDownloadModularComponent } from '../dialog-download-modular/dialog-modular.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-download-modular',
@@ -25,7 +27,16 @@ export class DownloadModularComponent {
     private dialog: MatDialog
   ) {}
 
-  onDownloadEmployerProfileAll(): void {
+  public todaysDate()
+  {
+    var currentDate = new Date().toString();
+    const format = 'dd-MM-YY--HH-mm-ss'
+    const locale = 'en-US'
+    const formattedDate = formatDate(currentDate, format, locale);
+    return formattedDate;
+  }
+
+  public onDownloadEmployerProfile(): void {
     const dialogRef = this.dialog.open(DialogDownloadModularComponent, {
       width: 'auto',
       height: 'auto',
@@ -37,19 +48,36 @@ export class DownloadModularComponent {
       .pipe(
         tap((result) => {
           if (result) {
-            console.log(result);
-            console.log(result.all);
-            console.log(result.pdf);
-            console.log(result.csv);
-
             this.sendAll = result.all;
             this.sendPdf = result.pdf;
             this.sendCsv = result.csv;
           }
         }),
         switchMap((result) => {
-          if (result) {
-            return this.jobTrackerService.DownloadEmployerProfileAll(
+          if (result.pdf == true && result.csv == true) {
+            return forkJoin({
+              pdf: this.jobTrackerService.DownloadEmployerProfilePdf(
+                this._jobProfileId,
+                this.sendAll,
+                this.sendCsv,
+                this.sendPdf
+              ),
+              csv: this.jobTrackerService.DownloadEmployerProfileCsv(
+                this._jobProfileId,
+                this.sendAll,
+                this.sendCsv,
+                this.sendPdf
+              ),
+            });
+          } else if (result.csv == true && result.pdf == false) {
+            return this.jobTrackerService.DownloadEmployerProfileCsv(
+              this._jobProfileId,
+              this.sendAll,
+              this.sendPdf,
+              this.sendCsv
+            );
+          } else if (result.csv == false && result.pdf == true) {
+            return this.jobTrackerService.DownloadEmployerProfilePdf(
               this._jobProfileId,
               this.sendAll,
               this.sendPdf,
@@ -61,51 +89,46 @@ export class DownloadModularComponent {
         }),
         takeUntil(this.destroy$)
       )
-
-      //this was used for zip folder but it was invalid, can't unzip but now I think about it
-      //maybe we should do actions 1 by 1 instead of everything
-      //makes it more managable in the future
-
       .subscribe({
-        next: (response) => {
-          // if (this._loading) {
-          //   return; // Prevent multiple clicks
-          // }
-          const blob = new Blob([response], { type: 'application/zip' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'employer_profile.zip';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
+        next: (files: any) => {
+          if (files.pdf && files.csv) {
+            const zip = new JSZip();
+            const reader = new FileReader();
+            reader.onload = (event: any) => {
+              const csvContent = event.target.result;
+              zip.file(`employer-profile--${this.todaysDate()}.pdf`, files.pdf, { binary: true });
+              zip.file(`employer-profile--${this.todaysDate()}.csv`, csvContent);
+
+              zip.generateAsync({ type: 'blob' }).then((content: any) => {
+                const url = window.URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `employer-profile--${this.todaysDate()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+              });
+            };
+            reader.readAsText(files.csv);
+          } else if (files instanceof Blob) {
+            const url = window.URL.createObjectURL(files);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download =
+              files.type === 'application/pdf'
+                ? `employer-profile--${this.todaysDate()}.pdf`
+                : `employer-profile--${this.todaysDate()}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }
         },
         error: (error) => {
           console.error('Download failed', error);
         },
       });
-
-    // this._loading = true;
-    // this.jobTrackerService.DownloadEmployerProfile(this._jobProfileId, this.sendAll, this.sendPdf, this.sendCsv)
-    //   .pipe(
-    //     takeUntil(this.destroy$),
-    //     map(response => new Blob([response], { type: 'text/csv' })),
-    //   )
-    //   .subscribe((csv: Blob) => {
-    //     const url = window.URL.createObjectURL(csv);
-    //     const a = document.createElement('a');
-    //     a.href = url;
-    //     a.download = 'download.csv'; // Set the file name here
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     document.body.removeChild(a);
-    //     window.URL.revokeObjectURL(url);
-    //     this._loading = false;
-    //   },
-    //   () => {
-    //     this._loading = false;
-    //   });
   }
 
   public onDownloadEmployerProfileCsv() {
@@ -144,7 +167,7 @@ export class DownloadModularComponent {
           const url = window.URL.createObjectURL(csv);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'download.csv'; // Set the file name here
+          a.download = `employer-profile--${this.todaysDate()}.csv`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -196,7 +219,7 @@ export class DownloadModularComponent {
           const url = window.URL.createObjectURL(pdf);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'download.pdf'; // Set the file name here
+          a.download = `employer-profile--${this.todaysDate()}.pdf`; // Set the file name here
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -212,7 +235,7 @@ export class DownloadModularComponent {
       });
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

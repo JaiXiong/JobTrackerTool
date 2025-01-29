@@ -4,6 +4,8 @@ using iText.Layout;
 using iText.Layout.Element;
 using JobData.Common;
 using JobData.Entities;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace JobTracker.Business.Business
@@ -15,29 +17,30 @@ namespace JobTracker.Business.Business
             throw new NotImplementedException();
         }
 
-        //public StringBuilder CreateZipFile(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles)
-        //{
-        //    using (var memoryStream = new MemoryStream())
-        //    {
-        //        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-        //        {
-        //            var csvContent = DownloadContent(jobProfileId, employerProfiles, downloadOptions).ToString();
-        //            var csvFile = archive.CreateEntry($"{jobProfileId}_employerProfiles.csv");
-        //            using (var entryStream = csvFile.Open())
-        //            using (var streamWriter = new StreamWriter(entryStream))
-        //            {
-        //                streamWriter.Write(csvContent);
-        //            }
+        public byte[] CreateZipFile(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles, DownloadOptions downloadOptions)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    var csvContent = DownloadCsv(jobProfileId, employerProfiles, downloadOptions).ToString();
+                    var csvFile = archive.CreateEntry($"{jobProfileId}_employerProfiles.csv");
+                    using (var entryStream = csvFile.Open())
+                    using (var streamWriter = new StreamWriter(entryStream))
+                    {
+                        streamWriter.Write(csvContent);
+                    }
 
-        //            var pdfContent = GeneratePdfContent(employerProfiles);
-        //            var pdfFile = archive.CreateEntry($"{jobProfileId}_employerProfiles.pdf");
-        //            using (var entryStream = pdfFile.Open())
-        //            {
-        //                entryStream.Write(pdfContent, 0, pdfContent.Length);
-        //            }
-        //        }
-        //    }
-        //}
+                    var pdfContent = DownloadPdf(jobProfileId, employerProfiles, downloadOptions);
+                    var pdfFile = archive.CreateEntry($"{jobProfileId}_employerProfiles.pdf");
+                    using (var entryStream = pdfFile.Open())
+                    {
+                        entryStream.Write(pdfContent, 0, pdfContent.Length);
+                    }
+                }
+                return memoryStream.ToArray();
+            }
+        }
 
         public StringBuilder DownloadCsv(Guid jobProfileId, IEnumerable<EmployerProfile> employerProfiles, DownloadOptions downloadOptions)
         {

@@ -494,44 +494,43 @@ namespace JobTracker.API.tool.Controllers
         }
 
 
-        //[HttpGet("download/{jobProfileId}", Name = "Download")]
-        //public async Task<IActionResult> DownloadAll(Guid jobProfileId)
-        //{
-        //    var fileTobeDownloaded = new StringBuilder();
-        //    try
-        //    {
-        //        var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId);
+        [HttpGet("downloadall/{jobProfileId}", Name = "Download")]
+        public async Task<IActionResult> DownloadAll(Guid jobProfileId)
+        {
+            byte[] filesTobeDownloaded;
+            try
+            {
+                var downloadOptions = new DownloadOptions
+                {
+                    Include = Request.Query["include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
+                    Pdf = Request.Query["pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None,
+                    Csv = Request.Query["csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None
+                };
 
-        //        var downloadOptions = new DownloadOptions
-        //        {
-        //            Include = Request.Query["include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
-        //            Pdf = Request.Query["pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None,
-        //            Csv = Request.Query["csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None
-        //        };
-                
+                var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
 
-        //        fileTobeDownloaded = _jobTrackerToolBusiness.DownloadAll(jobProfileId, employerProfiles, downloadOptions);
+                filesTobeDownloaded = _jobTrackerToolBusiness.CreateZipFile(jobProfileId, employerProfiles, downloadOptions);
 
-        //        var bytes = Encoding.UTF8.GetBytes(fileTobeDownloaded.ToString());
-        //        var date = DateTime.Now;
-        //        var result = new FileContentResult(bytes, "text/csv")
-        //        {
-        //            FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.csv"
-        //        };
+                //var bytes = Encoding.UTF8.GetBytes(filesTobeDownloaded.ToString());
+                var date = DateTime.Now;
+                var result = new FileContentResult(filesTobeDownloaded, "application/zip")
+                {
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.zip"
+                };
 
-        //        return result;
-        //    }
-        //    catch (BusinessException ex)
-        //    {
-        //        _logger.LogError(ex, "Business rule violation occurred while downloading employer zip");
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
-        //        throw new ArgumentException("An error occurred while downloading the employer profile.");
-        //    }
-        //}
+                return result;
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while downloading employer zip");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
+                throw new ArgumentException("An error occurred while downloading the employer profile.");
+            }
+        }
 
         [HttpGet("downloadcsv/{jobProfileId}", Name = "DownloadCsv")]
         public async Task<IActionResult> DownloadCsv(Guid jobProfileId)

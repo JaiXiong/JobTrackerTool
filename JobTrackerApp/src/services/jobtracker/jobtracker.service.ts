@@ -109,18 +109,18 @@ export class JobTrackerService {
       catchError(this.handleError<any>('GetEmployerTotalCount')));
   }
 
-  public DownloadEmployerProfileAll(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<any> {
+  public DownloadEmployerProfileAll(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<Blob> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams()
       .set('pdf', sendPdf.toString())
       .set('csv', sendCsv.toString())
       .set('include', sendAll.toString());
 
-    return this.http.get(`http://localhost:5001/api/JobTracker/download/${jobProfileId}`, { headers, params, responseType: 'blob' }).pipe(
+    return this.http.get(`http://localhost:5001/api/JobTracker/downloadall/${jobProfileId}`, { headers, params, responseType: 'blob' }).pipe(
       catchError(this.handleError<any>('DownloadEmployerProfile')));
   }
 
-  public DownloadEmployerProfileCsv(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<any> {
+  public DownloadEmployerProfileCsv(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<Blob> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams()
       .set('pdf', sendPdf.toString())
@@ -131,7 +131,7 @@ export class JobTrackerService {
       catchError(this.handleError<any>('DownloadEmployerProfile')));
   }
 
-  public DownloadEmployerProfilePdf(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<any> {
+  public DownloadEmployerProfilePdf(jobProfileId: any, sendAll: boolean, sendPdf:boolean, sendCsv:boolean): Observable<Blob> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams()
       .set('pdf', sendPdf.toString())
