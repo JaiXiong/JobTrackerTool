@@ -160,6 +160,58 @@ export class DownloadModularComponent {
       });
   }
 
+  public onDownloadEmployerProfilePdf() {
+    const dialogRef = this.dialog.open(DialogDownloadModularComponent, {
+      width: 'auto',
+      height: 'auto',
+      disableClose: true,
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(
+        tap((result) => {
+          if (result) {
+            this.sendAll = result.all;
+            this.sendPdf = result.pdf;
+            this.sendCsv = result.csv;
+          }
+        }),
+        switchMap((result) => {
+          if (result) {
+            return this.jobTrackerService.DownloadEmployerProfilePdf(
+              this._jobProfileId,
+              this.sendAll,
+              this.sendPdf,
+              this.sendCsv
+            );
+          } else {
+            return EMPTY;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (pdf: Blob) => {
+          const url = window.URL.createObjectURL(pdf);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'download.pdf'; // Set the file name here
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          this._loading = false;
+        },
+        error: (error: any) => {
+          console.log(error);
+        },
+        complete: () => {
+          this._loading = false;
+        }
+      });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

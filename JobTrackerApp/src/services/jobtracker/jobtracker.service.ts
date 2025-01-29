@@ -138,7 +138,7 @@ export class JobTrackerService {
       .set('csv', sendCsv.toString())
       .set('include', sendAll.toString());
 
-    return this.http.get(`http://localhost:5001/api/JobTracker/download/${jobProfileId}`, { headers, params, responseType: 'blob' }).pipe(
+    return this.http.get(`http://localhost:5001/api/JobTracker/downloadpdf/${jobProfileId}`, { headers, params, responseType: 'blob' }).pipe(
       catchError(this.handleError<any>('DownloadEmployerProfile')));
   }
 

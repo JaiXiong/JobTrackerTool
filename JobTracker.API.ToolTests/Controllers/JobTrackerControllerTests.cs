@@ -10,6 +10,7 @@ using AutoMapper;
 using JobTracker.Business.Business;
 using Utils.Operations;
 using JobData.Common;
+using Azure.Core;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -205,6 +206,13 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod()]
         public async Task GetEmployerProfile()
         {
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf 
+            };
+
             var expectedEmployerProfile = new EmployerProfile
             {
                 Id = Guid.NewGuid(),
@@ -222,7 +230,7 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Website = "Test"
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id))
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id, downloadOptions))
                 .ReturnsAsync(expectedEmployerProfile);
 
             var result = await _controller.GetEmployerProfile(expectedEmployerProfile.Id) as OkObjectResult;
@@ -238,6 +246,13 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod()]
         public async Task GetEmployerProfileFails()
         {
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf
+            };
+
             var expectedEmployerProfile = new EmployerProfile
             {
                 Id = Guid.NewGuid(),
@@ -255,7 +270,7 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Website = "Test"
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id))
+            _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id, downloadOptions))
                 .ThrowsAsync(new ArgumentException("Failed to get Employer Profile"));
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
@@ -265,6 +280,13 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod()]
         public async Task GetEmployerProfiles()
         {
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf
+            };
+
             var jobProfileId = Guid.NewGuid();
             var expectedEmployerProfiles = new List<EmployerProfile>
             {
@@ -302,7 +324,7 @@ namespace JobTracker.API.tool.Controllers.Tests
                 }
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId))
+            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId, downloadOptions))
                 .ReturnsAsync(expectedEmployerProfiles);
 
             var result = await _controller.GetEmployerProfiles(jobProfileId) as OkObjectResult;
@@ -317,6 +339,13 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod]
         public async Task GetEmployerProfilesFail()
         {
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf
+            };
+
             var jobProfileId = Guid.NewGuid();
             var expectedEmployerProfiles = new List<EmployerProfile>
             {
@@ -354,7 +383,7 @@ namespace JobTracker.API.tool.Controllers.Tests
                 }
             };
 
-            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId))
+            _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId, downloadOptions))
                 .ThrowsAsync(new ArgumentException("Get All Employer Profiles Failed"));
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(

@@ -1,9 +1,9 @@
-﻿using iText.Kernel.Pdf;
+﻿
+using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using JobData.Common;
 using JobData.Entities;
-using System.IO.Compression;
 using System.Text;
 
 namespace JobTracker.Business.Business
