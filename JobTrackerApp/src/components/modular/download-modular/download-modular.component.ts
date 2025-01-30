@@ -3,14 +3,18 @@ import JSZip from 'jszip';
 import { MatIcon } from '@angular/material/icon';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 import { Subject, takeUntil, map, tap, switchMap, take, EMPTY, forkJoin } from 'rxjs';
-import { DialogDownloadModularComponent } from '../dialog-download-modular/dialog-modular.component';
+import { DialogDownloadModularComponent } from '../dialog-download-modular/dialog-download-modular.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-download-modular',
   standalone: true,
-  imports: [MatIcon, MatDialogModule],
+  imports: 
+  [
+    MatIcon, 
+    MatDialogModule
+  ],
   templateUrl: './download-modular.component.html',
   styleUrl: './download-modular.component.scss',
 })

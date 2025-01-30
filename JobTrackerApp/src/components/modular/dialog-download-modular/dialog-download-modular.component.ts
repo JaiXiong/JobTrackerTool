@@ -17,8 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     MatTooltipModule
   ],
-  templateUrl: './dialog-modular.component.html',
-  styleUrl: './dialog-modular.component.scss',
+  templateUrl: './dialog-download-modular.component.html',
+  styleUrl: './dialog-download-modular.component.scss',
 })
 export class DialogDownloadModularComponent {
 
@@ -27,9 +27,6 @@ export class DialogDownloadModularComponent {
     pdf: false,
     csv: false
   }
-  // selectAll: boolean = false;
-  // selectPdf: boolean = false;
-  // selectCsv: boolean = false;
 
   constructor() {}
 
