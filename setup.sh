@@ -15,7 +15,7 @@ az staticwebapp create \
   --name $STATIC_APP_NAME \
   --resource-group $RESOURCE_GROUP \
   --location $LOCATION \
-  --source https://github.com/YourUsername/JobTrackerTool \
+  --source https://github.com/JaiXiong/JobTrackerTool \
   --branch main \
   --app-location "/JobTrackerApp" \
   --api-location "/JobTrackerAPI" \
