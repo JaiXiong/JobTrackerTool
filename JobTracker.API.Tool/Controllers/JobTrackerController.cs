@@ -358,6 +358,7 @@ namespace JobTracker.API.tool.Controllers
         {
             //TODO:
             //eventually we need to rename this to make more sense
+            //it's results but named jobaction
             try
             {
                 var result = await _jobTrackerToolService.AddJobAction(employerProfileId, jobAction);
