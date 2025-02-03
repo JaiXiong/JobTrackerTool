@@ -1,0 +1,22 @@
+{
+    "routes": [
+      {
+        "route": "/api/jobTracker/*",
+        "allowedRoles": ["anonymous"],
+        "rewrite": "http://localhost:5001/api/{rest}"
+      },
+      {
+        "route": "/api/login/*",
+        "allowedRoles": ["anonymous"],
+        "rewrite": "http://localhost:3001/api/{rest}"
+      },
+      {
+        "route": "/api/*",
+        "allowedRoles": ["anonymous"],
+        "rewrite": "https://yellow-desert-0e13a9910.4.azurewebsites.net/api/{rest}"
+      }
+    ],
+    "navigationFallback": {
+      "rewrite": "index.html"
+    }
+}
