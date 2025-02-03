@@ -1,53 +1,64 @@
 #!/bin/bash
 
-# Generate random suffix for unique names
-SUFFIX=$(openssl rand -hex 5)
-STATIC_APP_NAME="jobtracker-static-$SUFFIX"
-API_APP_NAME="jobtracker-api-$SUFFIX"
-RESOURCE_GROUP="JobTracker-RG"
-LOCATION="centralus"
+apiappname=JobTrackerAPI$(openssl rand -hex 5)
 
-echo "Configuring Git..."
-GIT_USERNAME=${GIT_USERNAME:-"deployment-$SUFFIX"}
-GIT_EMAIL=${GIT_EMAIL:-"deployment-$SUFFIX@azure-deploy.com"}
+printf "Setting username and password for Git ... (1/8)\n\n"
 
-echo "Creating Resource Group..."
-az group create --name $RESOURCE_GROUP --location $LOCATION
+GIT_USERNAME=gitName$(openssl rand -hex 5)
+GIT_EMAIL=a@b.c
 
-echo "Creating Static Web App..."
-az staticwebapp create \
-  --name $STATIC_APP_NAME \
-  --resource-group $RESOURCE_GROUP \
-  --location $LOCATION \
-  --source https://github.com/JaiXiong/JobTrackerTool \
-  --branch main \
-  --app-location "/JobTrackerApp" \
-  --api-location "/JobTrackerAPI" \
-  --output-location "dist/JobTrackerApp"
+git config --global user.name "$GIT_USERNAME"
+git config --global user.email "$GIT_EMAIL"
 
-echo "Creating API App Service..."
-az appservice plan create \
-  --name "jobtracker-plan" \
-  --resource-group $RESOURCE_GROUP \
-  --sku F1 \
-  --is-linux
+RESOURCE_GROUP=$(az group list --query "[0].name" -o tsv)
 
-az webapp create \
-  --name $API_APP_NAME \
-  --resource-group $RESOURCE_GROUP \
-  --plan "jobtracker-plan" \
-  --runtime "DOTNET|6.0"
+# Create App Service plan
+PLAN_NAME=myPlan
 
-# Configure API URL in Static Web App
-az staticwebapp appsettings set \
-  --name $STATIC_APP_NAME \
-  --resource-group $RESOURCE_GROUP \
-  --setting-names "API_URL=https://$API_APP_NAME.azurewebsites.net"
+printf "\nCreating App Service plan in FREE tier ... (2/8)\n\n"
 
-echo "==== Deployment Complete ===="
-echo "Static Web App URL: https://$STATIC_APP_NAME.azurestaticapps.net"
-echo "API URL: https://$API_APP_NAME.azurewebsites.net"
+az appservice plan create --name $apiappname --resource-group $RESOURCE_GROUP --sku FREE --location centralus --verbose
 
-# Save URLs to a file
-echo "https://$STATIC_APP_NAME.azurestaticapps.net" > deployment-urls.txt
-echo "https://$API_APP_NAME.azurewebsites.net" >> deployment-urls.txt
+printf "\nCreating API App ... (3/8)\n\n"
+
+az webapp create --name $apiappname --resource-group $RESOURCE_GROUP --plan $apiappname --deployment-local-git --verbose
+
+printf "\nSetting the account-level deployment credentials ...(4/8)\n\n"
+
+DEPLOY_USER="myName1$(openssl rand -hex 5)"
+DEPLOY_PASSWORD="Pw1$(openssl rand -hex 10)"
+
+az webapp deployment user set --user-name $DEPLOY_USER --password $DEPLOY_PASSWORD --verbose
+
+GIT_URL="https://$DEPLOY_USER@$apiappname.scm.azurewebsites.net/$apiappname.git"
+
+# Create Web App with local-git deploy
+REMOTE_NAME=production
+
+# Set remote on src
+printf "\nSetting Git remote...(5/8)\n\n"
+
+git remote add $REMOTE_NAME $GIT_URL
+
+printf "\nGit add...(6/8)\n\n"
+
+git add .
+git commit -m "initial revision"
+
+printf "\nGit push... (7/8)\n\n"
+
+# Handle GitHub access token
+printf "Please enter your GitHub Personal Access Token: "
+read -s GITHUB_TOKEN
+
+printf "When prompted for a password enter this: $DEPLOY_PASSWORD\n"
+git push --set-upstream $REMOTE_NAME master
+git push "https://$DEPLOY_USER:$DEPLOY_PASSWORD@$apiappname.scm.azurewebsites.net/$apiappname.git"
+
+printf "Setup complete!\n\n"
+
+printf "*********************** IMPORTANT INFO *********************\n\n"
+
+printf "Swagger URL: https://$apiappname.azurewebsites.net/swagger\n"
+
+printf "Swagger JSON URL: https://$apiappname.azurewebsites.net/swagger/v1/swagger.json\n\n"
