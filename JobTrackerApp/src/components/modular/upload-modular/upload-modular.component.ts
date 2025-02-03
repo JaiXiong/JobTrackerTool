@@ -1,44 +1,55 @@
 import { Component, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogUploadModularComponent } from '../dialog-upload-modular/dialog-upload-modular.component';
-import { switchMap, tap } from 'rxjs';
+import { UploadService } from '../../../services/upload/upload.service';
 
 @Component({
   selector: 'app-upload-modular',
   standalone: true,
-  imports: 
-  [
-    MatIcon
-  ],
+  imports: [MatIcon, MatDialogModule],
   templateUrl: './upload-modular.component.html',
-  styleUrl: './upload-modular.component.scss'
+  styleUrl: './upload-modular.component.scss',
 })
 export class UploadModularComponent {
-@Input() _jobProfileId!: string | null;
+  @Input() _jobProfileId!: string | null;
+  selectedFile: File | null = null;
 
-constructor(private _jobTrackerService: JobTrackerService, private dialog: MatDialog) {}
+  constructor(
+    private _uploadService: UploadService,
+    private dialog: MatDialog
+  ) {}
 
   onUploadEmployerProfile(): void {
-    const dialogRef = this.dialog.open(DialogUploadModularComponent, 
-    {
+    const dialogRef = this.dialog.open(DialogUploadModularComponent, {
       width: 'auto',
       height: 'auto',
-      disableClose: true
+      disableClose: true,
     });
 
-    dialogRef.afterClosed()
-    .pipe(
-      tap(result => {
-        if (result)
-        {
-          //to some logic
-        }
-      })
-    ),
-    switchMap((result: any) => {
-      return result;
+    dialogRef.componentInstance.fileSelected.subscribe((file: File) => {
+      this.selectedFile = file;
+      //this.uploadFile(file);
+      this.uploadFile();
+      dialogRef.close();
     });
+  }
+
+  public uploadFile() {
+    if (this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      this._uploadService.Upload(formData, this._jobProfileId).subscribe({
+        next: (result) => {
+          if (result) {
+            alert('File uploaded successfully');
+          }
+        },
+        error: (error) => {
+          console.log('File upload failed', error);
+        },
+      });
+    }
   }
 }

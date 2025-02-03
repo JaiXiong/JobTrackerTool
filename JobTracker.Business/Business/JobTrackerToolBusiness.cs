@@ -4,6 +4,8 @@ using iText.Layout;
 using iText.Layout.Element;
 using JobData.Common;
 using JobData.Entities;
+using JobData.Migrations;
+using System.Collections;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -101,6 +103,72 @@ namespace JobTracker.Business.Business
                 document.Close();
                 return memoryStream.ToArray();
             }
+        }
+
+        public List<EmployerProfile> UploadParsing(Stream fileStream, Guid jobProfileId)
+        {
+            var employerProfiles = new List<EmployerProfile>();
+            var columnMapping = new Dictionary<string, int>();
+
+            using(var reader = new StreamReader(fileStream))
+            {
+                string line;
+                bool isHeader = true;
+
+                while((line = reader.ReadLine()) != null)
+                {
+                    var values = line.Split(',');
+
+                    if (isHeader)
+                    {
+                        for (int i = 0; i < values.Length; i++)
+                        {
+                            columnMapping[values[i].Trim().ToLower()] = i;
+                        }
+                        isHeader = false;
+                    }
+                    else
+                    {
+                        var employerProfile = new EmployerProfile
+                        {
+                            Id = Guid.NewGuid(),
+                            JobProfileId = jobProfileId,
+                            Date = DateTime.Parse(values[columnMapping["date"]]),
+                            LatestUpdate = DateTime.Parse(values[columnMapping["latestupdate"]]),
+                            Name = values[columnMapping["name"]],
+                            Title = values[columnMapping["title"]],
+                            Address = values[columnMapping["address"]],
+                            City = values[columnMapping["city"]],
+                            State = values[columnMapping["state"]],
+                            Zip = values[columnMapping["zip"]],
+                            Phone = values[columnMapping["phone"]],
+                            Email = values[columnMapping["email"]],
+                            Website = values[columnMapping["website"]],
+                            Result = new JobAction
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = Guid.Parse(values[columnMapping["id"]]),
+                                Action = values[columnMapping["action"]],
+                                ActionResult = values[columnMapping["actionresult"]],
+                                Date = DateTime.Parse(values[columnMapping["resultdate"]]),
+                                LatestUpdate = DateTime.Parse(values[columnMapping["resultlatestupdate"]])
+                            },
+                            Detail = new Detail
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = Guid.Parse(values[columnMapping["id"]]),
+                                Comments = values[columnMapping["detailcomments"]],
+                                Updates = values[columnMapping["detailupdate"]],
+                                Date = DateTime.Parse(values[columnMapping["detaildate"]]),
+                                LatestUpdate = DateTime.Parse(values[columnMapping["detaillatestupdate"]])
+                            }
+                        };
+                        employerProfiles.Add(employerProfile);
+                    }
+                   
+                }
+            }
+            return employerProfiles;
         }
     }
 }

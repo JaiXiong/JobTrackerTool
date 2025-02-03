@@ -160,6 +160,15 @@ namespace JobTracker.Business {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Upload File doesn&apos;t exist..
+        /// </summary>
+        internal static string UploadNotExist {
+            get {
+                return ResourceManager.GetString("UploadNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User already exist..
         /// </summary>
         internal static string UserExist {

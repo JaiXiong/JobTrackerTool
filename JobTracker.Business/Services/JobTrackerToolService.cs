@@ -165,7 +165,9 @@ namespace JobTracker.Business.Services
             {
                 return OperationResult.CreateFailure(_resx.Create("EmployerProfileExist"));
             }
-            employerProfile.Id = Guid.NewGuid();
+
+            //employerProfile.Id = Guid.NewGuid();
+            employerProfile.Id = employerProfile.Id != Guid.Empty ? employerProfile.Id : Guid.NewGuid();
             employerProfile.Date = DateTime.Now;
             employerProfile.LatestUpdate = DateTime.Now;
 
@@ -186,7 +188,7 @@ namespace JobTracker.Business.Services
             }
 
             _dbContext.Employers.Add(employerProfile);
-            _dbContext.Employers.Update(employerProfile);
+            //_dbContext.Employers.Update(employerProfile);
             await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("Added employer profile successfully.");
@@ -525,6 +527,28 @@ namespace JobTracker.Business.Services
             await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("Deleted employer profile successfully.");
+        }
+
+        public async Task<OperationResult> UploadEmployerProfiles(List<EmployerProfile> employerProfiles, Guid jobProfileId)
+        {
+            if (employerProfiles == null)
+            {
+                return OperationResult.CreateFailure(_resx.Create("UploadNotExist"));
+            }
+
+            var exist = await _dbContext.JobProfiles.AnyAsync(c => c.Id == jobProfileId);
+
+            if (!exist)
+            {
+                return OperationResult.CreateFailure(_resx.Create("JobProfileNotExist"));
+            }
+
+            foreach(var profile in employerProfiles)
+            {
+                await AddEmployerProfile(profile);
+            }
+
+            return OperationResult.CreateSuccess("Upload employer profiles successfully.");
         }
     }
 }

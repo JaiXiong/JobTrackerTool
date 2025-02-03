@@ -25,7 +25,7 @@ import { DialogJobprofilesComponent } from '../../manage-dialog-popups/dialog-jo
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DialogEmployerprofilesComponent } from '../../manage-dialog-popups/dialog-employerprofiles/dialog-employerprofiles.component';
 import { DialogEditJobprofilesComponent } from '../../manage-dialog-popups/dialog-jobprofiles/dialog-edit-jobprofiles/dialog-edit-jobprofiles.component';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { tap, catchError, switchMap, map, takeUntil } from 'rxjs/operators';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
@@ -34,6 +34,7 @@ import { NotificationService } from '../../../services/notifications/notificatio
 import { UploadModularComponent } from "../../modular/upload-modular/upload-modular.component";
 import { DownloadModularComponent } from '../../modular/download-modular/download-modular.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { UploadService } from '../../../services/upload/upload.service';
 
 @Component({
   selector: 'app-jobprofile',
@@ -73,6 +74,8 @@ import { MatMenuModule } from '@angular/material/menu';
 })
 export class JobprofileComponent implements OnInit, OnDestroy {
   title = 'JobTrackerApp';
+  private uploadSubscription!: Subscription;
+  private jobProfilesSubject = new BehaviorSubject<JobProfile[]>([]);
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   totalRecords: number = 0;
@@ -99,9 +102,21 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   showJobOptions: boolean = true;
   showEmployerOptions: boolean = false;
 
-  private jobProfilesSubject = new BehaviorSubject<JobProfile[]>([]);
+  constructor(
+    private route: ActivatedRoute,
+    private jobTrackerService: JobTrackerService,
+    private dialog: MatDialog,
+    private datePipe: DatePipe,
+    private cdr: ChangeDetectorRef,
+    private _liveAnnouncer: LiveAnnouncer,
+    private notificationService: NotificationService, 
+    private uploadService: UploadService
+  ) {}
 
   ngOnInit(): void {
+    this.uploadSubscription = this.uploadService.uploadComplete$.subscribe(() => {
+      this.getPageData();
+    });
     // Retrieve the username from the query parameters
     this.route.queryParams.subscribe((params) => {
       this.userNameId = params['usernameid'];
@@ -141,16 +156,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     localStorage.removeItem('jobProfile');
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private jobTrackerService: JobTrackerService,
-    private dialog: MatDialog,
-    private datePipe: DatePipe,
-    private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
-    private _liveAnnouncer: LiveAnnouncer,
-    private notificationService: NotificationService
-  ) {}
+  
 
   // public getJobProfile(): void {
   //   if (this.jobProfileSelected) {

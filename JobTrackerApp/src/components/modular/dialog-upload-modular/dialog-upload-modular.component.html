@@ -1,1 +1,23 @@
-<input type="file" class="file-upload" onchange="console.log(event.log(event.target.files))">
+<!-- <input type="file" class="file-upload" onchange="console.log(event.log(event.target.files))"> -->
+<h1 class="upload-header">Upload</h1>
+    <span class="upload-content">
+        Upload File:
+    </span>
+<input type="file" class="file-upload" (change)="onFileSelected($event)" #fileUpload>
+
+<div class="file-upload">
+    {{fileName || "No file uploaded yet"}}
+
+    <button mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()"> 
+        <mat-icon>attach_file</mat-icon> 
+    </button>
+</div>
+<button mat-raised-button color="accent" (click)="onUpload()">Upload</button>
+
+<div class="progress">
+    <mat-progress-bar mode="determinate" value="40" [value]="uploadProgress" *ngIf="uploadProgress"></mat-progress-bar>
+    
+    <mat-icon class="cancel-upload" (click)="cancelUpload()" 
+              *ngIf="uploadProgress">delete_forever</mat-icon>
+  
+  </div>

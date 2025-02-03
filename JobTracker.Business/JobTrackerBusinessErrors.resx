@@ -159,4 +159,7 @@
   <data name="JobActionNotExist" xml:space="preserve">
     <value>Job Action doesn't exist.</value>
   </data>
+  <data name="UploadNotExist" xml:space="preserve">
+    <value>Upload File doesn't exist.</value>
+  </data>
 </root>

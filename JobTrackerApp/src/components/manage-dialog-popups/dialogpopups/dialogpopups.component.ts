@@ -16,6 +16,7 @@ import { UserprofileComponent } from '../../manage-users/userprofile/userprofile
   styleUrl: './dialogpopups.component.scss'
 })
 export class DialogpopupsComponent {
+uploadProgress: boolean = false;
 
   constructor(private jobTrackerService: JobTrackerService, private dialog: MatDialog) {}
 

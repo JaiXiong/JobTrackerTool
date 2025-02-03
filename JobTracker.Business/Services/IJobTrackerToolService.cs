@@ -29,4 +29,5 @@ public interface IJobTrackerToolService
     Task<OperationResult> UpdateDetail(Detail updatedProfile);
     Task<OperationResult> DeleteJobProfile(Guid jobProfileId);
     Task<OperationResult> DeleteEmployerProfile(Guid employerProfileId);
+    Task<OperationResult> UploadEmployerProfiles(List<EmployerProfile> employerProfiles, Guid jobProfileId);
 }

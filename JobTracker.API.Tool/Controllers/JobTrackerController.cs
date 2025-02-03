@@ -558,6 +558,11 @@ namespace JobTracker.API.tool.Controllers
 
                 return result;
             }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while downloading employer csv");
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
@@ -588,6 +593,11 @@ namespace JobTracker.API.tool.Controllers
 
                 return result;
             }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while downloading employer pdf");
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while downloading the employer profiles.");
@@ -595,19 +605,28 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpPost("upload", Name ="Upload")]
-        public async Task<IActionResult> Upload(IFormFile uploadFile)
+        [HttpPost("upload/{jobProfileId}", Name ="Upload")]
+        public async Task<IActionResult> Upload([FromForm] IFormCollection formData, Guid jobProfileId)
         {
-            if (uploadFile == null || uploadFile.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-
             try
             {
-                // Process the file here
+                var file = formData.Files[0];
+                using var stream = new MemoryStream();
+                await file.CopyToAsync(stream);
+                stream.Position = 0;
 
-                return Ok("File uploaded successfully.");
+                var parsedEmployerData = _jobTrackerToolBusiness.UploadParsing(stream, jobProfileId);
+
+                var result = await _jobTrackerToolService.UploadEmployerProfiles(parsedEmployerData, jobProfileId);
+
+                if (result.Success)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
             }
             catch (Exception ex)
             {
