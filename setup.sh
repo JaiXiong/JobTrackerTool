@@ -7,6 +7,10 @@ API_APP_NAME="jobtracker-api-$SUFFIX"
 RESOURCE_GROUP="JobTracker-RG"
 LOCATION="centralus"
 
+echo "Configuring Git..."
+GIT_USERNAME=${GIT_USERNAME:-"deployment-$SUFFIX"}
+GIT_EMAIL=${GIT_EMAIL:-"deployment-$SUFFIX@azure-deploy.com"}
+
 echo "Creating Resource Group..."
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
