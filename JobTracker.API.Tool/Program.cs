@@ -71,13 +71,8 @@ builder.Services.AddScoped<Encryption>();
 builder.Services.AddDbContext<JobProfileContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register the Swagger generator so we can view it
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTracker API", Version = "v1" });
-});
-
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -94,10 +89,9 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Enviro
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseDeveloperExceptionPage();
 
 app.Run();
