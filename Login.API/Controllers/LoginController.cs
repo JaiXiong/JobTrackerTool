@@ -6,20 +6,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Login.API.Controllers
 {
+    /// <summary>
+    /// Controller for handling login and user registration.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
-
         private readonly ILogger<LoginController> _logger;
         private readonly LoginServices _loginServices;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoginController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="loginServices">The login services instance.</param>
         public LoginController(ILogger<LoginController> logger, LoginServices loginServices)
         {
             _logger = logger;
             _loginServices = loginServices;
         }
 
+        /// <summary>
+        /// Authenticates a user and generates tokens.
+        /// </summary>
+        /// <param name="loginRequest">The login request containing email and password.</param>
+        /// <returns>A response containing the user ID, username, access token, and refresh token.</returns>
         [HttpPost("loginauth", Name = "Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
@@ -30,8 +42,6 @@ namespace Login.API.Controllers
 
             try
             {
-                
-                //var delimiter = new char[] { '@' };
                 var username = loginRequest.Email;
                 var password = loginRequest.Password;
 
@@ -50,12 +60,16 @@ namespace Login.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating the employer profile.");
+                _logger.LogError(ex, "An error occurred while authenticating the user.");
                 return StatusCode(500, "Internal server error");
             }
-
         }
 
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="registerRequest">The registration request containing email and password.</param>
+        /// <returns>A response indicating the result of the registration operation.</returns>
         [HttpPost("registeruser", Name = "RegisterUser")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
@@ -71,11 +85,15 @@ namespace Login.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating the employer profile.");
+                _logger.LogError(ex, "An error occurred while registering the user.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
+        /// <summary>
+        /// Gets the current authenticated user.
+        /// </summary>
+        /// <returns>The current authenticated user.</returns>
         [Authorize]
         [HttpGet("currentuser", Name = "CurrentUser")]
         public async Task<IActionResult> CurrentUser()
@@ -87,11 +105,15 @@ namespace Login.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating the employer profile.");
+                _logger.LogError(ex, "An error occurred while retrieving the current user.");
                 return StatusCode(500, "Internal server error");
             }
         }
 
+        /// <summary>
+        /// Refreshes the authentication token.
+        /// </summary>
+        /// <returns>A response containing the new refresh token.</returns>
         [Authorize]
         [HttpPost("refreshtoken", Name = "RefreshToken")]
         public async Task<IActionResult> RefreshToken()
@@ -106,12 +128,12 @@ namespace Login.API.Controllers
 
                 var token = authHeader.Substring("Bearer ".Length).Trim();
 
-                var refreshToken =  await _loginServices.RefreshToken(token);
+                var refreshToken = await _loginServices.RefreshToken(token);
                 return Ok(new { refreshToken });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while creating the employer profile.");
+                _logger.LogError(ex, "An error occurred while refreshing the token.");
                 return StatusCode(500, "Internal server error");
             }
         }

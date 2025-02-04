@@ -11,6 +11,9 @@ using Utils.Encryption;
 
 namespace JobTracker.API.tool.Controllers
 {
+    /// <summary>
+    ///Controller for handling login and user registration.
+    /// </summary>
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -22,6 +25,14 @@ namespace JobTracker.API.tool.Controllers
         private readonly IJobTrackerToolBusiness _jobTrackerToolBusiness;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobTrackerController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="jobTrackerToolService">The job tracker tool service instance.</param>
+        /// <param name="encyption">The encryption instance.</param>
+        /// <param name="jobTrackerToolBusiness">The job tracker tool business instance.</param>
+        /// <param name="mapper">The mapper instance.</param>
         public JobTrackerController(ILogger<JobTrackerController> logger, IJobTrackerToolService jobTrackerToolService, Encryption encyption, IJobTrackerToolBusiness jobTrackerToolBusiness, IMapper mapper)
         {
             _logger = logger;
@@ -31,7 +42,12 @@ namespace JobTracker.API.tool.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("employerprofile/{employerprofileid}", Name = "GetEmployer")]
+        /// <summary>
+        /// Gets the employer based on the id.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer.</param>
+        /// <returns>A employer profile of given id.</returns>
+        [HttpGet("employerprofile/{employerProfileid}", Name = "GetEmployer")]
         public async Task<IActionResult> GetEmployerProfile(Guid employerProfileId)
         {
             try
@@ -40,7 +56,7 @@ namespace JobTracker.API.tool.Controllers
                 {
                     Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
                     Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
-                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                    Pdf = Request.Query["Pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None
                 };
 
                 var employerProfile = await _jobTrackerToolService.GetEmployerProfile(employerProfileId, downloadOptions);
@@ -59,6 +75,11 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a list of employer based on the job id.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <returns>A list of all employer profile of given job id.</returns>
         [HttpGet("employerprofiles/{jobprofileid}", Name = "GetEmployers")]
         public async Task<IActionResult> GetEmployerProfiles(Guid jobProfileId)
         {
@@ -68,7 +89,7 @@ namespace JobTracker.API.tool.Controllers
                 {
                     Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
                     Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
-                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                    Pdf = Request.Query["Pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None
                 };
 
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
@@ -88,6 +109,10 @@ namespace JobTracker.API.tool.Controllers
 
         }
 
+        /// <summary>
+        /// Gets list of all employer in database.
+        /// </summary>
+        /// <returns>A list of all employer profiles.</returns>
         [HttpGet("employerprofiles", Name = "GetAllEmployerNames")]
         public async Task<IActionResult> GetAllEmployerProfiles()
         {
@@ -110,6 +135,11 @@ namespace JobTracker.API.tool.Controllers
 
         }
 
+        /// <summary>
+        /// Gets a job profile based on the job id.
+        /// </summary>
+        /// <param name="jobprofileid">The ID of the job profile.</param>
+        /// <returns>A job profile of given job id.</returns>
         [HttpGet("jobprofile/{jobprofileid}", Name = "GetJobProfile")]
         public async Task<IActionResult> GetJobProfile(Guid jobprofileid)
         {
@@ -131,6 +161,11 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a user profile based on the user id.
+        /// </summary>
+        /// <param name="userProfileId">The ID of the user profile.</param>
+        /// <returns>A user profile of given user id.</returns>
         [HttpGet("jobprofiles/{userProfileId}", Name = "GetJobProfiles")]
         public async Task<IActionResult> GetJobProfiles(Guid userProfileId)
         {
@@ -152,6 +187,10 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all job profiles in database.
+        /// </summary>
+        /// <returns>All job profiles.</returns>
         [HttpGet("jobprofiles", Name = "GetAllJobProfiles")]
         public async Task<IActionResult> GetAllJobProfiles()
         {
@@ -173,6 +212,13 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a paged list of employer profile based on the user job id.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <param name="pageIndex">Page user selects.</param>
+        /// <param name="pageSize">Size user selects.</param>
+        /// <returns>A paged list of employers.</returns>
         [HttpGet("employerpagingdata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetPaging")]
         public async Task<IActionResult> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
@@ -197,6 +243,10 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all job actions.
+        /// </summary>
+        /// <returns>A list of all job actions.</returns>
         [HttpGet("jobaction", Name = "GetAllJobAction")]
         public async Task<IActionResult> GetAllJobAction()
         {
@@ -218,6 +268,11 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a employer action based on the user employer id.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer profile.</param>
+        /// <returns>A employer job action.</returns>
         [HttpGet("jobaction/{employerProfileId}", Name = "GetJobAction")]
         public async Task<IActionResult> GetJobAction(Guid employerProfileId)
         {
@@ -239,6 +294,10 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets all details.
+        /// </summary>
+        /// <returns>A list of all details.</returns>
         [HttpGet("detail", Name = "GetAllDetail")]
         public async Task<IActionResult> GetAllDetail()
         {
@@ -260,6 +319,11 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Gets a detail based on the employer profile id.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer profile.</param>
+        /// <returns>A detail of given employer profile id.</returns>
         [HttpGet("detail/{employerProfileId}", Name = "GetDetail")]
         public async Task<IActionResult> GetDetail(Guid employerProfileId)
         {
@@ -281,11 +345,15 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new user profile.
+        /// </summary>
+        /// <param name="userProfile">The user profile to create.</param>
+        /// <returns>A response indicating the result of the creation operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPost("userprofile", Name = "CreateUserProfile")]
         public async Task<IActionResult> CreateUserProfile([FromBody] UserProfile userProfile)
         {
-            
-
             try
             {
                 var result = await _jobTrackerToolService.AddUserProfile(userProfile);
@@ -306,6 +374,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new job profile.
+        /// </summary>
+        /// <param name="jobProfile">The job profile to create.</param>
+        /// <returns>A response indicating the result of the creation operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPost("jobprofile", Name = "CreateJobProfile")]
         public async Task<IActionResult> CreateJobProfile([FromBody] JobProfile jobProfile)
         {
@@ -330,13 +404,19 @@ namespace JobTracker.API.tool.Controllers
 
         }
 
+        /// <summary>
+        /// Creates a new employer profile.
+        /// </summary>
+        /// <param name="employerProfile">The employer profile to create.</param>
+        /// <returns>A response indicating the result of the creation operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPost("employerprofile", Name = "CreateEmployerProfile")]
         public async Task<IActionResult> CreateEmployerProfile([FromBody] EmployerProfile employerProfile)
         {
             try
             {
                 var result = await _jobTrackerToolService.AddEmployerProfile(employerProfile);
-                
+
                 if (result.Success)
                 {
                     return CreatedAtAction(nameof(CreateEmployerProfile), new { id = employerProfile.Id }, employerProfile);
@@ -353,6 +433,13 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Adds a job action for a specific employer profile.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer profile.</param>
+        /// <param name="jobAction">The job action to add.</param>
+        /// <returns>A response indicating the result of the add operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPost("jobaction/{employerProfileId}", Name = "AddJobAction")]
         public async Task<IActionResult> AddJobAction(Guid employerProfileId, [FromBody] JobAction jobAction)
         {
@@ -379,6 +466,13 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates a new detail for a specific employer profile.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer profile.</param>
+        /// <param name="detail">The detail to create.</param>
+        /// <returns>A response indicating the result of the creation operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPost("detail/{employerProfileId}", Name = "CreateDetail")]
         public async Task<IActionResult> CreateDetail(Guid employerProfileId, [FromBody] Detail detail)
         {
@@ -402,6 +496,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing employer profile.
+        /// </summary>
+        /// <param name="employerProfile">The employer profile to update.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPut("employerprofile", Name = "UpdateEmployerProfile")]
         public async Task<IActionResult> UpdateEmployerProfile([FromBody] EmployerProfile employerProfile)
         {
@@ -425,6 +525,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates an existing job profile.
+        /// </summary>
+        /// <param name="jobProfile">The job profile to update.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs
         [HttpPut("jobprofile", Name = "UpdateJobProfile")]
         public async Task<IActionResult> UpdateJobProfile([FromBody] JobProfile jobProfile)
         {
@@ -448,6 +554,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes a job profile based on the job profile ID.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpDelete("jobprofile/{jobProfileId}", Name = "DeleteJobProfile")]
         public async Task<IActionResult> DeleteJobProfile(Guid jobProfileId)
         {
@@ -471,6 +583,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Deletes an employer profile based on the employer profile ID.
+        /// </summary>
+        /// <param name="employerProfileId">The ID of the employer profile to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpDelete("employerprofile/{employerProfileId}", Name = "DeleteEmployerProfile")]
         public async Task<IActionResult> DeleteEmployerProfile(Guid employerProfileId)
         {
@@ -494,7 +612,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Downloads all employer profiles for a specific job profile as a zip file.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <returns>A zip file containing all employer profiles for the specified job profile.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpGet("downloadall/{jobProfileId}", Name = "Download")]
         public async Task<IActionResult> DownloadAll(Guid jobProfileId)
         {
@@ -512,7 +635,6 @@ namespace JobTracker.API.tool.Controllers
 
                 filesTobeDownloaded = _jobTrackerToolBusiness.CreateZipFile(jobProfileId, employerProfiles, downloadOptions);
 
-                //var bytes = Encoding.UTF8.GetBytes(filesTobeDownloaded.ToString());
                 var date = DateTime.Now;
                 var result = new FileContentResult(filesTobeDownloaded, "application/zip")
                 {
@@ -533,6 +655,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Downloads all employer profiles for a specific job profile as a CSV file.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <returns>A CSV file containing all employer profiles for the specified job profile.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpGet("downloadcsv/{jobProfileId}", Name = "DownloadCsv")]
         public async Task<IActionResult> DownloadCsv(Guid jobProfileId)
         {
@@ -543,7 +671,7 @@ namespace JobTracker.API.tool.Controllers
                 {
                     Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
                     Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
-                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                    Pdf = Request.Query["Pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None
                 };
 
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
@@ -571,6 +699,12 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Downloads all employer profiles for a specific job profile as a PDF file.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <returns>A PDF file containing all employer profiles for the specified job profile.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpGet("downloadpdf/{jobProfileId}", Name = "DownloadPdf")]
         public async Task<IActionResult> DownloadPdf(Guid jobProfileId)
         {
@@ -580,7 +714,7 @@ namespace JobTracker.API.tool.Controllers
                 {
                     Include = Request.Query["Include"].ToString() == "true" ? DownloadType.Include : DownloadType.None,
                     Csv = Request.Query["Csv"].ToString() == "true" ? DownloadType.Csv : DownloadType.None,
-                    Pdf = Request.Query["Pdf"].ToString() == "True" ? DownloadType.Pdf : DownloadType.None
+                    Pdf = Request.Query["Pdf"].ToString() == "true" ? DownloadType.Pdf : DownloadType.None
                 };
 
                 var employerProfiles = await _jobTrackerToolService.GetEmployerProfiles(jobProfileId, downloadOptions);
@@ -589,7 +723,7 @@ namespace JobTracker.API.tool.Controllers
                 var date = DateTime.Now;
                 var result = new FileContentResult(pdf, "application/pdf")
                 {
-                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date::yyyyMMdd}.csv"
+                    FileDownloadName = $"{jobProfileId}_employerProfiles_{date:yyyyMMdd}.pdf"
                 };
 
                 return result;
@@ -606,7 +740,14 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
-        [HttpPost("upload/{jobProfileId}", Name ="Upload")]
+        /// <summary>
+        /// Uploads employer profiles for a specific job profile.
+        /// </summary>
+        /// <param name="formData">The form data containing the file to upload.</param>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <returns>A response indicating the result of the upload operation.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
+        [HttpPost("upload/{jobProfileId}", Name = "Upload")]
         public async Task<IActionResult> Upload([FromForm] IFormCollection formData, Guid jobProfileId)
         {
             try
@@ -635,5 +776,7 @@ namespace JobTracker.API.tool.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
     }
 }
+
