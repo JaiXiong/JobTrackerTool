@@ -13,7 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
-//var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY", EnvironmentVariableTarget.User);
 
 if (string.IsNullOrEmpty(jwtSecretKey))
 {
@@ -29,6 +28,11 @@ if (!builder.Environment.IsDevelopment())
 }
 
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    throw new InvalidOperationException("Allowed origins are not configured.");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Bearer", options =>

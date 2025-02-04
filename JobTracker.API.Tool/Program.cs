@@ -16,6 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
 
+if (string.IsNullOrEmpty(jwtSecretKey))
+{
+    throw new InvalidOperationException("JWT secret key is not configured.");
+}
+
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services.AddHttpsRedirection(options =>
@@ -26,6 +31,11 @@ if (!builder.Environment.IsDevelopment())
 
 // Read allowed origins from configuration file in appsettings
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+if (allowedOrigins == null || allowedOrigins.Length == 0)
+{
+    throw new InvalidOperationException("Allowed origins are not configured.");
+}
 
 // Add the CORS policy, for now we allow all, buckle down later
 builder.Services.AddCors(options =>

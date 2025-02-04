@@ -530,7 +530,7 @@ namespace JobTracker.API.tool.Controllers
         /// </summary>
         /// <param name="jobProfile">The job profile to update.</param>
         /// <returns>A response indicating the result of the update operation.</returns>
-        /// <exception cref="Exception">Thrown when an unexpected error occurs
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
         [HttpPut("jobprofile", Name = "UpdateJobProfile")]
         public async Task<IActionResult> UpdateJobProfile([FromBody] JobProfile jobProfile)
         {
