@@ -72,12 +72,15 @@ builder.Services.AddDbContext<JobProfileContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTracker API", Version = "v1" });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
@@ -86,6 +89,16 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Enviro
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobTracker API v1");
     });
 }
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobTracker API v1");
+        c.RoutePrefix = string.Empty;
+    });
+}
+
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 

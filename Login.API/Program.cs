@@ -4,6 +4,7 @@ using Login.Business.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Resources;
 using System.Text;
 using Utils.Encryption;
@@ -69,18 +70,29 @@ builder.Services.AddScoped<LoginBusiness>();
 
 builder.Services.AddControllers();  
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Login API", Version = "v1" });
+});
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Login API v1");
-        //c.RoutePrefix = string.Empty;
+    });
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Login API v1");
+        c.RoutePrefix = string.Empty;
     });
 }
 
