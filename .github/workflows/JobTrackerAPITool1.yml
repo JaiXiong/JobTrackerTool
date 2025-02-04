@@ -13,9 +13,9 @@ env:
   AZURE_APIM_SERVICENAME: JobTrackerAPI
   AZURE_APIM_API_ID: JobTrackerAPIToolAPI
   AZURE_APIM_APPSERVICEURL: https://jobtrackerapitool.azurewebsites.net
-  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.5.0  # Updated to newer version
+  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.5.0
   API_IMPORT_SPECIFICATION_PATH: JobTracker.API.Tool\publish\swagger.json
-  API_IMPORT_DLL: JobTracker.API.Tool\bin\Release\net9.0\JobTracker.API.Tool.dll
+  API_IMPORT_DLL: JobTracker.API.Tool\publish\JobTracker.API.Tool.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
@@ -26,11 +26,14 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+      
+      - name: Update .NET workloads
+        run: dotnet workload update
       
       - name: Restore
         run: dotnet restore ${{ env.WORKING_DIRECTORY }}
@@ -47,6 +50,15 @@ jobs:
       - name: List published files
         run: dir ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
       
+      - name: Verify DLL File
+        run: |
+          if (Test-Path "${{ env.API_IMPORT_DLL }}") {
+            echo "DLL file exists at ${{ env.API_IMPORT_DLL }}"
+          } else {
+            echo "DLL file not found at ${{ env.API_IMPORT_DLL }}"
+            exit 1
+          }
+
       - name: Install Swashbuckle CLI .NET Global Tool
         run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
       
@@ -55,6 +67,8 @@ jobs:
       
       - name: Generate Open API Specification Document
         run: |
+          echo "Checking DLL path: ${{ env.API_IMPORT_DLL }}"
+          dir ${{ env.API_IMPORT_DLL }}
           if (dotnet swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}") {
             echo "Swagger file generated successfully"
           } else {
