@@ -42,7 +42,7 @@ jobs:
            dir "${{ env.WORKING_DIRECTORY }}\bin\Release\net9.0\"
       - name: Print DLL Path
         run: |
-            echo "DLL Path: ${{ env.WORKING_DIRECTORY }}\bin\Release\net9.0\${{ env.PROJECT_FILE_PATH.Split('/')[-1].Replace('.csproj', '.dll') }}"
+            echo "DLL Path: ${{ env.WORKING_DIRECTORY }}\bin\Release\net9.0\JobTracker.API.Tool.dll"
       - name: Test
         run: dotnet test ${{ env.PROJECT_FILE_PATH }} --no-build # Specify the project file path
       - name: Publish
