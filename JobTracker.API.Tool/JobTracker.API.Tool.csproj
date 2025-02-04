@@ -8,6 +8,7 @@
     <AssemblyName>JobTracker.API.Tool</AssemblyName>
     <RootNamespace>JobTracker.API.Tool</RootNamespace>
     <BaseOutputPath></BaseOutputPath>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
