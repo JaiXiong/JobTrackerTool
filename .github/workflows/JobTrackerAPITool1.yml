@@ -51,7 +51,7 @@ jobs:
         run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Generate Open API Specification Document
-        run: dotnet swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --project "JobTracker.API.Tool\JobTracker.API.Tool.csproj" "${{ env.WORKING_DIRECTORY }}\bin\Release\net9.0\JobTracker.API.Tool.dll" "v1"
+        run: dotnet swagger tofile --output "JobTracker.API.Tool\publish\swagger.json" --project "JobTracker.API.Tool\JobTracker.API.Tool.csproj" "JobTracker.API.Tool\bin\Release\net9.0\JobTracker.API.Tool.dll" "v1"
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
