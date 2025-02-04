@@ -47,9 +47,7 @@ jobs:
         run: dotnet test ${{ env.PROJECT_FILE_PATH }} --no-build # Specify the project file path
       - name: Publish
         run: dotnet publish ${{ env.PROJECT_FILE_PATH }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} # Specify the project file path
-      - name: Install Swashbuckle CLI .NET Global Tool
-        run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
       - name: Install Swashbuckle CLI .NET Global Tool
         run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
         working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -57,6 +55,7 @@ jobs:
       - name: Generate Open API Specification Document
         run: swagger tofile --output "JobTracker.API.Tool\publish\swagger.json" --project "JobTracker.API.Tool\JobTracker.API.Tool.csproj" "JobTracker.API.Tool\bin\Release\net9.0\JobTracker.API.Tool.dll" "v1"
         working-directory: ${{ env.WORKING_DIRECTORY }}
+
       - name: Publish Artifacts
         uses: actions/upload-artifact@v4
         with:
