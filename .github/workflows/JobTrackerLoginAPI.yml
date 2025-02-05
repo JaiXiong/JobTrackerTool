@@ -1,8 +1,10 @@
 name: Build and deploy .NET Core application to Web App JobTrackerLoginAPI with API Management Service JobTrackerLoginAPI-LoginAPI
+
 on:
   push:
     branches:
     - master
+
 env:
   AZURE_WEBAPP_NAME: JobTrackerLoginAPI
   AZURE_WEBAPP_PACKAGE_PATH: Login.API\publish
@@ -11,10 +13,9 @@ env:
   AZURE_APIM_SERVICENAME: JobTrackerLoginAPI
   AZURE_APIM_API_ID: LoginAPI
   AZURE_APIM_APPSERVICEURL: https://jobtrackerloginapi.azurewebsites.net
-  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 5.6.3
-  SWASHBUCKLE_DOTNET_CORE_VERSION: 3.1.x
+  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.5.0
   API_IMPORT_SPECIFICATION_PATH: Login.API\publish\swagger.json
-  API_IMPORT_DLL: Login.API\bin\Release\net9.0\Login.API.dll
+  API_IMPORT_DLL: Login.API\publish\Login.API.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
@@ -43,8 +44,26 @@ jobs:
     - name: Install Swashbuckle CLI .NET Global Tool
       run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
       working-directory: ${{ env.WORKING_DIRECTORY }}
+
     - name: Generate Open API Specification Document
-      run: swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}"
+      run: |
+          echo "Checking DLL path: ${{ env.API_IMPORT_DLL }}"
+          if (dotnet swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}") {
+            echo "Swagger file generated successfully"
+          } else {
+            echo "Failed to generate swagger file"
+            exit 1
+          }
+      
+    - name: Verify Swagger File
+      run: |
+          if (Test-Path "${{ env.API_IMPORT_SPECIFICATION_PATH }}") {
+            echo "Swagger file exists"
+          } else {
+            echo "Swagger file not found"
+            exit 1
+          }
+
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:

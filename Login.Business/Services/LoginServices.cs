@@ -139,9 +139,6 @@ namespace Login.Business.Services
             var exp = expClaim.Value;
             var user = userClaim.Value;
             var email = emailClaim.Value;
-            //var exp = tokenInfo.Claims.FirstOrDefault(c => c.Type == "exp").Value;
-            //var user = tokenInfo.Claims.FirstOrDefault(c => c.Type == "sub").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            //var email = tokenInfo.Claims.FirstOrDefault(c => c.Type == "email").Value ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
             var userExist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == user && u.Email == email);
 
