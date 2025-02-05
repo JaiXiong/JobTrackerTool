@@ -12,8 +12,8 @@ env:
   AZURE_APIM_API_ID: LoginAPI
   AZURE_APIM_APPSERVICEURL: https://loginapi20250204135906.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.5.0
-  API_IMPORT_SPECIFICATION_PATH: Login.API\bin\publish\net9.0\swagger.json
-  API_IMPORT_DLL: Login.API\bin\publish\net9.0\Login.API.dll
+  API_IMPORT_SPECIFICATION_PATH: Login.API\publish\swagger.json
+  API_IMPORT_DLL: Login.API\publish\Login.API.dll
   API_IMPORT_VERSION: v1
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 9.0.x
