@@ -1,9 +1,11 @@
-﻿using JobData.Entities;
+﻿using Castle.Core.Logging;
+using JobData.Entities;
 using JobTracker.API.Tool.DbData;
 using Login.Business.Business;
 using Login.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -20,6 +22,7 @@ public class LoginServicesTests
     private readonly Mock<ResourceManager> _mockResourceManager;
     private readonly Mock<Encryption> _mockEncryption;
     private readonly Mock<LoginBusiness> _mockLoginBusiness;
+    private readonly Mock<ILogger<LoginServices>> _mockLogger;
 
     public LoginServicesTests()
     {
@@ -33,8 +36,10 @@ public class LoginServicesTests
         _mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();
         _mockLoginBusiness = new Mock<LoginBusiness>(_mockConfiguration.Object);
+        _mockLogger = new Mock<ILogger<LoginServices>>();
 
-        _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object, _mockEncryption.Object, _mockLoginBusiness.Object);
+        _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object,
+            _mockEncryption.Object, _mockLoginBusiness.Object, _mockLogger.Object);
     }
 
     [Fact]

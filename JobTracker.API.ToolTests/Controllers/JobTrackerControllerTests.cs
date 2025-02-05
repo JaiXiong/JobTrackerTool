@@ -126,8 +126,8 @@ namespace JobTracker.API.tool.Controllers.Tests
 
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             var objectResult = result as ObjectResult;
-            Assert.AreEqual(500, objectResult.StatusCode);
-            Assert.AreEqual("Internal server error", objectResult.Value);
+            Assert.AreEqual(500, objectResult?.StatusCode);
+            Assert.AreEqual("Internal server error", objectResult?.Value);
         }
 
         [TestMethod()]
@@ -171,8 +171,8 @@ namespace JobTracker.API.tool.Controllers.Tests
 
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             var objectResult = result as ObjectResult;
-            Assert.AreEqual(500, objectResult.StatusCode);
-            Assert.AreEqual("Internal server error", objectResult.Value);
+            Assert.AreEqual(500, objectResult?.StatusCode);
+            Assert.AreEqual("Internal server error", objectResult?.Value);
         }
 
         [TestMethod()]
@@ -447,8 +447,8 @@ namespace JobTracker.API.tool.Controllers.Tests
 
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
             var objectResult = result as ObjectResult;
-            Assert.AreEqual(500, objectResult.StatusCode);
-            Assert.AreEqual("Internal server error", objectResult.Value);
+            Assert.AreEqual(500, objectResult?.StatusCode);
+            Assert.AreEqual("Internal server error", objectResult?.Value);
         }
 
         [TestMethod()]

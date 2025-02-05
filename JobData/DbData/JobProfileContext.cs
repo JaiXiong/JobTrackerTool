@@ -44,9 +44,9 @@ namespace JobTracker.API.Tool.DbData
         public DbSet<JobAction> JobActions { get; set; }
         public DbSet<Detail> Details { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
-        public virtual Task<UserProfile> GetUserProfileAsync(Expression<Func<UserProfile, bool>> predicate, CancellationToken cancellationToken = default)
+        public virtual async Task<UserProfile> GetUserProfileAsync(Expression<Func<UserProfile, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return UserProfiles.FirstOrDefaultAsync(predicate, cancellationToken);
+            return await UserProfiles.FirstOrDefaultAsync(predicate, cancellationToken) ?? throw new InvalidOperationException("UserProfile not found");
         }
     }
 }
