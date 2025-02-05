@@ -6,6 +6,7 @@ using JobData.Common;
 using JobData.Entities;
 using JobData.Migrations;
 using JobTracker.Business.Services;
+using Microsoft.Extensions.Logging;
 using System.Collections;
 using System.IO;
 using System.IO.Compression;
@@ -18,13 +19,15 @@ namespace JobTracker.Business.Business
 {
     public class JobTrackerToolBusiness : IJobTrackerToolBusiness
     {
+        private readonly ILogger<JobTrackerToolService> _logger;
         private ResxFormat _resx;
         ResourceManager _resourceManager;
 
-        public JobTrackerToolBusiness()
+        public JobTrackerToolBusiness(ILogger<JobTrackerToolService> logger)
         {
             _resourceManager = new ResourceManager("JobTracker.Business.JobTrackerBusinessErrors", typeof(JobTrackerToolService).Assembly);
             _resx = new ResxFormat(_resourceManager);
+            _logger = logger;
         }
         public StringBuilder ExcelParse()
         {
@@ -129,6 +132,7 @@ namespace JobTracker.Business.Business
 
                 while ((line = reader.ReadLine()) != null)
                 {
+
                     var values = line.Split(',');
 
                     if (isHeader)
@@ -181,6 +185,7 @@ namespace JobTracker.Business.Business
                         }
                         catch (BusinessException ex)
                         {
+                            _logger.LogError(ex, "An error occured while persing upload");
                             throw new BusinessException(_resx.Create("ParsingFailed"));
                         }
                     }

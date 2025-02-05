@@ -68,7 +68,6 @@ jobs:
       - name: Generate Open API Specification Document
         run: |
           echo "Checking DLL path: ${{ env.API_IMPORT_DLL }}"
-          dir ${{ env.API_IMPORT_DLL }}
           if (dotnet swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" "${{ env.API_IMPORT_VERSION }}") {
             echo "Swagger file generated successfully"
           } else {
