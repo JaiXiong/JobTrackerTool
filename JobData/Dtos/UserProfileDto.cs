@@ -14,7 +14,7 @@ namespace JobData.Dtos
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
         public ICollection<JobProfile>? JobProfile { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public string? Phone { get; set; }
         public string? Address { get; set; }
         public string? City { get; set; }

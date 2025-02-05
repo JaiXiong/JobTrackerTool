@@ -98,41 +98,6 @@ namespace JobTracker.Business.Services
                 return OperationResult.CreateFailure("An error occured while adding user profile.");
             }
         }
-        //public void ValidateNewUser(UserProfile userProfile)
-        //{
-        //    if (userProfile == null)
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserProfileNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.Name))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserNameNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.Email))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserEmailNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.Phone))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserPhoneNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.Address))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserAddressNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.City))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserCityNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.State))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserStateNull"));
-        //    }
-        //    if (string.IsNullOrEmpty(userProfile.Zip))
-        //    {
-        //        throw new ArgumentNullException(_resourceManager.GetString("UserZipNull"));
-        //    }
-        //}
         public async Task<OperationResult> AddEmployerProfile(EmployerProfile employerProfile, Guid jobProfileId)
         {
             try
@@ -188,7 +153,7 @@ namespace JobTracker.Business.Services
             }
 
             _dbContext.Employers.Add(employerProfile);
-            //_dbContext.Employers.Update(employerProfile);
+
             await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("Added employer profile successfully.");

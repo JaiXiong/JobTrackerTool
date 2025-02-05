@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RequiredError" xml:space="preserve">
-    <value>The field {0} is required.</value>
+    <value>The field is required.</value>
   </data>
   <data name="LoginError" xml:space="preserve">
-    <value>Login Failed with username {0}</value>
+    <value>Login Failed with username.</value>
   </data>
   <data name="UserExist" xml:space="preserve">
-    <value>User {0} exists already.</value>
+    <value>User exists already.</value>
   </data>
   <data name="UserNotExist" xml:space="preserve">
     <value>No user found.</value>

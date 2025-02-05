@@ -15,6 +15,6 @@ namespace JobData.Dtos
         public Guid UserProfileId { get; set; }
         public DateTime Date { get; set; }
         public DateTime LatestUpdate { get; set; }
-        public string ProfileName { get; set; }
+        public string? ProfileName { get; set; }
     }
 }

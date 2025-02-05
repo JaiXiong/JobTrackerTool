@@ -3,11 +3,14 @@ using JobTracker.API.Tool.DbData;
 using Login.Business.Business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Resources;
 using System.Security.Claims;
+using Utils.CustomExceptions;
 using Utils.Encryption;
+using Utils.Operations;
 
 namespace Login.Business.Services
 {
@@ -18,21 +21,24 @@ namespace Login.Business.Services
         private readonly IConfiguration _configuration;
         private readonly Encryption _encryption;
         private readonly LoginBusiness _loginBusiness;
+        private readonly ILogger<LoginServices> _logger;
+        private ResxFormat _resx;
 
-        public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness)
+        public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness, ILogger<LoginServices> logger)
         {
             _resourceManager = new ResourceManager("Login.Business.LoginBusinessErrors", typeof(LoginServices).Assembly);
+            _resx = new ResxFormat(_resourceManager);
             _dbContext = context;
             _configuration = configuration;
             _encryption = encryption;
             _loginBusiness = loginBusiness;
+            _logger = logger;
         }
         public async Task<string> LoginAuth(string email, string pw)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pw))
             {
-                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
-                throw new ArgumentException(string.Format(errorMessage));
+                throw new BusinessException(_resx.Create("LoginError"));
             }
 
             var delimiter = new char[] { '@' };
@@ -42,8 +48,7 @@ namespace Login.Business.Services
 
             if (user == null || !_encryption.VerifyPassword(pw, hashedPassword))
             {
-                var errorMessage = _resourceManager.GetString("LoginAttemptError") ?? "Login attempt error";
-                throw new ArgumentException(string.Format(errorMessage));
+                throw new BusinessException(_resx.Create("LoginError"));
             }
 
             return user.Id.ToString();
@@ -52,11 +57,12 @@ namespace Login.Business.Services
         public string GenerateToken(string username)
         {
             var secretKey = _configuration["JWT_SECRET_KEY"];
+
             if (string.IsNullOrEmpty(secretKey))
             {
-                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
-                throw new ArgumentException(string.Format(errorMessage));
+                throw new BusinessException(_resx.Create("JWTInvalid"));
             }
+
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -71,7 +77,7 @@ namespace Login.Business.Services
             var expiresInMinutes = _configuration["Jwt:ExpiresInMinutes"];
             if (string.IsNullOrEmpty(expiresInMinutes))
             {
-                throw new ArgumentException("JWT expiration time is not configured properly.");
+                throw new BusinessException(_resx.Create("JWTInvalid"));
             }
 
             var token = new JwtSecurityToken(
@@ -87,11 +93,12 @@ namespace Login.Business.Services
         public string GenerateRefreshToken(string username)
         {
             var secretKey = _configuration["JWT_SECRET_KEY"];
+
             if (string.IsNullOrEmpty(secretKey))
             {
-                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
-                throw new ArgumentException(string.Format(errorMessage));
+                throw new BusinessException(_resx.Create("JWTInvalid"));
             }
+
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -106,7 +113,7 @@ namespace Login.Business.Services
             var refreshExpiresInMinutes = _configuration["Jwt:RefreshExpiresInMinutes"];
             if (string.IsNullOrEmpty(refreshExpiresInMinutes))
             {
-                throw new ArgumentException("JWT refresh expiration time is not configured properly.");
+                throw new BusinessException(_resx.Create("JWTInvalid"));
             }
 
             var token = new JwtSecurityToken(
@@ -125,7 +132,7 @@ namespace Login.Business.Services
 
             if (tokenInfo == null)
             {
-                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
+                throw new BusinessException(_resx.Create("TokenInvalid"));
             }
             var expClaim = tokenInfo.Claims.FirstOrDefault(c => c.Type == "exp");
             var userClaim = tokenInfo.Claims.FirstOrDefault(c => c.Type == "sub") ?? tokenInfo.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
@@ -133,7 +140,7 @@ namespace Login.Business.Services
 
             if (expClaim == null || userClaim == null || emailClaim == null)
             {
-                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
+                throw new BusinessException(_resx.Create("TokenInvalid"));
             }
 
             var exp = expClaim.Value;
@@ -144,7 +151,7 @@ namespace Login.Business.Services
 
             if (userExist == null || exp == null) 
             {
-                throw new ArgumentException(_resourceManager.GetString("TokenInvalid"));
+                throw new BusinessException(_resx.Create("TokenInvalid"));
             }
 
             return GenerateRefreshToken(user);
@@ -156,30 +163,23 @@ namespace Login.Business.Services
 
             if (user == null)
             {
-                var errorMessage = _resourceManager.GetString("UserNotExist") ?? "User does not exist";
-                throw new ArgumentException(string.Format(errorMessage));
+                throw new BusinessException(_resx.Create("UserNotExist"));
             }
 
             return user;
         }
 
-        public async Task Register(string email, string pw)
+        public async Task<OperationResult> Register(string email, string pw)
         {
             var exist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Email == email);
 
             if (exist != null)
             {
-                var errorMessage = _resourceManager.GetString("UserExist");
-                if (errorMessage == null)
-                {
-                    throw new ArgumentException("User already exists", nameof(email));
-                }
-                throw new ArgumentException(string.Format(errorMessage, email), nameof(email));
+                return OperationResult.CreateFailure(_resx.Create("UserExist"));
             }
 
             var delimiter = new char[] { '@' };
-            try
-            {
+           
                 var username = email.Substring(0, email.IndexOf('@'));
 
                 var user = new UserProfile
@@ -194,11 +194,8 @@ namespace Login.Business.Services
 
                 await _dbContext.UserProfiles.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+
+            return OperationResult.CreateSuccess(_resx.Create("User registered successfully."));
         }
     }
 }
