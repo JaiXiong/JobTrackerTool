@@ -138,7 +138,7 @@ namespace JobTracker.API.tool.Controllers
         /// <summary>
         /// Gets a job profile based on the job id.
         /// </summary>
-        /// <param name="jobprofileid">The ID of the job profile.</param>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
         /// <returns>A job profile of given job id.</returns>
         [HttpGet("jobprofile/{jobProfileId}", Name = "GetJobProfile")]
         public async Task<IActionResult> GetJobProfile(Guid jobProfileId)

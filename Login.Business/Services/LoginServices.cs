@@ -31,18 +31,19 @@ namespace Login.Business.Services
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pw))
             {
-                throw new ArgumentException(string.Format(_resourceManager.GetString("LoginAttemptError")));
+                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
+                throw new ArgumentException(string.Format(errorMessage));
             }
 
             var delimiter = new char[] { '@' };
             var username = email.Split(delimiter)[0];
             var hashedPassword = _encryption.HashPassword(pw);
             var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == username);
-            //var pass = await _dbContext.UserProfiles.FirstOrDefaultAsync(p => p.Password == _encyption.HashPassword(pw));
 
             if (user == null || !_encryption.VerifyPassword(pw, hashedPassword))
             {
-                throw new ArgumentException(string.Format(_resourceManager.GetString("LoginAttemptError")));
+                var errorMessage = _resourceManager.GetString("LoginAttemptError") ?? "Login attempt error";
+                throw new ArgumentException(string.Format(errorMessage));
             }
 
             return user.Id.ToString();
@@ -53,11 +54,11 @@ namespace Login.Business.Services
             var secretKey = _configuration["JWT_SECRET_KEY"];
             if (string.IsNullOrEmpty(secretKey))
             {
-                throw new ArgumentException(string.Format(_resourceManager.GetString("JWTInvalid")));
+                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
+                throw new ArgumentException(string.Format(errorMessage));
             }
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
-            //var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWT_SECRET_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -67,12 +68,17 @@ namespace Login.Business.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
+            var expiresInMinutes = _configuration["Jwt:ExpiresInMinutes"];
+            if (string.IsNullOrEmpty(expiresInMinutes))
+            {
+                throw new ArgumentException("JWT expiration time is not configured properly.");
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:ExpiresInMinutes"])),
+                expires: DateTime.Now.AddMinutes(double.Parse(expiresInMinutes)),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -83,11 +89,11 @@ namespace Login.Business.Services
             var secretKey = _configuration["JWT_SECRET_KEY"];
             if (string.IsNullOrEmpty(secretKey))
             {
-                throw new ArgumentException(_resourceManager.GetString("JWTInvalid"));
+                var errorMessage = _resourceManager.GetString("JWTInvalid") ?? "JWT invalid error";
+                throw new ArgumentException(string.Format(errorMessage));
             }
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
-            //var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration["JWT_SECRET_KEY"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -97,12 +103,17 @@ namespace Login.Business.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
+            var refreshExpiresInMinutes = _configuration["Jwt:RefreshExpiresInMinutes"];
+            if (string.IsNullOrEmpty(refreshExpiresInMinutes))
+            {
+                throw new ArgumentException("JWT refresh expiration time is not configured properly.");
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:RefreshExpiresInMinutes"])),
+                expires: DateTime.Now.AddMinutes(double.Parse(refreshExpiresInMinutes)),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -148,7 +159,8 @@ namespace Login.Business.Services
 
             if (user == null)
             {
-                throw new ArgumentException(string.Format(_resourceManager.GetString("UserNotExist")));
+                var errorMessage = _resourceManager.GetString("UserNotExist") ?? "User does not exist";
+                throw new ArgumentException(string.Format(errorMessage));
             }
 
             return user;
@@ -160,7 +172,12 @@ namespace Login.Business.Services
 
             if (exist != null)
             {
-                throw new ArgumentException(string.Format(_resourceManager.GetString("UserExist"), email), nameof(email));
+                var errorMessage = _resourceManager.GetString("UserExist");
+                if (errorMessage == null)
+                {
+                    throw new ArgumentException("User already exists", nameof(email));
+                }
+                throw new ArgumentException(string.Format(errorMessage, email), nameof(email));
             }
 
             var delimiter = new char[] { '@' };
