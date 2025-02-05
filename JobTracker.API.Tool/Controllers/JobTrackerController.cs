@@ -47,7 +47,7 @@ namespace JobTracker.API.tool.Controllers
         /// </summary>
         /// <param name="employerProfileId">The ID of the employer.</param>
         /// <returns>A employer profile of given id.</returns>
-        [HttpGet("employerprofile/{employerProfileid}", Name = "GetEmployer")]
+        [HttpGet("employerprofile/{employerProfileId}", Name = "GetEmployer")]
         public async Task<IActionResult> GetEmployerProfile(Guid employerProfileId)
         {
             try
@@ -80,7 +80,7 @@ namespace JobTracker.API.tool.Controllers
         /// </summary>
         /// <param name="jobProfileId">The ID of the job profile.</param>
         /// <returns>A list of all employer profile of given job id.</returns>
-        [HttpGet("employerprofiles/{jobprofileid}", Name = "GetEmployers")]
+        [HttpGet("employerprofiles/{jobProfileId}", Name = "GetEmployers")]
         public async Task<IActionResult> GetEmployerProfiles(Guid jobProfileId)
         {
             try
@@ -140,12 +140,12 @@ namespace JobTracker.API.tool.Controllers
         /// </summary>
         /// <param name="jobprofileid">The ID of the job profile.</param>
         /// <returns>A job profile of given job id.</returns>
-        [HttpGet("jobprofile/{jobprofileid}", Name = "GetJobProfile")]
-        public async Task<IActionResult> GetJobProfile(Guid jobprofileid)
+        [HttpGet("jobprofile/{jobProfileId}", Name = "GetJobProfile")]
+        public async Task<IActionResult> GetJobProfile(Guid jobProfileId)
         {
             try
             {
-                var jobProfile = await _jobTrackerToolService.GetJobProfile(jobprofileid);
+                var jobProfile = await _jobTrackerToolService.GetJobProfile(jobProfileId);
 
                 return Ok(jobProfile);
             }
