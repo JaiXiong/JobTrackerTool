@@ -96,6 +96,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     'email',
     'website',
     'latestupdate',
+    'actions'
   ];
   dataSource = new MatTableDataSource<EmployerProfile>();
   isSelected: boolean = false;
