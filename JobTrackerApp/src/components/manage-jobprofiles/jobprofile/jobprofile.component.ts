@@ -417,8 +417,8 @@ export class JobprofileComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onEditEmployerProfile(): void {
-    console.log('Edit Employer Profile button clicked!');
+  public onEditEmployerProfile(event: Event, element: EmployerProfile): void {
+    this.onNameClick(event, element);
   }
 
   public onDeleteEmployerProfile(): void {
