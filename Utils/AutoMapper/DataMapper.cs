@@ -10,6 +10,7 @@ namespace Utils.AutoMapper
         {
             CreateMap<JobProfile, JobProfileDto>();
             CreateMap<EmployerProfile, EmployerProfileDto>();
+            CreateMap<EmployerProfile, EmployerProfilePagingDto>();
             CreateMap<UserProfile, UserProfileDto>();
             CreateMap<JobAction, JobActionDto>();
             CreateMap<Detail, DetailDto>();

@@ -225,9 +225,47 @@ namespace JobTracker.API.tool.Controllers
             try
             {
                 var employerProfiles = await _jobTrackerToolService.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
+
+                //we could use the Dto here but i don't think it's worth it, we need all the information
+                //var employerProfilesPagingDto = _mapper.Map<IEnumerable<EmployerProfilePagingDto>>(employerProfiles);
                 var totalCount = await _jobTrackerToolService.GetTotalEmployerCount(jobProfileId);
 
                 var response = new PagingResponse<EmployerProfile>(employerProfiles, totalCount);
+                //var response = new PagingResponse<EmployerProfilePagingDto>(employerProfilesPagingDto, totalCount);
+
+                return Ok(response);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while getting employer paging data.");
+                return BadRequest(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting the employer paging.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
+        /// Gets a DTO paged list of employer profile based on the user job id.
+        /// </summary>
+        /// <param name="jobProfileId">The ID of the job profile.</param>
+        /// <param name="pageIndex">Page user selects.</param>
+        /// <param name="pageSize">Size user selects.</param>
+        /// <returns>A paged DTO list of employers.</returns>
+        [HttpGet("employerpagingtabledata/{jobProfileId}/{pageIndex}/{pageSize}", Name = "GetTablePaging")]
+        public async Task<IActionResult> GetEmployerPagingTableData(Guid jobProfileId, int pageIndex, int pageSize)
+        {
+            try
+            {
+                //for now we leave the usage of this DTO here incase we plan to use it
+                var employerProfiles = await _jobTrackerToolService.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
+
+                var employerProfilesPagingDto = _mapper.Map<IEnumerable<EmployerProfilePagingDto>>(employerProfiles);
+                var totalCount = await _jobTrackerToolService.GetTotalEmployerCount(jobProfileId);
+
+                var response = new PagingResponse<EmployerProfilePagingDto>(employerProfilesPagingDto, totalCount);
 
                 return Ok(response);
             }

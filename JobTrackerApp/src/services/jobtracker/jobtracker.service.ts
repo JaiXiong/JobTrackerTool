@@ -72,6 +72,13 @@ export class JobTrackerService {
     return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerPagingData`+ '/' + jobProfileId + '/' + pageIndex + '/' + pageSize, { headers }).pipe(
       catchError(this.handleError<any>('GetEmployerPagingData')));
   }
+  //this is incase we want to limit data for the table, we leave here for now maybe use later if needed
+  //this will only get the columns we want but realistically, if they click on the row it needs all data.
+  public GetEmployerPagingTableData(jobProfileId: any, pageIndex: any, pageSize: any): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.get<any>(`${this.jobTrackerUrl}/api/JobTracker/EmployerPagingTableData`+ '/' + jobProfileId + '/' + pageIndex + '/' + pageSize, { headers }).pipe(
+      catchError(this.handleError<any>('GetEmployerPagingTableData')));
+  }
 
   public UpdateJobProfile(jobProfile: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
