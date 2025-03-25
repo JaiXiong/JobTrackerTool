@@ -41,27 +41,32 @@ CSV form before using the application, so there's a way to upload your existing 
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* https://github.com/JaiXiong/JobTrackerTool, this is how you can get my code for this web application
 
 ### Executing program
 
 * How to run the program
+* * If you're running this locally, make sure you run the APIs and have chosen a hosting option, whether IIS, serve,r or debugging.
 * Step-by-step bullets
+* * Most of the commands can be found in the package.json
+  * For example...
+  * ng build
+  * ng serve
+  * etc.
 ```
 code blocks for commands
 ```
 
 ## Help
 
-Any advise for common problems or issues.
+Any advise for common problems or issues. TODO, some FAQ here.
 ```
 command to run if program contains helper info
 ```
 
 ## Authors
 
-Contributors names and contact info
+Jai Xiong, open to inquiries at [email TBD]
 
 ex. Dominique Pizzie  
 ex. [@DomPizzie](https://twitter.com/dompizzie)
