@@ -29,15 +29,15 @@ CSV form before using the application, so there's a way to upload your existing 
 * Angular: 18.2.10
 * Node: 20.17.0
 * These nuget packages are used in my project.
- * AutoMapper - Version 13.0.1
- * Microsoft.AspNetCore.Authentication.JwtBearer - Version 9.0.1
- * Microsoft.AspNetCore.Cors - Version 2.3.0
- * Microsoft.Data.SqlClient - Version 6.0.1
- * Microsoft.EntityFrameworkCore.Design - Version 9.0.1
- * Microsoft.Extensions.Configuration.Binder - Version 9.0.1
- * Swashbuckle.AspNetCore - Version 7.2.0
- * Swashbuckle.AspNetCore.SwaggerUI - Version 7.2.0
- * ex. Windows 10
+  * AutoMapper - Version 13.0.1
+  * Microsoft.AspNetCore.Authentication.JwtBearer - Version 9.0.1
+  * Microsoft.AspNetCore.Cors - Version 2.3.0
+  * Microsoft.Data.SqlClient - Version 6.0.1
+  * Microsoft.EntityFrameworkCore.Design - Version 9.0.1
+  * Microsoft.Extensions.Configuration.Binder - Version 9.0.1
+  * Swashbuckle.AspNetCore - Version 7.2.0
+  * Swashbuckle.AspNetCore.SwaggerUI - Version 7.2.0
+  * ex. Windows 10
 
 ### Installing
 
@@ -46,13 +46,13 @@ CSV form before using the application, so there's a way to upload your existing 
 ### Executing program
 
 * How to run the program
-* * If you're running this locally, make sure you run the APIs and have chosen a hosting option, whether IIS, serve,r or debugging.
+  * If you're running this locally, make sure you run the APIs and have chosen a hosting option, whether IIS, serve,r or debugging.
 * Step-by-step bullets
- * Most of the commands can be found in the package.json
+  * Most of the commands can be found in the package.json
   * For example...
-  * ng build
-  * ng serve
-  * etc.
+    * ng build
+    * ng serve
+    * etc.
 ```
 ng build
 ng serve
