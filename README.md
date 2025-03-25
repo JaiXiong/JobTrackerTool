@@ -29,15 +29,15 @@ CSV form before using the application, so there's a way to upload your existing 
 * Angular: 18.2.10
 * Node: 20.17.0
 * These nuget packages are used in my project.
-1.	AutoMapper - Version 13.0.1
-2.	Microsoft.AspNetCore.Authentication.JwtBearer - Version 9.0.1
-3.	Microsoft.AspNetCore.Cors - Version 2.3.0
-4.	Microsoft.Data.SqlClient - Version 6.0.1
-5.	Microsoft.EntityFrameworkCore.Design - Version 9.0.1
-6.	Microsoft.Extensions.Configuration.Binder - Version 9.0.1
-7.	Swashbuckle.AspNetCore - Version 7.2.0
-8.	Swashbuckle.AspNetCore.SwaggerUI - Version 7.2.0
-* ex. Windows 10
+ * AutoMapper - Version 13.0.1
+ * Microsoft.AspNetCore.Authentication.JwtBearer - Version 9.0.1
+ * Microsoft.AspNetCore.Cors - Version 2.3.0
+ * Microsoft.Data.SqlClient - Version 6.0.1
+ * Microsoft.EntityFrameworkCore.Design - Version 9.0.1
+ * Microsoft.Extensions.Configuration.Binder - Version 9.0.1
+ * Swashbuckle.AspNetCore - Version 7.2.0
+ * Swashbuckle.AspNetCore.SwaggerUI - Version 7.2.0
+ * ex. Windows 10
 
 ### Installing
 
@@ -48,28 +48,26 @@ CSV form before using the application, so there's a way to upload your existing 
 * How to run the program
 * * If you're running this locally, make sure you run the APIs and have chosen a hosting option, whether IIS, serve,r or debugging.
 * Step-by-step bullets
-* * Most of the commands can be found in the package.json
+ * Most of the commands can be found in the package.json
   * For example...
   * ng build
   * ng serve
   * etc.
 ```
-code blocks for commands
+ng build
+ng serve
 ```
 
-## Help
+## FAQ
 
-Any advise for common problems or issues. TODO, some FAQ here.
+TBD
 ```
-command to run if program contains helper info
+TBD
 ```
 
 ## Authors
 
 Jai Xiong, open to inquiries at [email TBD]
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
 
 ## Version History
 
@@ -81,13 +79,6 @@ ex. [@DomPizzie](https://twitter.com/dompizzie)
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the [TBD] License - see the LICENSE.md file for details
 
 ## Acknowledgments
-
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
