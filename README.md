@@ -67,18 +67,20 @@ TBD
 
 ## Authors
 
-Jai Xiong, open to inquiries at [email TBD]
+Jai Xiong, open to inquiries at [xiongjai.dev@gmail.com]
 
 ## Version History
 
 * 0.2
-    * Various bug fixes and optimizations
+    * Various bug fixes and optimizations 
     * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
+    * Web application is deployable and can be utilized.
+    * See [commit change]() or See [release history]()
 
 ## License
 
-This project is licensed under the [TBD] License - see the LICENSE.md file for details
+This project is licensed under the LICENSE - see the LICENSE.md file for details
 
 ## Acknowledgments
