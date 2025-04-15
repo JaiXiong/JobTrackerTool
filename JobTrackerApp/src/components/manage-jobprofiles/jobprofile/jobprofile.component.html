@@ -100,12 +100,6 @@
       <th mat-header-cell *matHeaderCellDef> Actions </th>
       <td mat-cell *matCellDef="let element">
         <span class="employer-icons-span-right-inrow">
-          <!-- <app-upload-modular *ngIf="showEmployerOptions"
-            [_jobProfileId]="jobProfileSelected?.id || null"></app-upload-modular>
-          <app-download-modular *ngIf="showEmployerOptions"
-            [_jobProfileId]="jobProfileSelected?.id || null"></app-download-modular>
-          <mat-icon class="employerprofile-icons" matTooltip="Add new employer profile" fontIcon="add"
-            *ngIf="showEmployerOptions" (click)="onCreateEmployerProfile()"></mat-icon> -->
           <mat-icon class="employerprofile-icons" matTooltip="Update employer profile" fontIcon="edit"
             *ngIf="showEmployerOptions" (click)="onEditEmployerProfile($event, element)"></mat-icon>
           <mat-icon class="employerprofile-icons" matTooltip="Delete employer profile" fontIcon="delete"

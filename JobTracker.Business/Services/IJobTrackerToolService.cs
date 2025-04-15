@@ -30,4 +30,5 @@ public interface IJobTrackerToolService
     Task<OperationResult> DeleteJobProfile(Guid jobProfileId);
     Task<OperationResult> DeleteEmployerProfile(Guid employerProfileId);
     Task<OperationResult> UploadEmployerProfiles(List<EmployerProfile> employerProfiles, Guid jobProfileId);
+    Task<OperationResult> ExportXMLEmployerProfiles();
 }

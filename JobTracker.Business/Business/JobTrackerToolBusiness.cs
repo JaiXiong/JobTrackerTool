@@ -14,6 +14,7 @@ using System.Resources;
 using System.Text;
 using Utils.CustomExceptions;
 using Verifiable.Core.Cryptography;
+using ClosedXML.Excel;
 
 namespace JobTracker.Business.Business
 {
@@ -193,6 +194,50 @@ namespace JobTracker.Business.Business
                 }
             }
             return employerProfiles;
+        }
+
+        public byte[] ExportEmployerProfilesToExcel(IEnumerable<EmployerProfile> employerProfiles)
+        {
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("EmployerProfiles");
+
+            //Add headers
+            worksheet.Cell(1, 1).Value = "Id";
+            worksheet.Cell(1, 2).Value = "JobProfileId";
+            worksheet.Cell(1, 3).Value = "Name";
+            worksheet.Cell(1, 4).Value = "Title";
+            worksheet.Cell(1, 5).Value = "Address";
+            worksheet.Cell(1, 6).Value = "City";
+            worksheet.Cell(1, 7).Value = "State";
+            worksheet.Cell(1, 8).Value = "Zip";
+            worksheet.Cell(1, 9).Value = "Phone";
+            worksheet.Cell(1, 10).Value = "Email";
+            worksheet.Cell(1, 11).Value = "Website";
+
+            //Add Data
+            int row = 2;
+            foreach (var profile in employerProfiles)
+            {
+                worksheet.Cell(row, 1).Value = profile.Id.ToString();
+                worksheet.Cell(row, 2).Value = profile.JobProfileId.ToString();
+                worksheet.Cell(row, 3).Value = profile.Name;
+                worksheet.Cell(row, 4).Value = profile.Title;
+                worksheet.Cell(row, 5).Value = profile.Address;
+                worksheet.Cell(row, 6).Value = profile.City;
+                worksheet.Cell(row, 7).Value = profile.State;
+                worksheet.Cell(row, 8).Value = profile.Zip;
+                worksheet.Cell(row, 9).Value = profile.Phone;
+                worksheet.Cell(row, 10).Value = profile.Email;
+                worksheet.Cell(row, 11).Value = profile.Website;
+                row++;
+            }
+
+            // Auto-fit columns
+        worksheet.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
         }
     }
 }

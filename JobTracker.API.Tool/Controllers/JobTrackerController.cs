@@ -815,6 +815,70 @@ namespace JobTracker.API.tool.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns all employer profiles in XML format.
+        /// </summary>
+        /// <returns>A XML file containing all employer profiles.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
+        [HttpGet("exportxml", Name = "ExportXML")]
+        public async Task<IActionResult> ExportXMLEmployerProfiles()
+        {
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetAllEmployerProfiles();
+
+                // Serialize the data to XML
+                var xmlSerializer = new System.Xml.Serialization.XmlSerializer(typeof(List<EmployerProfile>));
+                using var stringWriter = new StringWriter();
+                xmlSerializer.Serialize(stringWriter, employerProfiles);
+
+                // Convert the XML string to a byte array
+                var xmlBytes = Encoding.UTF8.GetBytes(stringWriter.ToString());
+
+                // Return the XML file as a download
+                var fileName = $"EmployerProfiles_{DateTime.Now:yyyyMMdd}.xml";
+                return File(xmlBytes, "application/xml", fileName);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while exporting XML employer profiles");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while exporting employer profiles to XMLK.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
+        /// Returns all employer profiles in Excel format.
+        /// </summary>
+        /// <returns>A Excel file containing all employer profiles.</returns>
+        /// <exception cref="Exception">Thrown when an unexpected error occurs.</exception>
+        [HttpGet("exportexcel", Name = "ExportExcel")]
+        public async Task<IActionResult> ExportExcelEmployerProfiles()
+        {
+            try
+            {
+                var employerProfiles = await _jobTrackerToolService.GetAllEmployerProfiles();
+                var excelData = _jobTrackerToolBusiness.ExportEmployerProfilesToExcel(employerProfiles);
+
+                var fileName = $"EmployerProfiles_{DateTime.Now:yyyyMMdd}.xlsx";
+
+                return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Business rule violation occurred while exporting Excel employer profiles");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while exporting employer profiles to Excel.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
 

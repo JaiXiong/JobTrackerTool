@@ -515,5 +515,10 @@ namespace JobTracker.Business.Services
 
             return OperationResult.CreateSuccess("Upload employer profiles successfully.");
         }
+
+        public Task<OperationResult> ExportXMLEmployerProfiles()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
