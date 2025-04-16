@@ -9,6 +9,7 @@ using System.Text;
 using Utils.Encryption;
 using AutoMapper;
 using Utils.AutoMapper;
+using Utils.Middleware;
 using JobTracker.Business.Business;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,6 +89,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Register Middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
