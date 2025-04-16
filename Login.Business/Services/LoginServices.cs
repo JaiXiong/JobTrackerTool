@@ -195,7 +195,7 @@ namespace Login.Business.Services
                 await _dbContext.UserProfiles.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
 
-            return OperationResult.CreateSuccess(_resx.Create("User registered successfully."));
+            return OperationResult.CreateSuccess("User registered successfully.");
         }
     }
 }

@@ -11,6 +11,9 @@ using JobTracker.Business.Business;
 using Utils.Operations;
 using JobData.Common;
 using Azure.Core;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace JobTracker.API.tool.Controllers.Tests
 {
@@ -77,8 +80,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetJobProfile(jobProfileId))
                 .ThrowsAsync(new ArgumentException("Job Profile not found"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.GetJobProfile(jobProfileId));
+            var result = await _controller.GetJobProfile(jobProfileId);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
 
         [TestMethod()]
@@ -197,8 +203,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.DeleteJobProfile(jobProfileId))
                 .ThrowsAsync(new ArgumentException("Job Profile Delete Failed"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.DeleteJobProfile(jobProfileId));
+            var result = await _controller.DeleteJobProfile(jobProfileId);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
         #endregion
 
@@ -206,12 +215,15 @@ namespace JobTracker.API.tool.Controllers.Tests
         [TestMethod()]
         public async Task GetEmployerProfile()
         {
-            var downloadOptions = new DownloadOptions
+            var query = new QueryCollection(new Dictionary<string, StringValues>
             {
-                Include = DownloadType.Include,
-                Csv = DownloadType.Csv,
-                Pdf = DownloadType.Pdf 
-            };
+               { "Include", "true" },
+               { "Csv", "true" },
+               { "Pdf", "true" }
+            });
+
+            var httpContext = new DefaultHttpContext { Request = { Query = query } };
+            _controller.ControllerContext = new ControllerContext { HttpContext = httpContext };
 
             var expectedEmployerProfile = new EmployerProfile
             {
@@ -230,6 +242,13 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Website = "Test"
             };
 
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf
+            };
+
             _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id, downloadOptions))
                 .ReturnsAsync(expectedEmployerProfile);
 
@@ -241,6 +260,12 @@ namespace JobTracker.API.tool.Controllers.Tests
             Assert.IsNotNull(employerProfile);
             Assert.AreEqual(expectedEmployerProfile.Id, employerProfile.Id);
             Assert.AreEqual(expectedEmployerProfile.Name, employerProfile.Name);
+
+            //var result = await _controller.GetEmployerProfile(expectedEmployerProfile.Id);
+
+            //Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            //var objectResult = result as ObjectResult;
+            //Assert.AreEqual(500, objectResult?.StatusCode);
         }
 
         [TestMethod()]
@@ -273,19 +298,25 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerProfile(expectedEmployerProfile.Id, downloadOptions))
                 .ThrowsAsync(new ArgumentException("Failed to get Employer Profile"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.GetEmployerProfile(expectedEmployerProfile.Id));
+            var result = await _controller.GetEmployerProfile(expectedEmployerProfile.Id);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
 
         [TestMethod()]
         public async Task GetEmployerProfiles()
         {
-            var downloadOptions = new DownloadOptions
+            var query = new QueryCollection(new Dictionary<string, StringValues>
             {
-                Include = DownloadType.Include,
-                Csv = DownloadType.Csv,
-                Pdf = DownloadType.Pdf
-            };
+               { "Include", "true" },
+               { "Csv", "true" },
+               { "Pdf", "true" }
+            });
+
+            var httpContext = new DefaultHttpContext { Request = { Query = query } };
+            _controller.ControllerContext = new ControllerContext { HttpContext = httpContext };
 
             var jobProfileId = Guid.NewGuid();
             var expectedEmployerProfiles = new List<EmployerProfile>
@@ -322,6 +353,14 @@ namespace JobTracker.API.tool.Controllers.Tests
                 Email = "Test",
                 Website = "Test"
                 }
+            };
+
+
+            var downloadOptions = new DownloadOptions
+            {
+                Include = DownloadType.Include,
+                Csv = DownloadType.Csv,
+                Pdf = DownloadType.Pdf
             };
 
             _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId, downloadOptions))
@@ -386,8 +425,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerProfiles(jobProfileId, downloadOptions))
                 .ThrowsAsync(new ArgumentException("Get All Employer Profiles Failed"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.GetEmployerProfiles(jobProfileId));
+            var result = await _controller.GetEmployerProfiles(jobProfileId);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
 
         [TestMethod()]
@@ -505,7 +547,7 @@ namespace JobTracker.API.tool.Controllers.Tests
             CollectionAssert.AreEqual(expectedEmployerProfiles, employerPagingData.Data.ToList());
         }
 
-        [TestMethod]
+        [TestMethod()]
         public async Task GetEmployerPagingDataFails()
         {
             var jobProfileId = Guid.NewGuid();
@@ -550,11 +592,14 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.GetEmployerPagingData(jobProfileId, pageIndex, pageSize))
                 .ThrowsAsync(new ArgumentException("Employer Paging Failed"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize));
+            var result = await _controller.GetEmployerPagingData(jobProfileId, pageIndex, pageSize);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
 
-        [TestMethod]
+        [TestMethod()]
         public async Task DeleteEmployerProfile()
         {
             var employerProfileId = Guid.NewGuid();
@@ -577,8 +622,11 @@ namespace JobTracker.API.tool.Controllers.Tests
             _mockServices.Setup(s => s.DeleteEmployerProfile(employerProfileId))
                 .ThrowsAsync(new ArgumentException("Employer Profile Delete Failed"));
 
-            await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await _controller.DeleteEmployerProfile(employerProfileId));
+            var result = await _controller.DeleteEmployerProfile(employerProfileId);
+
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
+            var objectResult = result as ObjectResult;
+            Assert.AreEqual(500, objectResult?.StatusCode);
         }
         #endregion
     }

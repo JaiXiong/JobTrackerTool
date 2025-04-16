@@ -11,6 +11,7 @@ using Moq.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Resources;
 using Utils.Encryption;
+using Utils.Operations;
 
 namespace JobTracker.UnitTests;
 
@@ -23,6 +24,7 @@ public class LoginServicesTests
     private readonly Mock<Encryption> _mockEncryption;
     private readonly Mock<LoginBusiness> _mockLoginBusiness;
     private readonly Mock<ILogger<LoginServices>> _mockLogger;
+    private readonly Mock<ILogger<LoginBusiness>> _mockLoggerBusiness;
 
     public LoginServicesTests()
     {
@@ -33,11 +35,13 @@ public class LoginServicesTests
         _mockConfiguration.Setup(config => config["Jwt:ExpiresInMinutes"]).Returns("15");
 
         _mockDbContext = new Mock<IJobProfileContext>();
-        _mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly);
+        //_mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly
+        _mockResourceManager = new Mock<ResourceManager>("Login.Business.LoginBusinessErrors", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();
-        _mockLoginBusiness = new Mock<LoginBusiness>(_mockConfiguration.Object);
         _mockLogger = new Mock<ILogger<LoginServices>>();
-
+        _mockLoggerBusiness = new Mock<ILogger<LoginBusiness>>();
+        _mockLoginBusiness = new Mock<LoginBusiness>(_mockConfiguration.Object, _mockResourceManager.Object, _mockLoggerBusiness.Object);
+       
         _loginServices = new LoginServices(_mockResourceManager.Object, _mockDbContext.Object, _mockConfiguration.Object,
             _mockEncryption.Object, _mockLoginBusiness.Object, _mockLogger.Object);
     }
@@ -108,7 +112,9 @@ public class LoginServicesTests
         }.AsQueryable();
 
         _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(userProfiles);
-        _mockResourceManager.Setup(rm => rm.GetString("UserExist")).Returns("User already exists");
+        //_mockResourceManager.Setup(rm => rm.GetString("UserExist")).Returns("User exists already.");
+        _mockResourceManager.Setup(rm => rm.GetString("User registered successfully.")).Returns("User registered successfully.");
+
         _mockEncryption.Setup(e => e.HashPassword(It.IsAny<string>())).Returns("hashedPassword");
 
         await _loginServices.Register("newuser@example.com", "password");
