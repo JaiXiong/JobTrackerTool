@@ -11,6 +11,7 @@ using AutoMapper;
 using Utils.AutoMapper;
 using Utils.Middleware;
 using JobTracker.Business.Business;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddLogging();
+builder.Services.AddMemoryCache();
 builder.Services.AddAutoMapper(typeof(DataMapper));
 // Register ResourceManager so we can catch errors
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBusinessErrors.ResourceFileName", typeof(Program).Assembly));
@@ -85,7 +87,7 @@ builder.Services.AddDbContext<JobProfileContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTracker API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JobTracker API", Version = "1.0.0" });
 });
 
 var app = builder.Build();
@@ -102,6 +104,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "JobTracker API v1");
+        c.RoutePrefix = "swagger";
     });
 }
 else

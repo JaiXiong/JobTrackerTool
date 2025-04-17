@@ -6,6 +6,7 @@ using Utils.Operations;
 using Microsoft.Extensions.Logging;
 using Utils.CustomExceptions;
 using JobData.Common;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace JobTracker.Business.Services
 {
@@ -13,12 +14,14 @@ namespace JobTracker.Business.Services
     {
         private readonly JobProfileContext _dbContext;
         private readonly ILogger<JobTrackerToolService> _logger;
+        private readonly IMemoryCache _cache;
         private ResxFormat _resx;
         ResourceManager _resourceManager;
-        public JobTrackerToolService(JobProfileContext context, ILogger<JobTrackerToolService> logger)
+        public JobTrackerToolService(JobProfileContext context, ILogger<JobTrackerToolService> logger, IMemoryCache cache)
         {
             _dbContext = context;
             _logger = logger;
+            _cache = cache;
             _resourceManager = new ResourceManager("JobTracker.Business.JobTrackerBusinessErrors", typeof(JobTrackerToolService).Assembly);
             _resx = new ResxFormat(_resourceManager);
         }
@@ -307,18 +310,75 @@ namespace JobTracker.Business.Services
             return employerProfiles;
         }
 
+        //public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
+        //{
+        //    var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == jobProfileId)
+        //        .Skip(pageIndex * pageSize)
+        //        .Take(pageSize).ToListAsync();
+
+        //    if (employerProfiles == null)
+        //    {
+        //        throw new BusinessException(_resx.Create("EmployerPagingError"));
+        //    }
+
+        //    return employerProfiles;
+        //}
+
         public async Task<IEnumerable<EmployerProfile>> GetEmployerPagingData(Guid jobProfileId, int pageIndex, int pageSize)
         {
-            var employerProfiles = await _dbContext.Employers.Where(c => c.JobProfileId == jobProfileId)
-                .Skip(pageIndex * pageSize)
-                .Take(pageSize).ToListAsync();
+            // Generate cache keys for current, previous, and next pages
+            var currentPageKey = $"EmployerPagingData_{jobProfileId}_Page_{pageIndex}_Size_{pageSize}";
+            var previousPageKey = $"EmployerPagingData_{jobProfileId}_Page_{pageIndex - 1}_Size_{pageSize}";
+            var nextPageKey = $"EmployerPagingData_{jobProfileId}_Page_{pageIndex + 1}_Size_{pageSize}";
 
-            if (employerProfiles == null)
+            if (!_cache.TryGetValue(currentPageKey, out IEnumerable<EmployerProfile>? currentPageData))
             {
-                throw new BusinessException(_resx.Create("EmployerPagingError"));
+                currentPageData = await _dbContext.Employers
+                    .Where(c => c.JobProfileId == jobProfileId)
+                    .Skip(pageIndex * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                if (currentPageData == null || !currentPageData.Any())
+                {
+                    throw new BusinessException(_resx.Create("EmployerPagingError"));
+                }
+
+                // Cache the current page data with a TTL of 5 minutes
+                _cache.Set(currentPageKey, currentPageData, TimeSpan.FromMinutes(5));
             }
 
-            return employerProfiles;
+            // Preload and cache the previous page data
+            if (pageIndex > 0 && !_cache.TryGetValue(previousPageKey, out _))
+            {
+                var previousPageData = await _dbContext.Employers
+                    .Where(c => c.JobProfileId == jobProfileId)
+                    .Skip((pageIndex - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                if (previousPageData != null && previousPageData.Any())
+                {
+                    _cache.Set(previousPageKey, previousPageData, TimeSpan.FromMinutes(5));
+                }
+            }
+
+            // Preload and cache the next page data
+            if (!_cache.TryGetValue(nextPageKey, out _))
+            {
+                var nextPageData = await _dbContext.Employers
+                    .Where(c => c.JobProfileId == jobProfileId)
+                    .Skip((pageIndex + 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                if (nextPageData != null && nextPageData.Any())
+                {
+                    _cache.Set(nextPageKey, nextPageData, TimeSpan.FromMinutes(5));
+                }
+            }
+
+            return currentPageData;
         }
 
         public async Task<int> GetTotalEmployerCount(Guid jobProfileId)

@@ -7,6 +7,7 @@ using JobData.Entities;
 using JobTracker.API.Tool.DbData;
 using JobTracker.Business.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Utils.AutoMapper;
 using Utils.Encryption;
@@ -59,6 +60,9 @@ class Program
 
         var dataContext = new JobProfileContext(optionsBuilder.Options);
 
-        return new JobTrackerToolService(dataContext, logger);
+        // Use MemoryCache instead of IMemoryCache directly
+        var memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+        return new JobTrackerToolService(dataContext, logger, memoryCache);
     }
 }
