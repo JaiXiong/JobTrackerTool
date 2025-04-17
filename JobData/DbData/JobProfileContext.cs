@@ -12,19 +12,27 @@ namespace JobTracker.API.Tool.DbData
 
         public JobProfileContext(DbContextOptions<JobProfileContext> options, IConfiguration configuration) : base(options)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
+        public JobProfileContext(DbContextOptions<JobProfileContext> options) : base(options)
+        {
+            _configuration = null!; // Explicitly mark as non-null since this constructor does not initialize it.
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString, options =>
+            if (_configuration != null)
             {
-                options.EnableRetryOnFailure(
-                    maxRetryCount: 2,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null);
-            });
+                var connectionString = _configuration.GetConnectionString("DefaultConnection");
+                optionsBuilder.UseSqlServer(connectionString, options =>
+                {
+                    options.EnableRetryOnFailure(
+                        maxRetryCount: 2,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                });
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
