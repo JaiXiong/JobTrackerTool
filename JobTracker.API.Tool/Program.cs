@@ -12,8 +12,16 @@ using Utils.AutoMapper;
 using Utils.Middleware;
 using JobTracker.Business.Business;
 using Microsoft.OpenApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Set up Serilog
+var logDirectory = builder.Configuration["Logging:LogDirectory:LogPath"] ?? "Logs";
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 builder.Configuration.AddEnvironmentVariables();
 var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
@@ -66,6 +74,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
     });
+
+//Use Serilog
+builder.Host.UseSerilog();
 
 // Add services
 builder.Services.AddControllers();

@@ -5,11 +5,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Resources;
 using System.Text;
 using Utils.Encryption;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Set up Serilog
+var logDirectory = builder.Configuration["Logging:LogDirectory:LogPath"] ?? "Logs";
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 builder.Configuration.AddEnvironmentVariables();
 var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
@@ -48,6 +56,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
     });
+
+
+//Set up Serilog
+builder.Host.UseSerilog();
 
 builder.Services.AddCors(options =>
 {

@@ -334,6 +334,7 @@ namespace JobTracker.Business.Services
             if (!_cache.TryGetValue(currentPageKey, out IEnumerable<EmployerProfile>? currentPageData))
             {
                 currentPageData = await _dbContext.Employers
+                    .AsNoTracking()
                     .Where(c => c.JobProfileId == jobProfileId)
                     .Skip(pageIndex * pageSize)
                     .Take(pageSize)
