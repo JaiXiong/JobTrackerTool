@@ -19,6 +19,7 @@ public class ExceptionHandlingMiddleware
     {
         try
         {
+            // Passes control to the next middleware/controller
             await _next(context);
         }
         catch (BusinessException ex)

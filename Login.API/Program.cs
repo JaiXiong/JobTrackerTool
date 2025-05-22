@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var logDirectory = builder.Configuration["Logging:LogDirectory:LogPath"] ?? "Logs";
 
 Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
