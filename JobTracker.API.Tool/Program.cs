@@ -106,7 +106,9 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // Register Middleware
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// We're not using the custom exception handling middleware for now, as it doesn't suit our needs for specific error handling in APIs
+
+//app.UseMiddleware<ExceptionHandlingMiddleware>();
 //app.UseMiddleware<LoggingMiddleware>();
 
 // Configure the HTTP request pipeline.

@@ -17,6 +17,12 @@ public class ExceptionHandlingMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        //NOTES
+        // At the time of designing this middleware, I wanted to centralize error handling for business exceptions and unexpected exceptions.
+        // However, I realized that this middleware is not suitable because you lose the ability to return specific error responses for different exceptions.
+        // This means we'd have to handle all exceptions in a generic way, which is not ideal for APIs that need to provide specific error messages.
+        // Therefore, I decided to hold off on using this middleware for now.
+
         try
         {
             // Passes control to the next middleware/controller
