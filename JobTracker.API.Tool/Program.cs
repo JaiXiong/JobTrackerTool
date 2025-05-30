@@ -1,18 +1,20 @@
+using AutoMapper;
+using Azure.Identity;
 using JobTracker.API.Tool.DbData;
+using JobTracker.Business.Business;
 using JobTracker.Business.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Resources;
 using System.Text;
-using Utils.Encryption;
-using AutoMapper;
 using Utils.AutoMapper;
+using Utils.Encryption;
 using Utils.Middleware;
-using JobTracker.Business.Business;
-using Microsoft.OpenApi;
-using Serilog;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +26,13 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-builder.Configuration.AddEnvironmentVariables();
-var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
+//builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddAzureKeyVault(
+    new Uri("https://jobappvault.vault.azure.net/"),
+    new DefaultAzureCredential());
+
+//var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
+var jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"];
 
 if (string.IsNullOrEmpty(jwtSecretKey))
 {

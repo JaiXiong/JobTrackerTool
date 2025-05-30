@@ -9,10 +9,12 @@
     <RootNamespace>JobTracker.API.Tool</RootNamespace>
     <BaseOutputPath></BaseOutputPath>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <UserSecretsId>eebb3bb3-52ad-443d-968e-3d3ca9313231</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.3.0" />
