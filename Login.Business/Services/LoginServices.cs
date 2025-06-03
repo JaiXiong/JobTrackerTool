@@ -56,7 +56,7 @@ namespace Login.Business.Services
 
         public string GenerateToken(string username)
         {
-            var secretKey = _configuration["JWT_SECRET_KEY"];
+            var secretKey = _configuration["JWT-SECRET-KEY"];
 
             if (string.IsNullOrEmpty(secretKey))
             {
@@ -92,7 +92,7 @@ namespace Login.Business.Services
 
         public string GenerateRefreshToken(string username)
         {
-            var secretKey = _configuration["JWT_SECRET_KEY"];
+            var secretKey = _configuration["JWT-SECRET-KEY"];
 
             if (string.IsNullOrEmpty(secretKey))
             {

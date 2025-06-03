@@ -16,9 +16,10 @@ namespace JobTracker.Business.DataServices
                 .AddLogging(configure => configure.AddConsole())
                 .AddDbContext<JobProfileContext>(options =>
                     options.UseSqlServer(
-                        //"Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes"
-                        "Server=tcp:jobtracker01.database.windows.net,1433;Initial Catalog=jobtracker01;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default"
+                        "Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes"
+                        //"Server=tcp:jobtracker01.database.windows.net,1433;Initial Catalog=jobtracker01;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default"
                         ))
+                .AddMemoryCache()
                 .AddScoped<JobTrackerToolService>()
                 //.AddSingleton(new ResourceManager("JobTracker.Business.Resources", typeof(JobTrackerToolService).Assembly))
                 .AddSingleton(new ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(JobTrackerToolService).Assembly))
