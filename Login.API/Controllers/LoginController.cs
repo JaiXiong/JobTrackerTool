@@ -137,5 +137,24 @@ namespace Login.API.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        /// <summary>
+        /// Gets the connection string for the database.
+        /// </summary>
+        /// <returns>A response containing the connection string.</returns>
+        [HttpGet("database", Name = "DB")]
+        public async Task<IActionResult> GetConnectionString()
+        {
+            try
+            {
+                var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+                return Ok(new { connectionString });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while refreshing the token.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
