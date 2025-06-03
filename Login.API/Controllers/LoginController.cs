@@ -15,16 +15,19 @@ namespace Login.API.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly LoginServices _loginServices;
+        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginController"/> class.
         /// </summary>
         /// <param name="logger">The logger instance.</param>
         /// <param name="loginServices">The login services instance.</param>
-        public LoginController(ILogger<LoginController> logger, LoginServices loginServices)
+        /// <param name="configuration">The configuration instance.</param>
+        public LoginController(ILogger<LoginController> logger, LoginServices loginServices, IConfiguration configuration)
         {
             _logger = logger;
             _loginServices = loginServices;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -147,7 +150,8 @@ namespace Login.API.Controllers
         {
             try
             {
-                var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+                //var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+                var connectionString = _configuration.GetConnectionString("DefaultConnection");
                 return Ok(new { connectionString });
             }
             catch (Exception ex)
