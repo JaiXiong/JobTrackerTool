@@ -152,7 +152,7 @@ namespace Login.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while refreshing the token.");
+                _logger.LogError(ex, "An error occurred while getting the connection string.");
                 return StatusCode(500, "Internal server error");
             }
         }
