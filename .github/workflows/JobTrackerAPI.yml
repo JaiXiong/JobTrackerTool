@@ -12,7 +12,7 @@ env:
   AZURE_APIM_RESOURCEGROUP: JobTrackerApp
   AZURE_APIM_SERVICENAME: JobTrackerAPI
   AZURE_APIM_API_ID: JobTrackerAPITool
-  AZURE_APIM_APPSERVICEURL: jobtrackerapi-dte7aza2fvgfgaes.centralus-01.azurewebsites.net
+  AZURE_APIM_APPSERVICEURL: https://jobtrackerapi-dte7aza2fvgfgaes.centralus-01.azurewebsites.net
   SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.5.0
   API_IMPORT_SPECIFICATION_PATH: JobTracker.API.Tool\publish\swagger.json
   API_IMPORT_DLL: JobTracker.API.Tool\publish\JobTracker.API.Tool.dll
