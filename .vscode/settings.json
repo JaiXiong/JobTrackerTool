@@ -3,5 +3,7 @@
     "azureFunctions.projectLanguage": "C#",
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",
-    "azureFunctions.preDeployTask": "publish (functions)"
+    "azureFunctions.preDeployTask": "publish (functions)",
+    "appService.defaultWebAppToDeploy": "/subscriptions/f42fde57-8680-4e9b-9173-4650c4a6b050/resourceGroups/JobTrackerApp/providers/Microsoft.Web/sites/JobTrackerAPI",
+    "appService.deploySubpath": "JobTracker.API.Tool"
 }
