@@ -11,7 +11,7 @@
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}",
             "sourceMaps": true,
-            "trace": true,
+            "trace": true
         },
         {
             "type": "firefox",
@@ -25,6 +25,12 @@
                     "path": "${workspaceFolder}/JobTrackerApp/src"
                 }
             ]
+        },
+        {
+            "name": "Attach to .NET Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}"
         }
     ]
 }
