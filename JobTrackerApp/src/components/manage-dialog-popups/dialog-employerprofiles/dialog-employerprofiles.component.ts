@@ -99,7 +99,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
       this.jobTrackerService.CreateEmployerProfile(employerProfile).subscribe({
         next: (response) => {
 
-          console.log('Employer Profile created successfully', response);
+          //console.log('Employer Profile created successfully', response);
           
           this.notificationService.showNotification('Employer Profile created successfully', 5000);
           this.dialogRef.close();
@@ -119,7 +119,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
 
       this.jobTrackerService.CreateEmployerAction(action).subscribe({
         next: (response) => {
-          console.log('Employer Action created successfully', response);
+          //console.log('Employer Action created successfully', response);
           this.notificationService.showNotification('Employer Action created successfully', 5000);
         },
         error: (error) => {
@@ -137,7 +137,7 @@ export class DialogEmployerprofilesComponent implements OnInit {
 
       this.jobTrackerService.CreateEmployerDetails(details).subscribe({
         next: (response) => {
-          console.log('Employer Details created successfully', response);
+          //console.log('Employer Details created successfully', response);
           this.notificationService.showNotification('Employer Details created successfully', 5000);
         },
         error: (error) => {

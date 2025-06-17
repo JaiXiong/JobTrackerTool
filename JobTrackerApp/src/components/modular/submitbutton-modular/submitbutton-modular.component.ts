@@ -23,7 +23,7 @@ export class SubmitbuttonModularComponent {
   public onSubmitRegister(email: string, pw: string): void {
     this.loginService.RegisterUser(email, pw).subscribe({
       next: (response) => {
-        console.log('Response received:', response);
+        //console.log('Response received:', response);
       },
       complete: () => {
         console.log('Request completed');
@@ -35,11 +35,11 @@ export class SubmitbuttonModularComponent {
   }
 
   public submit(): void {
-    console.log('Submit button clicked!');
+    //console.log('Submit button clicked!');
   }
   
   submitForm() {
-    console.log(this._registerUser);
+    //console.log(this._registerUser);
     this.loginService.RegisterUser(this._registerUser.email, this._registerUser.password).subscribe({
       next: response => {
         this.snackBar.open('Registered successfully', 'Close', {

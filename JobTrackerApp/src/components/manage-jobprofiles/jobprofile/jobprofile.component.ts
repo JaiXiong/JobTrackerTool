@@ -244,7 +244,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
       if (result) {
         this.jobTrackerService.UpdateEmployerProfile(result).subscribe({
           next: (response) => {
-            console.log('Employer profile updated successfully');
+            //console.log('Employer profile updated successfully');
           },
           error: (error) => {
             console.error('Failed to update employer profile', error);
@@ -336,7 +336,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   }
 
   public download(): void {
-    console.log('Download button clicked!');
+    //console.log('Download button clicked!');
   }
 
   public onCreateJobProfile(): void {
@@ -422,7 +422,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteEmployerProfile(): void {
-    console.log('Delete Employer Profile button clicked!');
+    //console.log('Delete Employer Profile button clicked!');
     this.jobTrackerService
       .DeleteJobProfile(this.employerProfileSelected)
       .subscribe({
@@ -432,7 +432,7 @@ export class JobprofileComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
         complete: () => {
-          console.log('Delete Employer Profile completed');
+          //console.log('Delete Employer Profile completed');
         },
         error: (error) => {
           console.error('Failed to delete employer profile', error);

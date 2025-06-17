@@ -137,7 +137,7 @@ export class EmployerprofileComponent implements OnInit {
       const employerProfile = this.employerProfileForm.value;
       this.jobTrackerService.UpdateEmployerProfile(employerProfile).subscribe({
         next: (response) => {
-          console.log('Employer profile updated successfully', response);
+          //console.log('Employer profile updated successfully', response);
           this.notificationService.showNotification('Employer Profile created successfully', 5000);
           this.dialogRef.close();
         },
@@ -178,7 +178,7 @@ export class EmployerprofileComponent implements OnInit {
       .GetJobAction(this.employerProfileForm.value.id)
       .subscribe(
         (data: ActionResult) => {
-          console.log('Action Data', data.actionResult);
+          //console.log('Action Data', data.actionResult);
 
           this.actionForm = this.formBuilder.group({
             id: [data.id],
@@ -253,7 +253,7 @@ export class EmployerprofileComponent implements OnInit {
       .UpdateEmployerProfile(this.employerProfileForm.value)
       .subscribe(
         (response) => {
-          console.log('Employer Profile Updated');
+          //console.log('Employer Profile Updated');
         },
         (error) => {
           console.log('Error updating Employer Profile');

@@ -8,8 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LogoutbuttonModularComponent } from '../components/modular/logoutbutton-modular/logoutbutton-modular/logoutbutton-modular.component';
-import { environment } from '../environments/environment';
-console.log('Current environment:', environment);
+
+// Used this to check the environment, during prod only
+// import { environment } from '../environments/environment';
+// console.log('Current environment:', environment);
 
 @Component({
   selector: 'app-root',

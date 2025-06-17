@@ -100,7 +100,7 @@ export class LoginComponent implements OnInit {
       .pipe(
         tap({
           next: (tokens) => {
-            console.log('Response received:', tokens);
+            //console.log('Response received:', tokens);
             this.authService.doLoginUser(
               this.loginForm.get('username')?.value,
               tokens.access_token,
@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit {
             });
           },
           complete: () => {
-            console.log('Request completed');
+            //console.log('Request completed');
           },
           error: (error) => {
             console.log('Error received:', error);

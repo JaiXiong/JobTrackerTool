@@ -27,6 +27,6 @@ export class ClosebuttonModularComponent {
   }
 
   public onCloseRegister(): void {
-    console.log('Close button clicked!');
+    //console.log('Close button clicked!');
   }
 }

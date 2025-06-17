@@ -29,7 +29,7 @@ export class NotificationService {
     });
 
     snackBarRef.onAction().subscribe(() => {
-      console.log('Close action canceled');
+      //console.log('Close action canceled');
       // Do nothing, just close the snackbar
     });
 

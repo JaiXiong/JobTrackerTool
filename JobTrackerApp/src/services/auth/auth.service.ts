@@ -86,14 +86,14 @@ export class AuthService {
       .pipe(
         tap({
           next: (response: any) => {
-            console.log('Token refreshed:', response);
+            //console.log('Token refreshed:', response);
             this.storeJwtTokens({
               access_token: response.access_token,
               refresh_token: this.cookieService.get(this.REFRESH_TOKEN),
             });
           },
           complete: () => {
-            console.log('Request completed');
+            //console.log('Request completed');
           },
           error: (error) => {
             console.log('Error refreshing token:', error);

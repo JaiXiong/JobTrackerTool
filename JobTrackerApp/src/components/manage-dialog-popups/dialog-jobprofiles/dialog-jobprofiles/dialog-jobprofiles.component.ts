@@ -71,7 +71,7 @@ export class DialogJobprofilesComponent implements OnInit {
       this.jobTrackerService.CreateJobProfile(jobProfile).subscribe(
         (response) => {
 
-          console.log('Job profile created successfully', response);
+          //console.log('Job profile created successfully', response);
           this.notificationService.showNotification('Job profile created successfully', 5000);
           this.dialogRef.close();
         },

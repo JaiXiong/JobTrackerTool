@@ -39,11 +39,11 @@ export class PopupformModularComponent {
   _registerUser = input(''); // This is a comment
 
   public onSubmitRegister(): void {
-    console.log('Register button clicked!');
+    //console.log('Register button clicked!');
   }
 
   public onCloseRegister(): void {
-    console.log('Close button clicked!');
+    //console.log('Close button clicked!');
   }
   
 }
