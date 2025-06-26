@@ -20,6 +20,9 @@ namespace AzureFunctions.FunctionCalls
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
             //Later we will create something like this to get the API URL from environment variables
+            //Azure Functions serves as a proxy to an external API that provides the connection string.
+            // It also runs small code in the cloud without the need to know the Infrastructure. (main advantage)
+            //Azure logic apps is more a low-code solution for integrating apps, data, and services.
             //var apiUrl = Environment.GetEnvironmentVariable("ExternalApiUrl");
             var apiUrl = "https://jobtrackerloginapi.azurewebsites.net/api/Login/database";
             
