@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { JobTrackerService } from '../../../services/jobtracker.service-old';
+import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmployerProfile, ActionResult, Details } from '../../../models/employer-profile.model';
