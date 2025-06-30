@@ -1,4 +1,5 @@
 ﻿
+using ClosedXML.Excel;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -12,9 +13,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Resources;
 using System.Text;
+using System.Threading.Tasks;
 using Utils.CustomExceptions;
+using Utils.Operations;
 using Verifiable.Core.Cryptography;
-using ClosedXML.Excel;
 
 namespace JobTracker.Business.Business
 {
@@ -233,11 +235,39 @@ namespace JobTracker.Business.Business
             }
 
             // Auto-fit columns
-        worksheet.Columns().AdjustToContents();
+            worksheet.Columns().AdjustToContents();
 
-        using var stream = new MemoryStream();
-        workbook.SaveAs(stream);
-        return stream.ToArray();
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return stream.ToArray();
         }
+
+        //public async Task<bool> VerifyNewEmail(string email)
+        //{
+        //    if (string.IsNullOrEmpty(email))
+        //    {
+        //        throw new ArgumentNullException(nameof(email), _resx.Create("EmailCannotBeNullOrEmpty"));
+        //    }
+        //    // Here you would typically check if the email already exists in your database
+        //    // For demonstration purposes, we will assume the email is valid and return true
+        //    var result = await _emailServices.VerifyEmail(email);
+        //    if (result.Success)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        throw new BusinessException(_resx.Create("EmailAlreadyExists"));
+        //    }
+        //    //if (result.Success)
+        //    //{
+        //    //    return CreatedAtAction(nameof(CreateJobProfile), new { id = jobProfile.Id }, jobProfile);
+        //    //}
+        //    //else
+        //    //{
+        //    //    return BadRequest(new { result.Message, result.Errors });
+        //    //}
+        //    return true;
+        //}
     }
 }

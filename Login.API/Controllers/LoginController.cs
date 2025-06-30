@@ -1,8 +1,10 @@
 using IdentityModel.Client;
+using JobData.Entities;
 using Login.Business.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Utils.CustomExceptions;
 
 namespace Login.API.Controllers
 {
@@ -15,6 +17,7 @@ namespace Login.API.Controllers
     {
         private readonly ILogger<LoginController> _logger;
         private readonly LoginServices _loginServices;
+        private readonly EmailServices _emailServices;
         private readonly IConfiguration _configuration;
 
         /// <summary>
@@ -23,10 +26,11 @@ namespace Login.API.Controllers
         /// <param name="logger">The logger instance.</param>
         /// <param name="loginServices">The login services instance.</param>
         /// <param name="configuration">The configuration instance.</param>
-        public LoginController(ILogger<LoginController> logger, LoginServices loginServices, IConfiguration configuration)
+        public LoginController(ILogger<LoginController> logger, LoginServices loginServices, EmailServices emailServices, IConfiguration configuration)
         {
             _logger = logger;
             _loginServices = loginServices;
+            _emailServices = emailServices;
             _configuration = configuration;
         }
 
@@ -83,7 +87,21 @@ namespace Login.API.Controllers
 
             try
             {
-                await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+                //await _emailServices.VerifyEmail(registerRequest.Email);
+                var result = await _emailServices.VerifyEmail(registerRequest.Email);
+
+                if (result.Success)
+                {
+                    // Send verification email
+                    await _emailServices.SendEmailAsync(registerRequest.Email, "Email Verification", "Please verify your email by clicking the link provided.");
+                    await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
+
+                //await _loginServices.Register(registerRequest.Email, registerRequest.Password);
                 return Ok();
             }
             catch (Exception ex)
@@ -145,20 +163,20 @@ namespace Login.API.Controllers
         /// Gets the connection string for the database.
         /// </summary>
         /// <returns>A response containing the connection string.</returns>
-        [HttpGet("database", Name = "DB")]
-        public async Task<IActionResult> GetConnectionString()
-        {
-            try
-            {
-                //var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
-                var connectionString = _configuration.GetConnectionString("DefaultConnection");
-                return Ok(new { connectionString });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while getting the connection string.");
-                return StatusCode(500, "Internal server error");
-            }
-        }
+        //[HttpGet("database", Name = "DB")]
+        //public async Task<IActionResult> GetConnectionString()
+        //{
+        //    try
+        //    {
+        //        //var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+        //        var connectionString = _configuration.GetConnectionString("DefaultConnection");
+        //        return Ok(new { connectionString });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while getting the connection string.");
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
     }
 }

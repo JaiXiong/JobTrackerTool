@@ -22,13 +22,13 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-//builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables();
 builder.Configuration.AddAzureKeyVault(
     new Uri("https://jobappvault.vault.azure.net/"),
     new DefaultAzureCredential());
 
 //var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
-var jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"];
+var jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"] ?? builder.Configuration["JWT_SECRET_KEY"];
 
 if (string.IsNullOrEmpty(jwtSecretKey))
 {
