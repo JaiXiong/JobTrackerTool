@@ -25,6 +25,7 @@ namespace Login.API.Controllers
         /// </summary>
         /// <param name="logger">The logger instance.</param>
         /// <param name="loginServices">The login services instance.</param>
+        /// <param name="emailServices"></param>
         /// <param name="configuration">The configuration instance.</param>
         public LoginController(ILogger<LoginController> logger, LoginServices loginServices, EmailServices emailServices, IConfiguration configuration)
         {
@@ -93,8 +94,8 @@ namespace Login.API.Controllers
                 if (result.Success)
                 {
                     // Send verification email
-                    await _emailServices.SendEmailAsync(registerRequest.Email, "Email Verification", "Please verify your email by clicking the link provided.");
-                    await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+                    await _emailServices.SendEmail(registerRequest.Email, "Email Verification", "Please verify your email by clicking the link provided.");
+                    //await _loginServices.Register(registerRequest.Email, registerRequest.Password);
                 }
                 else
                 {

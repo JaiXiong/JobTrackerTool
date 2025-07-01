@@ -23,6 +23,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Configuration.AddEnvironmentVariables();
+
 builder.Configuration.AddAzureKeyVault(
     new Uri("https://jobappvault.vault.azure.net/"),
     new DefaultAzureCredential());
@@ -88,6 +89,7 @@ builder.Services.AddDbContext<JobProfileContext>(options =>
 builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
 
 builder.Services.AddScoped<LoginServices>();
+builder.Services.AddScoped<EmailServices>();
 builder.Services.AddScoped<Encryption>();
 builder.Services.AddScoped<LoginBusiness>();
 

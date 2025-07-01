@@ -46,7 +46,7 @@ namespace Login.Business.Services
             return OperationResult.CreateSuccess("Email is valid and does not exist in the system.");
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        public async Task SendEmail(string toEmail, string subject, string body)
         {
             // Implementation for sending email
             _logger.LogInformation($"Sending email to {toEmail} with subject {subject}");
@@ -65,9 +65,11 @@ namespace Login.Business.Services
                 EnableSsl = bool.Parse(smtpSection["EnableSsl"])
             };
 
+            Console.WriteLine($"SMTP Client configured with Username: {smtpSection["Username"]}, Pass: {smtpSection["Password"]}, Domain: {smtpSection["FromEmail"]}");
+            Console.WriteLine($"SMTP Client configured with FromName: {smtpSection["FromName"]}");
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(smtpSection["From"]),
+                From = new MailAddress(smtpSection["FromName"]),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
