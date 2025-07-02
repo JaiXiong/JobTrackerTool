@@ -63,6 +63,7 @@ namespace Login.Business.Services
                 throw new BusinessException(_resx.Create("JWTInvalid"));
             }
 
+            
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

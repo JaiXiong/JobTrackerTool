@@ -1,4 +1,5 @@
-﻿using Castle.Core.Logging;
+﻿using Azure.Identity;
+using Castle.Core.Logging;
 using JobData.Entities;
 using JobTracker.API.Tool.DbData;
 using Login.Business.Business;
@@ -96,6 +97,17 @@ public class LoginServicesTests
     {
         var username = "admin";
         var password = "pw";
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            //.AddJsonFile("appsettings.Development.json", optional: true)
+            //.AddEnvironmentVariables()
+            .AddAzureKeyVault(
+            new Uri("https://jobappvault.vault.azure.net/"),
+            new DefaultAzureCredential())
+            .Build();
+
+        var jwtSecretKey = config["JWT-SECRET-KEY"];
+        _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns(jwtSecretKey);
         _mockEncryption.Setup(e => e.HashPassword(password)).Returns("hashedPassword");
 
         var token = _loginServices.GenerateToken(username);

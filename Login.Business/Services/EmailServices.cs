@@ -67,9 +67,10 @@ namespace Login.Business.Services
 
             Console.WriteLine($"SMTP Client configured with Username: {smtpSection["Username"]}, Pass: {smtpSection["Password"]}, Domain: {smtpSection["FromEmail"]}");
             Console.WriteLine($"SMTP Client configured with FromName: {smtpSection["FromName"]}");
+
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(smtpSection["FromName"]),
+                From = new MailAddress(smtpSection["FromEmail"], "Admin"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
