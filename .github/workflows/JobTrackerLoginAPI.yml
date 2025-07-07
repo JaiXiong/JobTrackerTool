@@ -99,10 +99,10 @@ jobs:
         run: dotnet restore JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj
 
       - name: Run unit tests
-        run: dotnet test JobTracker.UnitTests/JobTracker.UnitTests.csproj --no-build
+        run: dotnet test JobTracker.UnitTests/JobTracker.UnitTests.csproj
 
       - name: Run API tests
-        run: dotnet test JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj --no-build
+        run: dotnet test JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj
 
   deploy:
     runs-on: windows-latest
