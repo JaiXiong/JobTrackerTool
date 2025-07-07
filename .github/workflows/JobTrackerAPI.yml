@@ -94,6 +94,8 @@ jobs:
     runs-on: windows-latest
     needs: build
     steps:
+      - uses: actions/checkout@v4
+  
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
@@ -109,16 +111,16 @@ jobs:
         run: ls -R
 
       - name: Restore unit test dependencies
-        run: dotnet restore ../JobTracker.UnitTests/JobTracker.UnitTests.csproj
+        run: dotnet restore JobTracker.UnitTests/JobTracker.UnitTests.csproj
 
       - name: Restore API test dependencies
-        run: dotnet restore ../JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj
+        run: dotnet restore JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj
 
       - name: Run unit tests
-        run: dotnet test ../JobTracker.UnitTests/JobTracker.UnitTests.csproj --no-build
+        run: dotnet test JobTracker.UnitTests/JobTracker.UnitTests.csproj --no-build
 
       - name: Run API tests
-        run: dotnet test ../JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj --no-build
+        run: dotnet test JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj --no-build
 
   deploy:
     runs-on: windows-latest
