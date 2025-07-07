@@ -89,15 +89,19 @@ jobs:
       #   run: dotnet test --configuration ${{ env.CONFIGURATION }} --no-build --verbosity normal
       - name: Restore unit test dependencies
         run: dotnet restore ./JobTracker.UnitTests/JobTracker.UnitTests.csproj
+        working-directory: ${{ github.workspace }}
 
       - name: Restore API test dependencies
         run: dotnet restore ./JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj
+        working-directory: ${{ github.workspace }}
 
       - name: Run unit tests
         run: dotnet test JobTracker.UnitTests/JobTracker.UnitTests.csproj --no-build
+        working-directory: ${{ github.workspace }}
 
       - name: Run API tests
         run: dotnet test JobTracker.API.ToolTests/JobTracker.API.ToolTests.csproj --no-build
+        working-directory: ${{ github.workspace }}
 
   deploy:
     runs-on: windows-latest
