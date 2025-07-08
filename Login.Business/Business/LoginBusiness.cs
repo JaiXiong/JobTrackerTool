@@ -27,7 +27,7 @@ namespace Login.Business.Business
             _logger = logger;
         }
 
-        public ClaimsPrincipal GetTokenInfo(string token)
+        public virtual ClaimsPrincipal GetTokenInfo(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var secret = _configuration["JWT_SECRET_KEY"];

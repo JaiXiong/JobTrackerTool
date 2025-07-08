@@ -35,12 +35,12 @@ string? jwtSecretKey;
 
 if (builder.Environment.IsDevelopment())
 {
-    jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? Environment.GetEnvironmentVariable("JWT-SECRET-KEY");
+    jwtSecretKey = Environment.GetEnvironmentVariable("Jwt__Key");
 
 }
 else
 {
-    jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"] ?? builder.Configuration["JWT_SECRET_KEY"];
+    jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"];
 }
 
 if (string.IsNullOrEmpty(jwtSecretKey))

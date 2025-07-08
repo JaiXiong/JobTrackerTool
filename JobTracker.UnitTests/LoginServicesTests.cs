@@ -11,6 +11,7 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Resources;
+using Utils.CustomExceptions;
 using Utils.Encryption;
 using Utils.Operations;
 
@@ -134,5 +135,176 @@ public class LoginServicesTests
 
         _mockDbContext.Verify(db => db.UserProfiles.AddAsync(It.IsAny<UserProfile>(), default), Times.Once);
         _mockDbContext.Verify(db => db.SaveChangesAsync(default), Times.Once);
+    }
+
+    //CS3.7
+    [Fact]
+    public void GenerateRefreshToken_ShouldReturnToken_WhenCalled()
+    {
+        // Arrange
+        var username = "testuser";
+        _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns("your-very-secure-key-12345678901011");
+        _mockConfiguration.Setup(config => config["Jwt:RefreshExpiresInMinutes"]).Returns("1080"); // 18 hours
+
+        // Act
+        var refreshToken = _loginServices.GenerateRefreshToken(username);
+
+        // Assert
+        Assert.NotNull(refreshToken);
+        Assert.NotEmpty(refreshToken);
+    }
+
+    [Fact]
+    public async Task RefreshToken_ShouldReturnNewToken_WhenValidTokenProvided()
+    {
+        // Arrange
+        var username = "testuser";
+        var email = "testuser@example.com";
+        var validToken = "valid-refresh-token";
+        var jwtSecretKey = _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns("your-very-secure-key-12345678901011");
+        _mockConfiguration.Setup(config => config["Jwt:RefreshExpiresInMinutes"]).Returns("1080");
+
+        var userProfile = new UserProfile
+        {
+            Id = Guid.NewGuid(),
+            Name = username,
+            Email = email,
+            Password = "hashedPassword"
+        };
+
+        var userProfiles = new List<UserProfile> { userProfile }.AsQueryable();
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(userProfiles);
+
+        var claims = new List<System.Security.Claims.Claim>
+        {
+            new System.Security.Claims.Claim("exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds().ToString()),
+            new System.Security.Claims.Claim("sub", username),
+            new System.Security.Claims.Claim("email", email)
+        };
+
+        var claimsPrincipal = new System.Security.Claims.ClaimsPrincipal(
+            new System.Security.Claims.ClaimsIdentity(claims, "TestAuthType"));
+
+        _mockLoginBusiness.Setup(lb => lb.GetTokenInfo(validToken)).Returns(claimsPrincipal);
+
+        // Act
+        var result = await _loginServices.RefreshToken(validToken);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotEmpty(result);
+    }
+
+    [Fact]
+    public async Task RefreshToken_ShouldThrowException_WhenInvalidTokenProvided()
+    {
+        // Arrange
+        var invalidToken = "invalid-token";
+        _mockLoginBusiness.Setup(lb => lb.GetTokenInfo(invalidToken)).Returns((System.Security.Claims.ClaimsPrincipal)null);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessException>(() => _loginServices.RefreshToken(invalidToken));
+    }
+
+    [Fact]
+    public async Task GetCurrentUser_ShouldReturnUser_WhenUserExists()
+    {
+        // Arrange
+        var user = new UserProfile
+        {
+            Id = Guid.NewGuid(),
+            Name = "testuser",
+            Email = "testuser@example.com",
+            Password = "hashedPassword"
+        };
+
+        var users = new List<UserProfile> { user }.AsQueryable();
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(users);
+
+        // Act
+        var result = await _loginServices.GetCurrentUser();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(user.Id, result.Id);
+        Assert.Equal(user.Name, result.Name);
+        Assert.Equal(user.Email, result.Email);
+    }
+
+    [Fact]
+    public async Task GetCurrentUser_ShouldThrowException_WhenNoUserExists()
+    {
+        // Arrange
+        var emptyUsers = new List<UserProfile>().AsQueryable();
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(emptyUsers);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessException>(() => _loginServices.GetCurrentUser());
+    }
+
+    [Fact]
+    public async Task LoginAuth_ShouldThrowException_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var email = "nonexistent@example.com";
+        var password = "password";
+        var hashedPassword = "hashedPassword";
+
+        var emptyUsers = new List<UserProfile>().AsQueryable();
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(emptyUsers);
+        _mockEncryption.Setup(e => e.HashPassword(password)).Returns(hashedPassword);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessException>(() => _loginServices.LoginAuth(email, password));
+    }
+
+    [Fact]
+    public async Task LoginAuth_ShouldThrowException_WhenCredentialsAreEmpty()
+    {
+        // Arrange
+        string email = "";
+        string password = "";
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BusinessException>(() => _loginServices.LoginAuth(email, password));
+    }
+
+    [Fact]
+    public void GenerateToken_ShouldThrowException_WhenSecretKeyIsEmpty()
+    {
+        // Arrange
+        var username = "testuser";
+        _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns((string)null);
+
+        // Act & Assert
+        Assert.Throws<BusinessException>(() => _loginServices.GenerateToken(username));
+    }
+
+    [Fact]
+    public async Task Register_ShouldReturnFailure_WhenUserAlreadyExists()
+    {
+        // Arrange
+        var existingEmail = "existing@example.com";
+        var password = "password";
+
+        var existingUser = new UserProfile
+        {
+            Id = Guid.NewGuid(),
+            Name = "existing",
+            Email = existingEmail,
+            Password = "hashedPassword"
+        };
+
+        var users = new List<UserProfile> { existingUser }.AsQueryable();
+        _mockDbContext.Setup(db => db.UserProfiles).ReturnsDbSet(users);
+
+        _mockResourceManager.Setup(rm => rm.GetString("UserExist")).Returns("User exists already.");
+
+        // Act
+        var result = await _loginServices.Register(existingEmail, password);
+
+        // Assert
+        Assert.False(result.Success);
+        Assert.Contains("User exists already", result.Message);
     }
 }

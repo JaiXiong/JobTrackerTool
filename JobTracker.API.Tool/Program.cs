@@ -38,12 +38,12 @@ string? jwtSecretKey;
 
 if (builder.Environment.IsDevelopment())
 {
-    jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? Environment.GetEnvironmentVariable("JWT-SECRET-KEY");
+    jwtSecretKey = Environment.GetEnvironmentVariable("Jwt__Key");
     
 }
 else
 {
-    jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"] ?? builder.Configuration["JWT_SECRET_KEY"];
+    jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"];
 }   
 
 if (string.IsNullOrEmpty(jwtSecretKey))
@@ -111,6 +111,8 @@ builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBus
 builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
 builder.Services.AddScoped<IJobTrackerToolBusiness, JobTrackerToolBusiness>();
 builder.Services.AddScoped<Encryption>();
+//builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
+builder.Services.AddScoped<IJobProfileContext>(provider => provider.GetRequiredService<JobProfileContext>());
 
 // Register the DbContext with a connection string in the appsettings
 builder.Services.AddDbContext<JobProfileContext>(options =>

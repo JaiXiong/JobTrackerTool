@@ -12,12 +12,12 @@ namespace JobTracker.Business.Services
 {
     public class JobTrackerToolService : DbContext, IJobTrackerToolService
     {
-        private readonly JobProfileContext _dbContext;
+        private readonly IJobProfileContext _dbContext;
         private readonly ILogger<JobTrackerToolService> _logger;
         private readonly IMemoryCache _cache;
         private ResxFormat _resx;
         ResourceManager _resourceManager;
-        public JobTrackerToolService(JobProfileContext context, ILogger<JobTrackerToolService> logger, IMemoryCache cache)
+        public JobTrackerToolService(IJobProfileContext context, ILogger<JobTrackerToolService> logger, IMemoryCache cache)
         {
             _dbContext = context;
             _logger = logger;
