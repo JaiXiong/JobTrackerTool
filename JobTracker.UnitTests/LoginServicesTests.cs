@@ -97,24 +97,25 @@ public class LoginServicesTests
     {
         var username = "admin";
         var password = "pw";
-        var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            //.AddJsonFile("appsettings.Development.json", optional: true)
-            //.AddEnvironmentVariables()
-            .AddAzureKeyVault(
-            new Uri("https://jobappvault.vault.azure.net/"),
-            new DefaultAzureCredential())
-            .Build();
+        //var config = new ConfigurationBuilder()
+        //    .AddJsonFile("appsettings.json")
+        //    //.AddJsonFile("appsettings.Development.json", optional: true)
+        //    //.AddEnvironmentVariables()
+        //    .AddAzureKeyVault(
+        //    new Uri("https://jobappvault.vault.azure.net/"),
+        //    new DefaultAzureCredential())
+        //    .Build();
 
-        var jwtSecretKey = config["JWT-SECRET-KEY"];
-        _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns(jwtSecretKey);
+        //var jwtSecretKey = config["JWT-SECRET-KEY"];
+        var jwtSecretKey = _mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns("your-very-secure-key-12345678901011");
+        //_mockConfiguration.Setup(config => config["JWT-SECRET-KEY"]).Returns(jwtSecretKey);
         _mockEncryption.Setup(e => e.HashPassword(password)).Returns("hashedPassword");
 
         var token = _loginServices.GenerateToken(username);
 
         Assert.NotNull(token);
     }
-
+    
     [Fact]
     public async Task Register_ShouldAddUser_WhenCalled()
     {
