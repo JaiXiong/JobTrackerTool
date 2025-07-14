@@ -132,4 +132,7 @@
   <data name="UserNotExist" xml:space="preserve">
     <value>No user found.</value>
   </data>
+  <data name="EmailVerificationFailed" xml:space="preserve">
+    <value>Enter a correct email when registering.</value>
+  </data>
 </root>

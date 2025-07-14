@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Utils.CustomExceptions;
@@ -27,13 +28,14 @@ namespace Login.Business.Services
             _logger = logger;
             _configuration = configuration;
             _dbContext = context;
+            _resx = new ResxFormat(new ResourceManager("Login.Business.EmailErrors", typeof(EmailServices).Assembly));
         }
 
         public async Task<OperationResult> VerifyEmail(string email)
         {
             if (string.IsNullOrEmpty(email) || !email.Contains("@"))
             {
-                throw new BusinessException(_resx.Create("EmailError"));
+                throw new BusinessException(_resx.Create("EmailVerificationFailed"));
             }
 
             var exist = await _dbContext.UserProfiles.AnyAsync(u => u.Email == email);
