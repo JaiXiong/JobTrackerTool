@@ -28,7 +28,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Configuration.AddEnvironmentVariables();
 
-var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
+var keyVaultEndpoint = builder.Configuration["KeyVaultEndpoint:KeyVaultUri"];
 
 if (!string.IsNullOrEmpty(keyVaultEndpoint))
 {
