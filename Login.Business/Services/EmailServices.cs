@@ -58,6 +58,9 @@ namespace Login.Business.Services
                 throw new BusinessException("SMTP settings are not configured.");
             }
 
+            var host = smtpSection["Host"];
+            var port = smtpSection["port"];
+
             var smtpClient = new SmtpClient(smtpSection["Host"])
             {
                 Port = int.Parse(smtpSection["Port"]),

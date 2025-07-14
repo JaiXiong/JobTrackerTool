@@ -94,8 +94,8 @@ namespace Login.API.Controllers
                 if (result.Success)
                 {
                     // Send verification email
-                    await _emailServices.SendEmail(registerRequest.Email, "Email Verification", "Please verify your email by clicking the link provided.");
-                    //await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+                    await _emailServices.SendEmail(registerRequest.Email, "Your JobTracker Email Verification", "Please verify your email by clicking the link provided.");
+                    await _loginServices.Register(registerRequest.Email, registerRequest.Password);
                 }
                 else
                 {
