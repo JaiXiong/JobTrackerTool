@@ -27,9 +27,15 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Configuration.AddEnvironmentVariables();
-builder.Configuration.AddAzureKeyVault(
-    new Uri("https://jobappvault.vault.azure.net/"),
+
+var keyVaultEndpoint = builder.Configuration["KeyVault:Endpoint"];
+
+if (!string.IsNullOrEmpty(keyVaultEndpoint))
+{
+    builder.Configuration.AddAzureKeyVault(
+    new Uri(keyVaultEndpoint),
     new DefaultAzureCredential());
+}
 
 ////var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
 //var jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"] ?? builder.Configuration["JWT_SECRET_KEY"];
