@@ -50,7 +50,6 @@ namespace Login.Business.Services
 
         public async Task<OperationResult> SendEmail(string toEmail, string subject, string body)
         {
-            // Implementation for sending email
             _logger.LogInformation($"Sending email to {toEmail} with subject {subject}");
 
             var smtpSection = _configuration.GetSection("SMTP2Go");
@@ -60,18 +59,13 @@ namespace Login.Business.Services
                 throw new BusinessException("SMTP settings are not configured.");
             }
 
-            var host = smtpSection["Host"];
-            var port = smtpSection["port"];
-
             var smtpClient = new SmtpClient(smtpSection["Host"])
             {
                 Port = int.Parse(smtpSection["Port"]),
-                Credentials = new NetworkCredential(smtpSection["Username"], smtpSection["Password"]),
+                //Credentials = new NetworkCredential(smtpSection["Username"], smtpSection["Password"]),
+                Credentials = new NetworkCredential(_configuration["EMAIL-USERNAME"], _configuration["EMAIL-PASSWORD"]),
                 EnableSsl = bool.Parse(smtpSection["EnableSsl"])
             };
-
-            Console.WriteLine($"SMTP Client configured with Username: {smtpSection["Username"]}, Pass: {smtpSection["Password"]}, Domain: {smtpSection["FromEmail"]}");
-            Console.WriteLine($"SMTP Client configured with FromName: {smtpSection["FromName"]}");
 
             var mailMessage = new MailMessage
             {

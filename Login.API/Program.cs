@@ -33,6 +33,10 @@ if (!string.IsNullOrEmpty(keyVaultEndpoint))
     new DefaultAzureCredential());
 }
 
+//builder.Configuration.AddAzureKeyVault(
+//    new Uri("https://jobappvault.vault.azure.net/"),
+//    new DefaultAzureCredential());
+
 //var jwtSecretKey = builder.Configuration["JWT_SECRET_KEY"];
 //var jwtSecretKey = builder.Configuration["JWT-SECRET-KEY"] ?? builder.Configuration["JWT_SECRET_KEY"];
 
