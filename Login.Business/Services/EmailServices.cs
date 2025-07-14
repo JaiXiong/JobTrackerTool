@@ -46,7 +46,7 @@ namespace Login.Business.Services
             return OperationResult.CreateSuccess("Email is valid and does not exist in the system.");
         }
 
-        public async Task SendEmail(string toEmail, string subject, string body)
+        public async Task<OperationResult> SendEmail(string toEmail, string subject, string body)
         {
             // Implementation for sending email
             _logger.LogInformation($"Sending email to {toEmail} with subject {subject}");
@@ -84,6 +84,7 @@ namespace Login.Business.Services
             await smtpClient.SendMailAsync(mailMessage);
 
             //return Task.CompletedTask;
+            return OperationResult.CreateSuccess("Email sent successfully.");
         }
     }
 }
