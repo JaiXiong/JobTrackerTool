@@ -69,7 +69,8 @@ namespace Login.Business.Services
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(smtpSection["FromEmail"], "Admin"),
+                //From = new MailAddress(smtpSection["FromEmail"], "Admin"),
+                From = new MailAddress(_configuration["EMAIL-DOMAIN"], "Admin"),
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
