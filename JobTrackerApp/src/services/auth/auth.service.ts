@@ -73,7 +73,8 @@ export class AuthService {
   public refreshToken(): Observable<any> {
     var refreshToken = this.cookieService.get(this.REFRESH_TOKEN);
     if (!refreshToken) {
-      console.error('No refresh token found');
+      //debugging purposes
+      //console.error('No refresh token found'); 
     }
 
     const headers = new HttpHeaders().set(

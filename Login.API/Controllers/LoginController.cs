@@ -93,8 +93,8 @@ namespace Login.API.Controllers
 
                 if (result.Success)
                 {
-                    // Send verification email
-                    var emailSentStatus = await _emailServices.SendEmail(registerRequest.Email, "Your JobTracker Email Verification", "Please verify your email by clicking the link provided.");
+                    var token = _loginServices.GenerateToken(registerRequest.Email);
+                    var emailSentStatus = await _emailServices.SendVerificationEmail(registerRequest.Email, token);
 
                     if (!emailSentStatus.Success)
                     {
@@ -162,6 +162,41 @@ namespace Login.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while refreshing the token.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
+        /// Registers a new user.
+        /// </summary>
+        /// <param name="confirmemail">The confirmation email request will have a short life token for verification.</param>
+        /// <returns>A response indicating the result of the confirmation operation.</returns>
+        [HttpPost("confirmemail", Name = "ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                //eventually use operation result
+                throw new ArgumentNullException("Confirmation invalid");
+            }
+
+            try
+            {
+                var result = await _emailServices.VerifyEmail(registerRequest.Email);
+                if (result.Success)
+                {
+                    // Logic to confirm email using the token
+                    // This could involve checking the token against a database or cache
+                    return Ok(new { message = "Email confirmed successfully." });
+                }
+                else
+                {
+                    return BadRequest(new { result.Message, result.Errors });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while confirming the email.");
                 return StatusCode(500, "Internal server error");
             }
         }

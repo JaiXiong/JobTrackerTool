@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utils.CustomExceptions;
 using Utils.Operations;
+using static System.Net.WebRequestMethods;
 
 namespace Login.Business.Services
 {
@@ -48,8 +49,15 @@ namespace Login.Business.Services
             return OperationResult.CreateSuccess("Email is valid and does not exist in the system.");
         }
 
-        public async Task<OperationResult> SendEmail(string toEmail, string subject, string body)
+        public async Task<OperationResult> SendVerificationEmail(string toEmail, string token)
         {
+            
+
+            var subject = "Your JobTracker Email Verification";
+            //var confirmationLink = "https://jobtracker.dev/confirm-email?token=" + token;
+            var confirmationLink = "";
+            var body = $"<p>Please verify your email by clicking the link below:</p><a href='{confirmationLink}'>Verify Email</a>";
+
             _logger.LogInformation($"Sending email to {toEmail} with subject {subject}");
 
             var smtpSection = _configuration.GetSection("SMTP2Go");
@@ -82,6 +90,12 @@ namespace Login.Business.Services
 
             //return Task.CompletedTask;
             return OperationResult.CreateSuccess("Email sent successfully.");
+        }
+
+        private Task<OperationResult?> SendVerifiedLink(string toEmail, string subject, string body, string token)
+        {
+            
+            throw new NotImplementedException();
         }
     }
 }
