@@ -26,5 +26,6 @@ namespace JobData.Entities
         public string? City { get; set; }
         public string? State { get; set; }
         public string? Zip { get; set; }
+        public bool IsEmailVerified { get; set; } = false;
     }
 }

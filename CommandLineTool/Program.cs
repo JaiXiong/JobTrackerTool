@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml.Serialization;
-using JobData.Entities;
+﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
 using JobTracker.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Utils.AutoMapper;
-using Utils.Encryption;
+using System.Text;
+using System.Xml.Serialization;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 
 class Program
 {
@@ -54,13 +52,34 @@ class Program
 
     private static IJobTrackerToolService InitializeJobTrackerToolService()
     {
+        //var logger = new LoggerFactory().CreateLogger<JobTrackerToolService>();
+        //var optionsBuilder = new DbContextOptionsBuilder<JobTrackerContext>();
+        //optionsBuilder.UseSqlServer("Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes");
+
+        //var dataContext = new JobTrackerContext(optionsBuilder.Options);
+
+        //// Use MemoryCache instead of IMemoryCache directly
+        //var memoryCache = new MemoryCache(new MemoryCacheOptions());
+
+        //return new JobTrackerToolService(dataContext, logger, memoryCache);
+        // Set up configuration
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        // Set up logging
         var logger = new LoggerFactory().CreateLogger<JobTrackerToolService>();
-        var optionsBuilder = new DbContextOptionsBuilder<JobProfileContext>();
-        optionsBuilder.UseSqlServer("Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes");
 
-        var dataContext = new JobProfileContext(optionsBuilder.Options);
+        // Set up DbContext
+        var optionsBuilder = new DbContextOptionsBuilder<JobTrackerContext>();
+        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
-        // Use MemoryCache instead of IMemoryCache directly
+        var dataContext = new JobTrackerContext(optionsBuilder.Options, configuration);
+
+        // Memory cache remains the same
         var memoryCache = new MemoryCache(new MemoryCacheOptions());
 
         return new JobTrackerToolService(dataContext, logger, memoryCache);

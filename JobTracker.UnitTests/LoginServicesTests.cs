@@ -21,7 +21,7 @@ public class LoginServicesTests
 {
     private readonly LoginServices _loginServices;
     private readonly Mock<IConfiguration> _mockConfiguration;
-    private readonly Mock<IJobProfileContext> _mockDbContext;
+    private readonly Mock<IJobTrackerContext> _mockDbContext;
     private readonly Mock<ResourceManager> _mockResourceManager;
     private readonly Mock<Encryption> _mockEncryption;
     private readonly Mock<LoginBusiness> _mockLoginBusiness;
@@ -36,7 +36,7 @@ public class LoginServicesTests
         _mockConfiguration.Setup(config => config["Jwt:Audience"]).Returns("TestAudience");
         _mockConfiguration.Setup(config => config["Jwt:ExpiresInMinutes"]).Returns("15");
 
-        _mockDbContext = new Mock<IJobProfileContext>();
+        _mockDbContext = new Mock<IJobTrackerContext>();
         //_mockResourceManager = new Mock<ResourceManager>("LoginErrors.ResourceFileName", typeof(LoginServices).Assembly
         _mockResourceManager = new Mock<ResourceManager>("Login.Business.LoginBusinessErrors", typeof(LoginServices).Assembly);
         _mockEncryption = new Mock<Encryption>();

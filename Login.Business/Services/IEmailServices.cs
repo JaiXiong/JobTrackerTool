@@ -13,7 +13,7 @@ namespace Login.Business.Services
         //Task SendEmailAsync(string to, string subject, string body);
         Task<OperationResult> VerifyEmail(string email);
 
-        Task<OperationResult> SendVerificationEmail(string toEmail, string token);
+        Task<OperationResult> SendVerificationEmail(Guid userId, string toEmail, string token);
 
     }
 }

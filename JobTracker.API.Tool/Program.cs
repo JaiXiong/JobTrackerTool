@@ -118,10 +118,10 @@ builder.Services.AddScoped<IJobTrackerToolService, JobTrackerToolService>();
 builder.Services.AddScoped<IJobTrackerToolBusiness, JobTrackerToolBusiness>();
 builder.Services.AddScoped<Encryption>();
 //builder.Services.AddScoped<IJobProfileContext, JobProfileContext>();
-builder.Services.AddScoped<IJobProfileContext>(provider => provider.GetRequiredService<JobProfileContext>());
+builder.Services.AddScoped<IJobTrackerContext>(provider => provider.GetRequiredService<JobTrackerContext>());
 
 // Register the DbContext with a connection string in the appsettings
-builder.Services.AddDbContext<JobProfileContext>(options =>
+builder.Services.AddDbContext<JobTrackerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();

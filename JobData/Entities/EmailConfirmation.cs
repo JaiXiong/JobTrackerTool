@@ -12,7 +12,6 @@ namespace JobData.Entities
         public Guid UserId { get; set; }
         public string? token { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public bool IsConfirmed { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

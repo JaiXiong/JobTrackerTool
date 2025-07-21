@@ -1,4 +1,5 @@
-﻿using JobTracker.API.Tool.DbData;
+﻿using JobData.Entities;
+using JobTracker.API.Tool.DbData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
@@ -21,10 +22,10 @@ namespace Login.Business.Services
     {
         private readonly ILogger<EmailServices> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IJobProfileContext _dbContext;
+        private readonly IJobTrackerContext _dbContext;
         private ResxFormat _resx;
 
-        public EmailServices(ILogger<EmailServices> logger, IConfiguration configuration,IJobProfileContext context)
+        public EmailServices(ILogger<EmailServices> logger, IConfiguration configuration,IJobTrackerContext context)
         {
             _logger = logger;
             _configuration = configuration;
@@ -49,13 +50,13 @@ namespace Login.Business.Services
             return OperationResult.CreateSuccess("Email is valid and does not exist in the system.");
         }
 
-        public async Task<OperationResult> SendVerificationEmail(string toEmail, string token)
+        public async Task<OperationResult> SendVerificationEmail(Guid userId, string toEmail, string token)
         {
-            
-
             var subject = "Your JobTracker Email Verification";
-            //var confirmationLink = "https://jobtracker.dev/confirm-email?token=" + token;
-            var confirmationLink = "";
+            var baseUrl = _configuration["EmailConfirmation:BaseUrl"] ?? "https://localhost:3001";
+            var confirmationPath = _configuration["EmailConfirmation:Path"] ?? "/login/confirm-email";
+            var confirmationLink = $"{baseUrl}{confirmationPath}?token={Uri.EscapeDataString(token)}";
+
             var body = $"<p>Please verify your email by clicking the link below:</p><a href='{confirmationLink}'>Verify Email</a>";
 
             _logger.LogInformation($"Sending email to {toEmail} with subject {subject}");
@@ -86,6 +87,8 @@ namespace Login.Business.Services
 
             mailMessage.To.Add(toEmail);
 
+            CreateEmailConfirmation(userId, token);
+
             await smtpClient.SendMailAsync(mailMessage);
 
             //return Task.CompletedTask;
@@ -96,6 +99,29 @@ namespace Login.Business.Services
         {
             
             throw new NotImplementedException();
+        }
+
+        private async void CreateEmailConfirmation(Guid userId, string token)
+        {
+            EmailConfirmation emailConfirmation = new EmailConfirmation
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                token = token,
+                ExpirationDate = DateTime.UtcNow.AddMinutes(60),
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            try 
+            {
+                await _dbContext.EmailConfirmations.AddAsync(emailConfirmation);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating email confirmation.");
+                throw new BusinessException(_resx.Create("EmailConfirmationCreationFailed"));
+            }
         }
     }
 }

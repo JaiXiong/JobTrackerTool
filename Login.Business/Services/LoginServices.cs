@@ -17,14 +17,14 @@ namespace Login.Business.Services
     public class LoginServices : ILoginServices
     {
         private readonly ResourceManager _resourceManager;
-        private readonly IJobProfileContext _dbContext;
+        private readonly IJobTrackerContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly Encryption _encryption;
         private readonly LoginBusiness _loginBusiness;
         private readonly ILogger<LoginServices> _logger;
         private ResxFormat _resx;
 
-        public LoginServices(ResourceManager resourceManager, IJobProfileContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness, ILogger<LoginServices> logger)
+        public LoginServices(ResourceManager resourceManager, IJobTrackerContext context, IConfiguration configuration, Encryption encryption, LoginBusiness loginBusiness, ILogger<LoginServices> logger)
         {
             _resourceManager = new ResourceManager("Login.Business.LoginBusinessErrors", typeof(LoginServices).Assembly);
             _resx = new ResxFormat(_resourceManager);
@@ -197,6 +197,65 @@ namespace Login.Business.Services
                 await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("User registered successfully.");
+        }
+
+        public async Task<EmailConfirmation> GetEmailConfirmationById(Guid id)
+        {
+            var exist = await _dbContext.EmailConfirmations.FirstOrDefaultAsync(e => e.Id == id);
+            
+            if (exist == null)
+            {
+                // eventually use operation result
+                throw new BusinessException(_resx.Create("EmailConfirmationNotFound"));
+            }
+
+            return exist;
+        }
+
+        public async Task<Guid> GetUserIdByEmail(string email)
+        {
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                throw new BusinessException(_resx.Create("UserNotExist"));
+            }
+
+            return user.Id;
+        }
+
+        public async Task<OperationResult> ConfirmEmail(string token)
+        {
+            var profileExist = await _dbContext.EmailConfirmations
+                .Where(e => e.token == token && e.ExpirationDate > DateTime.Now)
+                .FirstOrDefaultAsync();
+
+            if (profileExist == null)
+            {
+                return OperationResult.CreateFailure(_resx.Create("EmailConfirmationNotFound"));
+            }
+
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Id == profileExist.UserId);
+
+            if (user == null)
+            {
+                return OperationResult.CreateFailure(_resx.Create("UserNotExist"));
+            }
+
+            user.IsEmailVerified = true;
+
+            _dbContext.UserProfiles.Update(user);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return OperationResult.CreateSuccess("Email confirmed successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while confirming email.");
+                return OperationResult.CreateFailure(_resx.Create("EmailConfirmationFailed"));
+            }
         }
     }
 }

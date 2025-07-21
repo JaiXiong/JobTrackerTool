@@ -19,7 +19,7 @@ namespace JobTracker.UnitTests
     {
         private readonly JobTrackerToolService _jobTrackerService;
         // Change the type of _mockDbContext to Mock<IJobProfileContext> to match the initialization
-        private readonly Mock<IJobProfileContext> _mockDbContext;
+        private readonly Mock<IJobTrackerContext> _mockDbContext;
         private readonly Mock<ILogger<JobTrackerToolService>> _mockLogger;
         private readonly Mock<IMemoryCache> _mockCache;
         private readonly Mock<ICacheEntry> _mockCacheEntry;
@@ -29,7 +29,7 @@ namespace JobTracker.UnitTests
         // Update the constructor to use the correct type
         public JobTrackerServicesTests()
         {
-            _mockDbContext = new Mock<IJobProfileContext>();
+            _mockDbContext = new Mock<IJobTrackerContext>();
             _mockLogger = new Mock<ILogger<JobTrackerToolService>>();
             _mockCache = new Mock<IMemoryCache>();
             _mockCacheEntry = new Mock<ICacheEntry>();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobData.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace Login.Business.Services
 
         string GenerateToken(string username);
         string GenerateRefreshToken(string username);
+        Task<EmailConfirmation> GetEmailConfirmationById(Guid id);
+        Task<OperationResult> ConfirmEmail(string token);
+        Task<Guid> GetUserIdByEmail(string email);
     }
 }

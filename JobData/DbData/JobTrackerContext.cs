@@ -6,19 +6,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace JobTracker.API.Tool.DbData
 {
-    public class JobProfileContext : DbContext, IJobProfileContext
+    public class JobTrackerContext : DbContext, IJobTrackerContext
     {
         private readonly IConfiguration _configuration;
 
-        public JobProfileContext(DbContextOptions<JobProfileContext> options, IConfiguration configuration) : base(options)
+        public JobTrackerContext(DbContextOptions<JobTrackerContext> options, IConfiguration configuration) : base(options)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        public JobProfileContext(DbContextOptions<JobProfileContext> options) : base(options)
-        {
-            _configuration = null!; // Explicitly mark as non-null since this constructor does not initialize it.
-        }
+        //public JobTrackerContext(DbContextOptions<JobTrackerContext> options) : base(options)
+        //{
+        //    _configuration = null;
+        //}
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,6 +52,7 @@ namespace JobTracker.API.Tool.DbData
         public DbSet<JobAction> JobActions { get; set; }
         public DbSet<Detail> Details { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<EmailConfirmation> EmailConfirmations { get; set; }
         public virtual async Task<UserProfile> GetUserProfileAsync(Expression<Func<UserProfile, bool>> predicate, CancellationToken cancellationToken = default)
         {
             return await UserProfiles.FirstOrDefaultAsync(predicate, cancellationToken) ?? throw new InvalidOperationException("UserProfile not found");

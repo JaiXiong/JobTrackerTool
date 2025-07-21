@@ -83,6 +83,7 @@ namespace Login.API.Controllers
         {
             if (string.IsNullOrEmpty(registerRequest.Email) || string.IsNullOrEmpty(registerRequest.Password))
             {
+                //this should use our custom exception instead of ArgumentNullException
                 throw new ArgumentNullException("Username or password invalid");
             }
 
@@ -93,15 +94,16 @@ namespace Login.API.Controllers
 
                 if (result.Success)
                 {
+                    await _loginServices.Register(registerRequest.Email, registerRequest.Password);
+
+                    var userId = await _loginServices.GetUserIdByEmail(registerRequest.Email);
                     var token = _loginServices.GenerateToken(registerRequest.Email);
-                    var emailSentStatus = await _emailServices.SendVerificationEmail(registerRequest.Email, token);
+                    var emailSentStatus = await _emailServices.SendVerificationEmail(userId, registerRequest.Email, token);
 
                     if (!emailSentStatus.Success)
                     {
                         return BadRequest(new { message = "Failed to send verification email.", errors = emailSentStatus.Errors });
                     }
-
-                    await _loginServices.Register(registerRequest.Email, registerRequest.Password);
                 }
                 else
                 {
@@ -167,26 +169,25 @@ namespace Login.API.Controllers
         }
 
         /// <summary>
-        /// Registers a new user.
+        /// Confirms a new user.
         /// </summary>
-        /// <param name="confirmemail">The confirmation email request will have a short life token for verification.</param>
+        /// <param name="token"></param>
         /// <returns>A response indicating the result of the confirmation operation.</returns>
-        [HttpPost("confirmemail", Name = "ConfirmEmail")]
+        [HttpGet("confirm-email", Name = "ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
         {
-            if (string.IsNullOrEmpty(token))
-            {
-                //eventually use operation result
-                throw new ArgumentNullException("Confirmation invalid");
-            }
-
             try
             {
-                var result = await _emailServices.VerifyEmail(registerRequest.Email);
+                //var comfirmationProfile = await _loginServices.GetEmailConfirmationById(emailConfirmationId);
+
+                var result = await _loginServices.ConfirmEmail(token);
+
                 if (result.Success)
                 {
                     // Logic to confirm email using the token
                     // This could involve checking the token against a database or cache
+                    //we should direct them to a working page no??
+
                     return Ok(new { message = "Email confirmed successfully." });
                 }
                 else
