@@ -28,6 +28,15 @@ export class LoginService {
             catchError(this.handleError<any>('RegisterUser')));
     }
 
+    public confirmEmail(email: string, token: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const body = { email, token };
+        const params = new HttpParams().set('email', email).set('token', token
+        );
+        return this.http.post<any>(`${this.loginUrl}/api/Login/confirm-email`, body, { headers }).pipe(
+            catchError(this.handleError<any>('confirmEmail')));
+    }
+
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
           console.error(`${operation} failed: ${error.message}`);

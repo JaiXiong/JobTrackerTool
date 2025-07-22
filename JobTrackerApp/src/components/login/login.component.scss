@@ -81,3 +81,14 @@ mat-dialog-content form mat-form-field:first-of-type {
   justify-content: flex-end; // Align the button to the right
   padding-top: 10px;
 }
+
+.enroll-link-container {
+  margin-top: 10px;
+  padding-top: 20px;
+}
+
+.enroll-link {
+  color: #1976d2; /* Material Design primary color */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Change cursor to pointer */
+}

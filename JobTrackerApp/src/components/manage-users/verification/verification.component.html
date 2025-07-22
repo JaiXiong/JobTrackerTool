@@ -1,0 +1,12 @@
+<div class="verification-container">
+  <h2>Verification</h2>
+  
+  <p>Please complete the reCAPTCHA verification below:</p>
+  
+  <div class="g-recaptcha"></div>
+  
+  <!-- Add a loading message or spinner -->
+  <div *ngIf="!captchaRendered" class="loading-captcha">
+    Loading reCAPTCHA...
+  </div>
+</div>

@@ -15,6 +15,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { ClosebuttonModularComponent } from '../../modular/closebutton-modular/closebutton-modular.component';
 import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular/submitbutton-modular.component';
+import { BackbuttonModularComponent } from '../../modular/backbutton-modular/backbutton-modular.component';
+import { VerificationComponent } from '../verification/verification.component';
 
 @Component({
   selector: 'app-registeruser',
@@ -29,7 +31,9 @@ import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular
     MatTooltipModule,
     ReactiveFormsModule,
     SubmitbuttonModularComponent,
-  ],
+    BackbuttonModularComponent,
+    VerificationComponent
+],
   templateUrl: './registeruser.component.html',
   styleUrl: './registeruser.component.scss',
 })
@@ -37,13 +41,16 @@ export class RegisteruserComponent {
   //userProfileForm!: FormGroup;
   _registerUser: FormGroup;
   _email: string = '';
+  _confirmEmail: string = '';
   _password: string = '';
   _confirmPassword: string = '';
   @Output() registerComplete = new EventEmitter<void>();
+  @Output() backClicked = new EventEmitter<void>();
 
   constructor(private formBuilder: FormBuilder) {
     this._registerUser = this.formBuilder.group({
       email: ['', Validators.required],
+      confirmEmail: ['', Validators.required],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
     });
@@ -55,8 +62,13 @@ export class RegisteruserComponent {
   public onSubmitRegisterUser(): void {
     
     this._registerUser.value.email = this._email;
+    this._registerUser.value.confirmEmail = this._confirmEmail;
     this._registerUser.value.password = this._password;
     this._registerUser.value.confirmPassword = this._confirmPassword;
+  }
+
+  public onBackClicked(): void {
+    this.backClicked.emit();
   }
 
   handleCloseRegister() {

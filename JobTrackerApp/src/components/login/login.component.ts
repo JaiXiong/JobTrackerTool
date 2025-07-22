@@ -12,6 +12,7 @@ import { RegisteruserComponent } from "../manage-users/registeruser/registeruser
 import { LoginService } from '../../services/login/login.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { tap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ import { tap } from 'rxjs';
     MatIconModule,
     FormsModule,
     RegisteruserComponent,
+    MatButtonModule
   ],
   providers: [],
   templateUrl: './login.component.html',
@@ -69,29 +71,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  // checkFormValidity() {
-  //   if (this.isUpdatingValidity) {
-  //     return;
-  //   }
-
-  //   this.isUpdatingValidity = true;
-    
-  //   if (this.username?.value && this.password?.value) {
-  //     this.loginForm.updateValueAndValidity();
-  //   }
-  //   this.isUpdatingValidity = false;
-  // }
-
   public login(): void {
-    // this.loginService.Login(this._username, this._password).subscribe({
-    //   next: (response) => {
-    //    this.router.navigate(['/jobprofile'], { queryParams: { usernameid: response.id, name: response.name } });
-    // },
-    //   error: (error) => {
-    //     console.error('Login failed', error);
-    //   },
-    // });
-
     this.loginService
       .Login(
         this.loginForm.get('username')?.value,
@@ -137,11 +117,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  handleClose() {
+  public handleClose(): void {
     this._isRegister = false;
   }
 
-  onRegisterComplete() {
+  public onRegisterComplete(): void {
+    this._isRegister = false;
+  }
+
+  public onBackFromRegister(): void {
     this._isRegister = false;
   }
 }

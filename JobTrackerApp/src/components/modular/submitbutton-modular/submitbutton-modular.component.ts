@@ -2,13 +2,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { JobTrackerService } from '../../../services/jobtracker/jobtracker.service';
 import { LoginService } from '../../../services/login/login.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-submitbutton-modular',
   standalone: true,
   imports: 
   [
-
+    MatButtonModule
   ],
   templateUrl: './submitbutton-modular.component.html',
   styleUrl: './submitbutton-modular.component.scss'

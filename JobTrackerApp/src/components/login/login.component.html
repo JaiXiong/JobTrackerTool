@@ -2,45 +2,40 @@
   <div class="login-container">
     <form [formGroup]="loginForm">
         <div class="login-form">
-
-          <mat-form-field class="login-form-custom">
-            <mat-label>Username</mat-label>
-            <input matInput placeholder="Enter your email" required formControlName="username" name="username">
-            <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
-              <span *ngIf="username?.errors?.['required']">Email is required.</span>
-              <span *ngIf="username?.errors?.['email']">Invalid email address.</span>
-            </mat-error>
+          <ng-container *ngIf="!_isRegister">
             
-          </mat-form-field>
+            <mat-form-field class="login-form-custom">
+              <mat-label>Username</mat-label>
+              <input matInput placeholder="Enter your email" required formControlName="username" name="username">
+              <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+                <span *ngIf="username?.errors?.['required']">Email is required.</span>
+                <span *ngIf="username?.errors?.['email']">Invalid email address.</span>
+              </mat-error>
+            </mat-form-field>
 
-          <mat-form-field class="login-form-custom">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" placeholder="Enter your password" required formControlName="password" name="password" style="margin-left: 3px;">
-            <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
-              <span *ngIf="password?.errors?.['required']">Password is required.</span>
-              <span *ngIf="password?.errors?.['email']">Invalid email address.</span>
-            </mat-error>
-          </mat-form-field>
+            <mat-form-field class="login-form-custom">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" placeholder="Enter your password" required formControlName="password" name="password" style="margin-left: 3px;">
+              <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+                <span *ngIf="password?.errors?.['required']">Password is required.</span>
+                <span *ngIf="password?.errors?.['email']">Invalid email address.</span>
+              </mat-error>
+            </mat-form-field>
 
-          <button mat-raised-button type="submit" (click)="login()" [disabled]="loginForm.invalid && loginForm.touched">Login</button>
-            <!-- <div *ngIf="!_isRegister">
-                <mat-label class="login-label-custom">Username</mat-label>
-                <input matInput placeholder="Enter your email" required [(ngModel)]="_username" name="username">
-              </div> -->
-          
-              <!-- <div *ngIf="!_isRegister">
-                <mat-label class="login-label-custom">Password</mat-label>
-                <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password" style="margin-left: 3px;">
-              </div>
-              <div class="login-button" *ngIf="!_isRegister">
-                <button  mat-raised-button color="primary" (click)="login()">Login</button>
-              </div> -->
+            <button mat-raised-button color="primary" type="submit" (click)="login()" [disabled]="loginForm.invalid && loginForm.touched">Login</button>
 
-              <span class="login-label-custom" style="align-items: center;" *ngIf="!_isRegister"><a  href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a></span>
-              <app-registeruser 
+              <span class="enroll-link-container" *ngIf="!_isRegister">
+                <a class="enroll-link" href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a>
+              </span>
+
+          </ng-container>
+
+            <app-registeruser 
               *ngIf="_isRegister" 
-              (registerComplete)="onRegisterComplete()">
+              (registerComplete)="onRegisterComplete()"
+              (backClicked)="onBackFromRegister()">
             </app-registeruser>
+            
         </div>
         <div>
           <!-- Don't have an account? <a routerLink="/register">Register</a> -->

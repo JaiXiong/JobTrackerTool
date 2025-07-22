@@ -1,7 +1,36 @@
-<p class="register-label">Create New User</p>
+<!-- <p class="register-label">Create new account</p> -->
+<h2>Create new account</h2>
+
 <form>
-  <div>
+
+  <mat-form-field class="register-email-textbox">
     <mat-label class="register-label-custom">Email</mat-label>
+    <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_email" name="email">
+  </mat-form-field>
+
+  <mat-form-field class="register-email-textbox">
+    <mat-label class="register-label-custom">Confirm Email</mat-label>
+    <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_confirmEmail" name="confirmEmail">
+  </mat-form-field>
+
+  <mat-form-field class="register-email-textbox">
+    <mat-label class="register-label-custom">Password</mat-label>
+    <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password"
+      style="margin-left: 3px;">
+  </mat-form-field>
+
+  <mat-form-field class="register-email-textbox">
+    <mat-label class="register-label-custom">Confirm Password</mat-label>
+    <input matInput type="password" placeholder="Enter password Again" required [(ngModel)]="_confirmPassword" name="confirmPassword"
+      style="margin-left: 9.2px;">
+  </mat-form-field>
+  <!-- <div>
+    <mat-label class="register-label-custom">Email</mat-label>
+    <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_email" name="email">
+  </div>
+
+  <div>
+    <mat-label class="register-label-custom">Confirm Email</mat-label>
     <input matInput class="register-email-textbox-custom" placeholder="Enter your Email" required [(ngModel)]="_email" name="email">
   </div>
   
@@ -10,15 +39,25 @@
     <input matInput type="password" placeholder="Enter your password" required [(ngModel)]="_password" name="password"
       style="margin-left: 3px;">
   </div>
+
   <div>
     <mat-label class="register-label-custom">Confirm</mat-label>
     <input matInput type="password" placeholder="Enter password Again" required [(ngModel)]="_confirmPassword" name="comfirmpassword"
       style="margin-left: 9.2px;">
-  </div>
+  </div> -->
+
+
   <!-- [formData]="{ email: _email, password: _password, confirmPassword: _confirmPassword }" -->
+  <!-- <app-backbutton-modular (closeRegister)="handleCloseRegister()"></app-backbutton-modular> -->
+<div class="register-button-container">
+  <app-backbutton-modular (backClicked)="onBackClicked()"></app-backbutton-modular>
+
   <app-submitbutton-modular
-    [_registerUser]="{ email: _email, password: _password, confirmPassword: _confirmPassword }"
+    [_registerUser]="{ email: _email, _confirmEmail, password: _password, confirmPassword: _confirmPassword }"
     (closeRegister)="handleCloseRegister()"
     (onSubmit)="onSubmitRegisterUser()">
   </app-submitbutton-modular>
+</div>
+  
+
 </form>

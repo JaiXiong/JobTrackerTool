@@ -41,3 +41,12 @@
   align-items: center;
   height: 100vh; // Full viewport height
 }
+
+.register-button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-left: 28px;
+  margin-right: 28px;
+}
