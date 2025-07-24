@@ -53,7 +53,7 @@ namespace Login.Business.Services
         public async Task<OperationResult> SendVerificationEmail(Guid userId, string toEmail, string token)
         {
             var subject = "Your JobTracker Email Verification";
-            var baseUrl = _configuration["EmailConfirmation:BaseUrl"] ?? "https://localhost:3001";
+            var baseUrl = _configuration["EmailConfirmation:BaseUrl"];
             var confirmationPath = _configuration["EmailConfirmation:Path"] ?? "/login/confirm-email";
             var confirmationLink = $"{baseUrl}{confirmationPath}?token={Uri.EscapeDataString(token)}";
 

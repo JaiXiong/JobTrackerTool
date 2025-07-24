@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone, AfterViewInit, Renderer2, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 declare global {
   interface Window {
@@ -14,12 +14,14 @@ declare global {
   templateUrl: './verification.component.html',
   styleUrls: ['./verification.component.scss'],
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule
+  ],
   
 })
 export class VerificationComponent implements OnInit, AfterViewInit {
-  private captchaRendered = false;
-  private captchaLoaded = false;
+  public captchaRendered: boolean = false;
+  private captchaLoaded: boolean = false;
   
   constructor(
     private renderer: Renderer2,

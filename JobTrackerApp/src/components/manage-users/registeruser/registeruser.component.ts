@@ -17,6 +17,7 @@ import { ClosebuttonModularComponent } from '../../modular/closebutton-modular/c
 import { SubmitbuttonModularComponent } from '../../modular/submitbutton-modular/submitbutton-modular.component';
 import { BackbuttonModularComponent } from '../../modular/backbutton-modular/backbutton-modular.component';
 import { VerificationComponent } from '../verification/verification.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-registeruser',
@@ -32,7 +33,8 @@ import { VerificationComponent } from '../verification/verification.component';
     ReactiveFormsModule,
     SubmitbuttonModularComponent,
     BackbuttonModularComponent,
-    VerificationComponent
+    MatSnackBarModule,
+    //VerificationComponent
 ],
   templateUrl: './registeruser.component.html',
   styleUrl: './registeruser.component.scss',
@@ -47,7 +49,7 @@ export class RegisteruserComponent {
   @Output() registerComplete = new EventEmitter<void>();
   @Output() backClicked = new EventEmitter<void>();
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
     this._registerUser = this.formBuilder.group({
       email: ['', Validators.required],
       confirmEmail: ['', Validators.required],
@@ -65,6 +67,16 @@ export class RegisteruserComponent {
     this._registerUser.value.confirmEmail = this._confirmEmail;
     this._registerUser.value.password = this._password;
     this._registerUser.value.confirmPassword = this._confirmPassword;
+
+    this.showMessage('Check your Email!');
+  }
+
+  private showMessage(message: string, action: string = 'Close', duration: number = 10000): void {
+    this.snackBar.open(message, action, {
+      duration: duration,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+    });
   }
 
   public onBackClicked(): void {

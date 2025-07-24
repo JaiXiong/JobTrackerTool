@@ -30,9 +30,9 @@ namespace Login.Business.Business
         public virtual ClaimsPrincipal GetTokenInfo(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var secret = _configuration["JWT_SECRET_KEY"];
+            var secret = _configuration["JWT-SECRET-KEY"];
 
-            if (secret.IsNullOrEmpty() || secret == null)
+            if (string.IsNullOrEmpty(secret))
             {
                 throw new BusinessException(_resx.Create("JWTInvalid"));
             }

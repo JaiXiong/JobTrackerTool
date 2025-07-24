@@ -1,0 +1,32 @@
+<div class="confirmation-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Email Confirmation</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Verifying your email...</p>
+      </div>
+      
+      <div *ngIf="!isLoading && isConfirmed" class="confirmation-success">
+        <mat-icon color="primary">check_circle</mat-icon>
+        <h2>Email Successfully Confirmed</h2>
+        <p>Thank you for confirming your email address. Your account is now active.</p>
+      </div>
+      
+      <div *ngIf="!isLoading && !isConfirmed" class="confirmation-error">
+        <mat-icon color="warn">error</mat-icon>
+        <h2>Email Confirmation Failed</h2>
+        <p>{{ errorMessage }}</p>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="goToLogin()">
+        Go to Login
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

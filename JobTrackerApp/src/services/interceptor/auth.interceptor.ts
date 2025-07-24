@@ -5,13 +5,29 @@ import { catchError, EMPTY, switchMap } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { response } from 'express';
 
+const PUBLIC_ENDPOINTS = [
+  '/api/Login/loginauth',
+  '/api/Login/registeruser',
+  '/api/Login/confirm-email'
+];
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const authService = inject(AuthService);
   const jwtToken = getJwtToken();
   const refreshToken = authService.refreshToken();
   
-  if (req.url.includes('login') || req.url.includes('register')) {
+  //what to omit old way
+  // if (req.url.includes('login') || req.url.includes('register') || req.url.includes('confirm-email')) {
+  //   return next(req);
+  // }
+
+  // Check if the request URL matches any public endpoint
+  const isPublicEndpoint = PUBLIC_ENDPOINTS.some(endpoint => 
+    req.url.endsWith(endpoint) || req.url.includes(`${endpoint}?`)
+  );
+
+   if (isPublicEndpoint) {
     return next(req);
   }
   

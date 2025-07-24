@@ -145,7 +145,7 @@ namespace Login.Business.Services
             }
 
             var exp = expClaim.Value;
-            var user = userClaim.Value;
+            var user = userClaim.Value.Substring(0, userClaim.Value.IndexOf('@'));
             var email = emailClaim.Value;
 
             var userExist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == user && u.Email == email);

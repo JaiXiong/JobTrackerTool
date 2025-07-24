@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   public getCurrentUser(): Observable<any> {
-    return this.http.get('${this.loginUrl}/api/Login/currentuser');
+    return this.http.get(`${this.loginUrl}/api/Login/currentuser`);
   }
 
   public isLoggedIn() {
@@ -86,7 +86,7 @@ export class AuthService {
     );
 
     return this.http
-      .post('${this.loginUrl}/api/login/refreshtoken', {}, { headers })
+      .post(`${this.loginUrl}/api/login/refreshtoken`, {}, { headers })
       .pipe(
         tap({
           next: (response: any) => {

@@ -22,18 +22,18 @@ export class LoginService {
     public RegisterUser(email: string, password: string): Observable<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         const body = { email, password };
-        const params = new HttpParams().set('email', email).set('password', password);
+        //const params = new HttpParams().set('email', email).set('password', password);
       
         return this.http.post<any>(`${this.loginUrl}/api/Login/registeruser`, body, { headers }).pipe(
             catchError(this.handleError<any>('RegisterUser')));
     }
 
-    public confirmEmail(email: string, token: string): Observable<any> {
+    public ConfirmEmail(token: string): Observable<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        const body = { email, token };
-        const params = new HttpParams().set('email', email).set('token', token
-        );
-        return this.http.post<any>(`${this.loginUrl}/api/Login/confirm-email`, body, { headers }).pipe(
+        //const body = { token };
+        const params = new HttpParams().set('token', token);
+
+        return this.http.get<any>(`${this.loginUrl}/api/Login/confirm-email`, { headers, params }).pipe(
             catchError(this.handleError<any>('confirmEmail')));
     }
 
