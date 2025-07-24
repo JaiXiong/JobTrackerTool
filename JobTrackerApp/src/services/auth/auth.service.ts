@@ -14,6 +14,8 @@ export class AuthService {
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
   private loggedUser?: string;
   private isAuthicatedSubject = new BehaviorSubject<boolean>(false);
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   //private cookieService = inject(CookieService);
 
@@ -27,6 +29,7 @@ export class AuthService {
       refresh_token: refreshtoken,
     });
     this.isAuthicatedSubject.next(true);
+    this.isLoggedInSubject.next(true);
   }
 
   public storeJwtTokens(tokens: any) {
@@ -108,6 +111,7 @@ export class AuthService {
     this.cookieService.delete(this.REFRESH_TOKEN);
     localStorage.removeItem('jobProfileId');
     this.isAuthicatedSubject.next(false);
+    this.isLoggedInSubject.next(false);
   }
 }
 

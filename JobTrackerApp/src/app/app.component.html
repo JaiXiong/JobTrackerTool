@@ -3,13 +3,25 @@
   <div class="flex-container">
     <mat-icon class="title-icon" fontIcon="home" matTooltip="Go to main page" (click)="mainpage()"></mat-icon>
     JobTrackerApp
-    <app-logoutbutton-modular></app-logoutbutton-modular>
+
+    <!-- this was used to be able to render the login/logout button in the header dynamically when it isn't being used as a parent component -->
+  <!-- <app-logoutbutton-modular 
+  *ngIf="_isLoggedin"
+  (isLoggedIn)="onLoginFromLogin($event)">
+  </app-logoutbutton-modular> -->
+
+  <app-logoutbutton-modular *ngIf="_isLoggedin"></app-logoutbutton-modular> 
   </div>
 </div>
 
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+
+ <!-- this was used to be able to render the login/logout button in the header dynamically when it isn't being used as a parent component -->
+<!-- <div class="content">
+  <router-outlet (activate)="onActivate($event)"></router-outlet>
+</div> -->
 
 <body class="body-for-sticky">
   <div class="footer sticky-footer">Copyright information &copy; 2023 Jai Xiong. All rights reserved. </div>

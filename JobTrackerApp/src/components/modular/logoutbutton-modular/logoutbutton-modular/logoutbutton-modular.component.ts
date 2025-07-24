@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -26,11 +26,13 @@ import { AuthService } from '../../../../services/auth/auth.service';
   styleUrl: './logoutbutton-modular.component.scss'
 })
 export class LogoutbuttonModularComponent {
-
+  @Output() isLoggedIn = new EventEmitter<boolean>();
+  
   constructor(private router: Router, private authService: AuthService) {}
 
   public logout(): void {
     this.authService.logout();
+    this.isLoggedIn.emit(false);
     this.router.navigate(['/login']);
   }
 }

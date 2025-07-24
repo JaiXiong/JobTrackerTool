@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
   _isRegister: boolean = false;
   _currenUser: any;
   //private isUpdatingValidity = false;
+  @Output() isLoggedIn = new EventEmitter<boolean>();
 
   constructor(
     private router: Router,
@@ -92,6 +93,7 @@ export class LoginComponent implements OnInit {
           },
           complete: () => {
             //console.log('Request completed');
+            this.isLoggedIn.emit(true);
           },
           error: (error) => {
             console.log('Error received:', error);
