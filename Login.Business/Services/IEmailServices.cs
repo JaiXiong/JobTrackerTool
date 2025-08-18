@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JobData.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -14,6 +15,8 @@ namespace Login.Business.Services
         Task<OperationResult> VerifyEmail(string email);
 
         Task<OperationResult> SendVerificationEmail(Guid userId, string toEmail, string token);
+
+        Task<OperationResult> AddEmailConfirmation(EmailConfirmation emailConfirmationProfile);
 
     }
 }

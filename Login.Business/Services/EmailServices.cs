@@ -25,7 +25,7 @@ namespace Login.Business.Services
         private readonly IJobTrackerContext _dbContext;
         private ResxFormat _resx;
 
-        public EmailServices(ILogger<EmailServices> logger, IConfiguration configuration,IJobTrackerContext context)
+        public EmailServices(ILogger<EmailServices> logger, IConfiguration configuration, IJobTrackerContext context)
         {
             _logger = logger;
             _configuration = configuration;
@@ -97,7 +97,7 @@ namespace Login.Business.Services
 
         private Task<OperationResult?> SendVerifiedLink(string toEmail, string subject, string body, string token)
         {
-            
+
             throw new NotImplementedException();
         }
 
@@ -112,7 +112,7 @@ namespace Login.Business.Services
                 CreatedAt = DateTime.UtcNow,
             };
 
-            try 
+            try
             {
                 await _dbContext.EmailConfirmations.AddAsync(emailConfirmation);
                 await _dbContext.SaveChangesAsync();
@@ -121,6 +121,26 @@ namespace Login.Business.Services
             {
                 _logger.LogError(ex, "An error occurred while creating email confirmation.");
                 throw new BusinessException(_resx.Create("EmailConfirmationCreationFailed"));
+            }
+        }
+
+       public async Task<OperationResult> AddEmailConfirmation(EmailConfirmation emailConfirmationProfile)
+        {
+            if (emailConfirmationProfile == null)
+            {
+                throw new ArgumentNullException(nameof(emailConfirmationProfile), "Email confirmation profile cannot be null.");
+            }
+
+            try
+            {
+                await _dbContext.EmailConfirmations.AddAsync(emailConfirmationProfile);
+                await _dbContext.SaveChangesAsync();
+                return OperationResult.CreateSuccess("Email confirmation added successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding email confirmation.");
+                return OperationResult.CreateFailure("Failed to add email confirmation.");
             }
         }
     }

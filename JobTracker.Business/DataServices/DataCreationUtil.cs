@@ -1,11 +1,15 @@
 ﻿using JobData.Entities;
 using JobTracker.API.Tool.DbData;
+using JobTracker.Business.Business;
 using JobTracker.Business.Services;
+using Login.Business.Business;
+using Login.Business.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Resources;
+using Utils.Encryption;
 
 namespace JobTracker.Business.DataServices
 {
@@ -13,25 +17,43 @@ namespace JobTracker.Business.DataServices
     {
         public static async Task Create(string[] args)
         {
+            var connectionString = "Server=(local),1433;Database=JobTracker01;Integrated Security=True;TrustServerCertificate=Yes";
+            
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    {"ConnectionStrings:DefaultConnection", connectionString}
+                })
+                .Build();
+            
             var serviceProvider = new ServiceCollection()
                 .AddLogging(configure => configure.AddConsole())
-                .AddDbContext<JobTrackerContext>(options =>
-                    options.UseSqlServer(
-                        "Server=(local), 1433;Database=JobTracker01; Integrated Security=True; TrustServerCertificate=Yes"
-                        //"Server=tcp:jobtracker01.database.windows.net,1433;Initial Catalog=jobtracker01;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default"
-                        ))
+                .AddDbContext<JobTrackerContext>()
+                //.AddDbContext<JobTrackerContext>(options =>
+                //    options.UseSqlServer(connectionString))
                 .AddMemoryCache()
                 .AddScoped<JobTrackerToolService>()
                 .AddScoped<IJobTrackerContext, JobTrackerContext>()
                 .AddScoped<IJobTrackerToolService, JobTrackerToolService>()
+                .AddScoped<ILoginServices, LoginServices>()
+                .AddScoped<IEmailServices, EmailServices>()
+                .AddScoped<IJobTrackerToolBusiness, JobTrackerToolBusiness>()
+                .AddScoped<ILoginBusiness, LoginBusiness>()
+                .AddScoped<LoginBusiness>()
+                .AddSingleton<Encryption>()
                 //.AddSingleton(new ResourceManager("JobTracker.Business.Resources", typeof(JobTrackerToolService).Assembly))
                 .AddSingleton(new ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(IJobTrackerToolService).Assembly))
+                .AddSingleton<IConfiguration>(configuration)
                 .BuildServiceProvider();
 
             var jobTrackerToolService = serviceProvider.GetService<IJobTrackerToolService>();
+            var loginServices = serviceProvider.GetService<ILoginServices>();
+            var emailServices = serviceProvider.GetService<IEmailServices>();
             var logger = serviceProvider.GetService<ILogger<Program>>();
 
-            if (jobTrackerToolService == null || logger == null)
+            if (jobTrackerToolService == null || loginServices == null || emailServices == null || logger == null)
             {
                 Console.WriteLine("Failed to initialize services.");
                 return;
@@ -39,7 +61,7 @@ namespace JobTracker.Business.DataServices
 
             try
             {
-                await GenerateData(jobTrackerToolService, logger);
+                await GenerateData(jobTrackerToolService, emailServices, logger);
                 //await GenerateData2(jobTrackerToolService, logger);
                 //await GenerateDataForAdmin(jobTrackerToolService, logger);
                 Console.WriteLine("Data generation completed successfully.");
@@ -50,7 +72,7 @@ namespace JobTracker.Business.DataServices
             }
         }
 
-        private static async Task GenerateData(IJobTrackerToolService jobTrackerToolService, ILogger logger)
+        private static async Task GenerateData(IJobTrackerToolService jobTrackerToolService, IEmailServices emailServices, ILogger logger)
         {
             var random = new Random();
 
@@ -68,12 +90,24 @@ namespace JobTracker.Business.DataServices
                     Address = $"123 Main St Apt {i}",
                     City = "City",
                     State = "State",
-                    Zip = "12345"
+                    Zip = "12345",
+                    IsEmailVerified = true
                 };
 
                 await jobTrackerToolService.AddUserProfile(userProfile);
 
-                for (int j = 0; j < 5; j++)
+                var emailConfirmation = new EmailConfirmation
+                {
+                    Id = Guid.NewGuid(),
+                    UserProfileId = userProfile.Id,
+                    Token = Guid.NewGuid().ToString(),
+                    ExpirationDate = DateTime.UtcNow.AddMinutes(5),
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await emailServices.AddEmailConfirmation(emailConfirmation);
+
+                for (int j = 0; j < 10; j++)
                 {
                     var jobProfile = new JobProfile
                     {
@@ -86,8 +120,9 @@ namespace JobTracker.Business.DataServices
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
 
-                    for (int k = 0; k < 50; k++)
+                    for (int k = 0; k < 100; k++)
                     {
+                        int randomNumber = random.Next(0, 1);
                         var employerProfile = new EmployerProfile
                         {
                             Id = Guid.NewGuid(),
@@ -105,28 +140,58 @@ namespace JobTracker.Business.DataServices
 
                         await jobTrackerToolService.AddEmployerProfile(employerProfile);
 
-                        var jobAction = new JobAction
+                        if (randomNumber == 0)
                         {
-                            Id = Guid.NewGuid(),
-                            EmployerProfileId = employerProfile.Id,
-                            Action = "Apply",
-                            Method = "Email",
-                            ActionResult = "Success"
-                        };
+                            var jobAction = new JobAction
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = employerProfile.Id,
+                                Action = "Apply",
+                                Method = "Email",
+                                ActionResult = "Success"
+                            };
 
-                        await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
+                            await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
 
-                        var detail = new Detail
+                            var detail = new Detail
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = employerProfile.Id,
+                                Date = DateTime.UtcNow,
+                                LatestUpdate = DateTime.UtcNow,
+                                Comments = "Rejected",
+                                Updates = "Rejected"
+                            };
+
+                            await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
+                        }
+                        else
                         {
-                            Id = Guid.NewGuid(),
-                            EmployerProfileId = employerProfile.Id,
-                            Date = DateTime.UtcNow,
-                            LatestUpdate = DateTime.UtcNow,
-                            Comments = "Initial contact",
-                            Updates = "Follow-up scheduled"
-                        };
+                            var jobAction = new JobAction
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = employerProfile.Id,
+                                Action = "Apply",
+                                Method = "Email",
+                                ActionResult = "Success"
+                            };
 
-                        await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
+                            await jobTrackerToolService.AddJobAction(employerProfile.Id, jobAction);
+
+                            var detail = new Detail
+                            {
+                                Id = Guid.NewGuid(),
+                                EmployerProfileId = employerProfile.Id,
+                                Date = DateTime.UtcNow,
+                                LatestUpdate = DateTime.UtcNow,
+                                Comments = "Call back",
+                                Updates = "Follow-up scheduled"
+                            };
+
+                            await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
+                        }
+
+                            //await jobTrackerToolService.AddDetail(employerProfile.Id, detail);
                     }
                 }
             }

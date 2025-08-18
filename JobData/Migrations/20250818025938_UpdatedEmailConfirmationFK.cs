@@ -20,10 +20,12 @@ namespace JobData.Migrations
                 table: "EmailConfirmations",
                 newName: "UserProfileId");
 
-            // Clean up orphaned EmailConfirmation records before creating foreign key
+            // SAFE cleanup - only delete records where UserProfileId is NULL or doesn't exist
+            // First, check if there are any orphaned records AFTER the column rename
             migrationBuilder.Sql(@"
                 DELETE FROM EmailConfirmations 
-                WHERE UserProfileId NOT IN (SELECT Id FROM UserProfiles)
+                WHERE UserProfileId IS NULL 
+                   OR UserProfileId NOT IN (SELECT Id FROM UserProfiles WHERE Id IS NOT NULL)
             ");
 
             migrationBuilder.CreateIndex(

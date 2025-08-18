@@ -113,16 +113,17 @@ jobs:
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    
     - name: Azure Login
       uses: azure/login@v2
       with:
         creds: ${{ secrets.JobTrackerAPITool_SPN }}
+    
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    # - name: Import API into Azure API Management
-    #   run: az apim api import --path "${{ env.AZURE_APIM_RESOURCE_PATH }}" --resource-group "${{ env.AZURE_APIM_RESOURCEGROUP }}" --service-name "${{ env.AZURE_APIM_SERVICENAME }}" --api-id "${{ env.AZURE_APIM_API_ID }}" --specification-path "${{ env.API_IMPORT_SPECIFICATION_PATH }}" --service-url "${{ env.AZURE_APIM_APPSERVICEURL }}"
+    
     - name: logout
       run: az logout

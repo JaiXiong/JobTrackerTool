@@ -155,5 +155,10 @@ jobs:
       #       --specification-format OpenApi \
       #       --subscription-required false
       
+      - name: Run Database Migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --connection "${{ secrets.AZURE_CONNECTION_STRING }}" --project JobData --startup-project JobTracker.API.Tool
+      
       - name: logout
         run: az logout
