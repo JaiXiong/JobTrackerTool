@@ -15,6 +15,7 @@ using Utils.AutoMapper;
 using Utils.Encryption;
 using Utils.Middleware;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -108,7 +109,8 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddLogging();
 builder.Services.AddMemoryCache();
-builder.Services.AddAutoMapper(typeof(DataMapper));
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<DataMapper>());
+//builder.Services.AddAutoMapper(typeof(DataMapper));
 
 // Register ResourceManager so we can catch errors
 builder.Services.AddSingleton<ResourceManager>(new ResourceManager("JobTackerBusinessErrors.ResourceFileName", typeof(Program).Assembly));
