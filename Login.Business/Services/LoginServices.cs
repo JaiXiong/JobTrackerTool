@@ -228,7 +228,7 @@ namespace Login.Business.Services
         public async Task<OperationResult> ConfirmEmail(string token)
         {
             var profileExist = await _dbContext.EmailConfirmations
-                .Where(e => e.token == token && e.ExpirationDate > DateTime.Now)
+                .Where(e => e.Token == token && e.ExpirationDate > DateTime.Now)
                 .FirstOrDefaultAsync();
 
             if (profileExist == null)
@@ -236,7 +236,7 @@ namespace Login.Business.Services
                 return OperationResult.CreateFailure(_resx.Create("EmailConfirmationNotFound"));
             }
 
-            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Id == profileExist.UserId);
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Id == profileExist.UserProfileId);
 
             if (user == null)
             {

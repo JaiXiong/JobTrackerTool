@@ -106,8 +106,8 @@ namespace Login.Business.Services
             EmailConfirmation emailConfirmation = new EmailConfirmation
             {
                 Id = Guid.NewGuid(),
-                UserId = userId,
-                token = token,
+                UserProfileId = userId,
+                Token = token,
                 ExpirationDate = DateTime.UtcNow.AddMinutes(60),
                 CreatedAt = DateTime.UtcNow,
             };
