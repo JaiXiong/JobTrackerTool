@@ -348,11 +348,39 @@ export class JobprofileComponent implements OnInit, OnDestroy {
 
     //use switchMap to chain the observable
     //use behavior subject to emit the new job profiles because we're tracking the job profiles already
+    // dialogRef
+    //   .afterClosed()
+    //   .pipe(switchMap(() => this.getJobProfiles()))
+    //   .subscribe((profiles) => {
+    //     this.jobProfilesSubject.next(profiles);
+    //   });
+
     dialogRef
       .afterClosed()
-      .pipe(switchMap(() => this.getJobProfiles()))
-      .subscribe((profiles) => {
-        this.jobProfilesSubject.next(profiles);
+      .pipe(
+        tap(result => console.log('Dialog result:', result)),
+        switchMap(result => {
+          if (result) {
+            return this.getJobProfiles();
+          }
+          else
+          {
+            return of(null);
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (profiles) => {
+          if (profiles) {
+            this.jobProfiles = profiles;
+            this.jobProfilesSubject.next(profiles);
+            this.cdr.detectChanges();
+          }
+        },
+        error: (error) => {
+          console.error('Error refreshing job profiles:', error);
+        }
       });
   }
 

@@ -2,6 +2,7 @@
 using JobTracker.API.Tool.DbData;
 using JobTracker.Business.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Resources;
@@ -21,11 +22,13 @@ namespace JobTracker.Business.DataServices
                         ))
                 .AddMemoryCache()
                 .AddScoped<JobTrackerToolService>()
+                .AddScoped<IJobTrackerContext, JobTrackerContext>()
+                .AddScoped<IJobTrackerToolService, JobTrackerToolService>()
                 //.AddSingleton(new ResourceManager("JobTracker.Business.Resources", typeof(JobTrackerToolService).Assembly))
-                .AddSingleton(new ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(JobTrackerToolService).Assembly))
+                .AddSingleton(new ResourceManager("JobTracker.Business.JobTackerBusinessErrors", typeof(IJobTrackerToolService).Assembly))
                 .BuildServiceProvider();
 
-            var jobTrackerToolService = serviceProvider.GetService<JobTrackerToolService>();
+            var jobTrackerToolService = serviceProvider.GetService<IJobTrackerToolService>();
             var logger = serviceProvider.GetService<ILogger<Program>>();
 
             if (jobTrackerToolService == null || logger == null)
@@ -36,9 +39,9 @@ namespace JobTracker.Business.DataServices
 
             try
             {
-                //await GenerateData(jobTrackerToolService, logger);
+                await GenerateData(jobTrackerToolService, logger);
                 //await GenerateData2(jobTrackerToolService, logger);
-                await GenerateDataForAdmin(jobTrackerToolService, logger);
+                //await GenerateDataForAdmin(jobTrackerToolService, logger);
                 Console.WriteLine("Data generation completed successfully.");
             }
             catch (Exception ex)
@@ -47,11 +50,11 @@ namespace JobTracker.Business.DataServices
             }
         }
 
-        private static async Task GenerateData(JobTrackerToolService jobTrackerToolService, ILogger logger)
+        private static async Task GenerateData(IJobTrackerToolService jobTrackerToolService, ILogger logger)
         {
             var random = new Random();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 20; i++)
             {
                 var userProfile = new UserProfile
                 {
@@ -83,7 +86,7 @@ namespace JobTracker.Business.DataServices
 
                     await jobTrackerToolService.AddJobProfile(jobProfile);
 
-                    for (int k = 0; k < 5; k++)
+                    for (int k = 0; k < 50; k++)
                     {
                         var employerProfile = new EmployerProfile
                         {

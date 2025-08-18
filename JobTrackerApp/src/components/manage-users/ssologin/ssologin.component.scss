@@ -1,0 +1,45 @@
+.icons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.icon-wrapper {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.icons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.icon-wrapper {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.sso-icon {
+  width: 36px;
+  height: 36px;
+}
+
+// /* Use ::ng-deep to target the SVG elements inside the mat-icon */
+// :host ::ng-deep .mat-icon svg {
+//   width: 36px;
+//   height: 36px;
+// }

@@ -63,7 +63,7 @@ namespace Login.Business.Services
                 throw new BusinessException(_resx.Create("JWTInvalid"));
             }
 
-            
+
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
 
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -151,7 +151,7 @@ namespace Login.Business.Services
 
             var userExist = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Name == user && u.Email == email);
 
-            if (userExist == null || exp == null) 
+            if (userExist == null || exp == null)
             {
                 throw new BusinessException(_resx.Create("TokenInvalid"));
             }
@@ -181,21 +181,21 @@ namespace Login.Business.Services
             }
 
             var delimiter = new char[] { '@' };
-           
-                var username = email.Substring(0, email.IndexOf('@'));
 
-                var user = new UserProfile
-                {
-                    Id = Guid.NewGuid(),
-                    Date = DateTime.Now,
-                    LatestUpdate = DateTime.Now,
-                    Name = email.Substring(0, email.IndexOf('@')),
-                    Email = email,
-                    Password = _encryption.HashPassword(pw)
-                };
+            var username = email.Substring(0, email.IndexOf('@'));
 
-                await _dbContext.UserProfiles.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
+            var user = new UserProfile
+            {
+                Id = Guid.NewGuid(),
+                Date = DateTime.Now,
+                LatestUpdate = DateTime.Now,
+                Name = email.Substring(0, email.IndexOf('@')),
+                Email = email,
+                Password = _encryption.HashPassword(pw)
+            };
+
+            await _dbContext.UserProfiles.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
 
             return OperationResult.CreateSuccess("User registered successfully.");
         }
@@ -203,7 +203,7 @@ namespace Login.Business.Services
         public async Task<EmailConfirmation> GetEmailConfirmationById(Guid id)
         {
             var exist = await _dbContext.EmailConfirmations.FirstOrDefaultAsync(e => e.Id == id);
-            
+
             if (exist == null)
             {
                 // eventually use operation result
@@ -257,6 +257,28 @@ namespace Login.Business.Services
                 _logger.LogError(ex, "An error occurred while confirming email.");
                 return OperationResult.CreateFailure(_resx.Create("EmailConfirmationFailed"));
             }
+        }
+
+        public async Task<UserProfile> SSOLogin(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                throw new BusinessException(_resx.Create("SSOLoginError"));
+            }
+
+            var user = await _dbContext.UserProfiles.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                throw new BusinessException(_resx.Create("UserNotExist"));
+            }
+
+            // Here you would typically validate the SSO token with your SSO provider.
+            // For simplicity, we assume the token is valid.
+            var jwtToken = GenerateToken(user.Name);
+            var refreshToken = GenerateRefreshToken(user.Name);
+            //return OperationResult.CreateSuccess(new { Token = jwtToken, RefreshToken = refreshToken });
+
+            return user;
         }
     }
 }

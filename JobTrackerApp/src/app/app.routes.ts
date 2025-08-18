@@ -6,6 +6,7 @@ import { LoginComponent } from '../components/login/login.component';
 import { VerificationComponent } from '../components/manage-users/verification/verification.component';
 import { authGuard } from '../services/auth/auth.guard';
 import { EmailconfirmationComponent } from '../components/manage-users/emailconfirmation/emailconfirmation.component';
+import { AuthCallbackComponent } from '../components/manage-users/auth-callback/auth-callback.component';
 
 export const routes: Routes = 
 [
@@ -16,6 +17,7 @@ export const routes: Routes =
     {path: 'jobaction', component: JobactionComponent, title: 'JobAction Page', canActivate: [authGuard]},
     {path: 'verification', component: VerificationComponent, title: 'Verification Page'},
     {path: 'login/confirm-email', component: EmailconfirmationComponent, title: 'Email Confirmation Page'},
+    {path: 'auth-callback', component: AuthCallbackComponent, title: 'Authentication Callback'},
 ];
 
 export const AppRoutingModule = RouterModule.forRoot(routes, {

@@ -23,19 +23,24 @@
             </mat-form-field>
 
             <button mat-raised-button color="primary" type="submit" (click)="login()" [disabled]="loginForm.invalid && loginForm.touched">Login</button>
+              
+              <div class="sso-login-section">
+                <p class="sso-title">Or Login with:</p>
+                <app-ssologin></app-ssologin>
+              </div>
 
               <span class="enroll-link-container" *ngIf="!_isRegister">
                 <a class="enroll-link" href="#" (click)="registerPopup($event)">Not Enrolled? Sign Up Now.</a>
               </span>
 
           </ng-container>
-
+          
             <app-registeruser 
               *ngIf="_isRegister" 
               (registerComplete)="onRegisterComplete()"
               (backClicked)="onBackFromRegister()">
             </app-registeruser>
-            
+
         </div>
         <div>
           <!-- Don't have an account? <a routerLink="/register">Register</a> -->

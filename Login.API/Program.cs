@@ -11,6 +11,8 @@ using System.Resources;
 using System.Text;
 using Utils.Encryption;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +77,7 @@ if (allowedOrigins == null || allowedOrigins.Length == 0)
 }
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer("Bearer", options =>
+    .AddJwtBearer("JwtBearer", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -87,7 +89,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey))
         };
-    });
+    })
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 
 //Set up Serilog

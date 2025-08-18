@@ -15,10 +15,10 @@ namespace JobTracker.API.Tool.DbData
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
-        //public JobTrackerContext(DbContextOptions<JobTrackerContext> options) : base(options)
-        //{
-        //    _configuration = null;
-        //}
+        public JobTrackerContext(DbContextOptions<JobTrackerContext> options) : base(options)
+        {
+            _configuration = null;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,6 +45,11 @@ namespace JobTracker.API.Tool.DbData
             modelBuilder.Entity<JobProfile>()
                 .HasIndex(j => j.ProfileName)
                 .IsUnique();
+
+            modelBuilder.Entity<EmailConfirmation>()
+                .HasOne(u => u.UserProfile)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public DbSet<EmployerProfile> Employers { get; set; }

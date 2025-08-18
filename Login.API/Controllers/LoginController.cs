@@ -171,7 +171,7 @@ namespace Login.API.Controllers
         /// <summary>
         /// Confirms a new user.
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token">The token to verify the email address</param>
         /// <returns>A response indicating the result of the confirmation operation.</returns>
         [HttpGet("confirm-email", Name = "ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
@@ -198,6 +198,42 @@ namespace Login.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while confirming the email.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        /// <summary>
+        /// Confirms a new user for SSO login.
+        /// </summary>
+        /// <param name="token">The token to verify the user</param>
+        /// <param name="provider"> The SSO provider (e.g., Google, Facebook).</param>
+        /// <returns>A response indicating the result of the confirmation operation.</returns>
+        [HttpPost("sso-login", Name = "SSOLogin")]
+        public async Task<IActionResult> SSOLogin([FromBody] string token, string provider )
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(provider))
+            {
+                throw new ArgumentNullException("SSO info invalid");
+            }
+
+            try
+            {
+                var userProfile = await _loginServices.SSOLogin(token, provider);
+
+                if (userProfile != null)
+                {
+                    var access_token = _loginServices.GenerateToken(userProfile.Name);
+                    var refresh_token = _loginServices.GenerateRefreshToken(userProfile.Name);
+                    return Ok(new { email = userProfile.Name, access_token, refresh_token });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during SSO login.");
                 return StatusCode(500, "Internal server error");
             }
         }

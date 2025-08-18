@@ -45,6 +45,21 @@ form {
   text-align: center;
 }
 
+.sso-login-section {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sso-title {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
 mat-form-field {
   margin: 10%;
   padding: 10%;

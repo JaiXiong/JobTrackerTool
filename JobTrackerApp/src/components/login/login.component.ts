@@ -13,6 +13,7 @@ import { LoginService } from '../../services/login/login.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { SsologinComponent } from '../manage-users/ssologin/ssologin.component';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     FormsModule,
     RegisteruserComponent,
+    SsologinComponent,
     MatButtonModule
   ],
   providers: [],

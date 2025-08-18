@@ -40,7 +40,7 @@ import { AuthService } from '../services/auth/auth.service';
 export class AppComponent implements OnInit {
   title = 'JobTrackerApp';
   _isLoggedin: boolean = false;
-
+  
   constructor(private router: Router, private authService: AuthService) {}
 
    ngOnInit() {
