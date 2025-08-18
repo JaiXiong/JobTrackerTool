@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JobData.Migrations
+namespace JobTracker.API.tool.Migrations
 {
     [DbContext(typeof(JobTracker.API.Tool.DbData.JobTrackerContext))]
     [Migration("20241220220951_init_1.0.2")]

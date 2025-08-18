@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JobData.Migrations
+namespace JobTracker.API.tool.Migrations
 {
     [DbContext(typeof(JobTrackerContext))]
     [Migration("20250721155618_AddEmailConfirmationToken")]
