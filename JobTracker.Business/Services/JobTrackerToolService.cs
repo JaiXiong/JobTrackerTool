@@ -10,7 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace JobTracker.Business.Services
 {
-    public class JobTrackerToolService : DbContext, IJobTrackerToolService
+    public class JobTrackerToolService : IJobTrackerToolService
     {
         private readonly IJobTrackerContext _dbContext;
         private readonly ILogger<JobTrackerToolService> _logger;

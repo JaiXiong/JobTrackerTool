@@ -14,7 +14,7 @@ namespace JobTracker.API.Tool.DbData
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-
+       
         public JobTrackerContext(DbContextOptions<JobTrackerContext> options) : base(options)
         {
             _configuration = null;
