@@ -1,83 +1,75 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, Subject } from 'rxjs';
 import { AuthService } from './auth.service';
-import { msalConfig, loginRequest, googleAuthConfig } from './auth.config';
-
-// For Microsoft Authentication
-import * as msal from '@azure/msal-browser';
+import { googleAuthConfig } from './auth.config';
+import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
+import { PopupRequest, RedirectRequest } from '@azure/msal-browser';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class SsoAuthService {
-  private msalInstance: msal.PublicClientApplication;
+  private readonly _destroying$ = new Subject<void>();
   private ssoUserSubject = new BehaviorSubject<any>(null);
   public ssoUser$ = this.ssoUserSubject.asObservable();
+  private isFirefox = window.navigator.userAgent.indexOf('Firefox') > -1;
+  private msalServiceInit = false;
 
   constructor(
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private msalService: MsalService,
+    private msalBroadcastService: MsalBroadcastService
   ) {
-    // Initialize MSAL instance for Microsoft authentication
-    this.msalInstance = new msal.PublicClientApplication(msalConfig);
-    
-    // Check if user is already signed in
-    this.checkAccount();
+    //this.checkAccount();
   }
 
-  /**
-   * Checks if there's an active account in the MSAL instance
-   */
-  private checkAccount(): void {
-    const accounts = this.msalInstance.getAllAccounts();
-    if (accounts.length > 0) {
-      // User is already logged in
-      const user = accounts[0];
-      this.ssoUserSubject.next(user);
+  private async ensureMsalInitialized(): Promise<void> {
+    if (!this.msalServiceInit) {
+      await this.msalService.instance.initialize();
+      this.msalServiceInit = true;
     }
   }
 
   /**
    * Initiates Microsoft login flow
    */
-  public loginWithMicrosoft(): void {
-    this.msalInstance.loginPopup(loginRequest)
-      .then(response => {
-        // Handle successful login
-        console.log('Login successful', response);
-        this.ssoUserSubject.next(response.account);
-        
-        // Get access token for API access
-        return this.getTokenSilent();
-      })
-      .then(tokenResponse => {
-        // Use token for API access or integrate with the existing auth service
-        this.handleSsoAuthentication(tokenResponse?.accessToken, 'microsoft');
-      })
-      .catch(error => {
-        console.error('Microsoft login error:', error);
-      });
-  }
+  public async loginWithMicrosoft(): Promise<void> {
+    await this.ensureMsalInitialized();
 
-  /**
-   * Gets access token silently if user is already logged in
-   */
-  private getTokenSilent(): Promise<msal.AuthenticationResult | null> {
-    const accounts = this.msalInstance.getAllAccounts();
-    if (accounts.length === 0) {
-      return Promise.resolve(null);
+    if (this.isFirefox) {
+      if (this.msalGuardConfig.authRequest) {
+          this.msalService.loginPopup({...this.msalGuardConfig.authRequest } as PopupRequest)
+          .pipe(
+            catchError((error: any) => {
+              console.error('Error during Firefox popup login', error);
+              this.msalService.loginRedirect({...this.msalGuardConfig.authRequest } as RedirectRequest);
+              return of(null);
+            })
+          ).subscribe();
+        } else {
+          this.msalService.loginPopup()
+          .pipe(
+            catchError((error: any) => {
+              console.error('Error during Firefox popup login', error);
+              this.msalService.loginRedirect();
+              return of(null);
+            })
+          ).subscribe();
+        }
+      } else {
+        if (this.msalGuardConfig.authRequest) {
+          this.msalService.loginRedirect({ ...this.msalGuardConfig.authRequest } as RedirectRequest);
+        } else {
+          this.msalService.loginRedirect();
+        }
+      }
     }
-    
-    const request = {
-      ...loginRequest,
-      account: accounts[0]
-    };
-    
-    return this.msalInstance.acquireTokenSilent(request);
-  }
 
   /**
    * Initiates Google login flow
@@ -152,7 +144,7 @@ export class SsoAuthService {
    */
   public logout(): void {
     // Log out from Microsoft
-    this.msalInstance.logout();
+    //this.msalInstance.logout();
     
     // Clear local user state
     this.ssoUserSubject.next(null);
