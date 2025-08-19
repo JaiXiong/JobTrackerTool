@@ -155,7 +155,17 @@ jobs:
       #       --specification-format OpenApi \
       #       --subscription-required false
       
+      - name: Check for migration changes
+        id: check_migrations
+        run: |
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "Migrations/"; then
+            echo "migrations_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "migrations_changed=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Database Migrations
+        if: steps.check_migrations.outputs.migrations_changed == 'true'
         run: |
           dotnet tool install --global dotnet-ef
           dotnet ef database update --connection "${{ secrets.AZURE_CONNECTION_STRING }}" --project JobData --startup-project JobTracker.API.Tool
